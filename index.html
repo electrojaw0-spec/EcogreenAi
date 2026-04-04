@@ -545,19 +545,26 @@ let apiKey = '', selField = null, selTopic = '', selLevel = 'Intermediate';
 let ideas = [], saved = [], chatHist = [], chatBusy = false;
 
 // ===== AI API (OpenRouter — free, CORS-enabled) =====
-// OpenRouter supports browser requests and has free models
 // Get your free key at: openrouter.ai/keys
-const OR_URL   = 'https://openrouter.ai/api/v1/chat/completions';
-const OR_MODEL = 'meta-llama/llama-3.3-70b-instruct:free'; // confirmed free April 2026
+const OR_URL = 'https://openrouter.ai/api/v1/chat/completions';
+// Fallback chain — tries each model until one works
+const OR_MODELS = [
+  'meta-llama/llama-3.3-70b-instruct:free',
+  'google/gemma-3-27b-it:free',
+  'mistralai/devstral-small:free',
+  'nvidia/llama-3.1-nemotron-nano-8b-v1:free',
+  'openrouter/auto'
+];
+let currentModel = OR_MODELS[0];
 
 async function aiRequest(messages, systemText) {
   if (!apiKey) { openModal(); throw new Error('no_key'); }
 
-  // Build messages array with optional system prompt
+  // Build messages array
   const msgs = [];
   if (systemText) msgs.push({ role: 'system', content: systemText });
 
-  // Filter and clean messages
+  // Filter to only user/assistant roles
   const filtered = messages
     .filter(m => m.role === 'user' || m.role === 'assistant')
     .map(m => ({ role: m.role, content: m.content || '' }));
@@ -574,7 +581,6 @@ async function aiRequest(messages, systemText) {
   // Must not start with assistant
   while (merged.length && merged[0].role === 'assistant') merged.shift();
   if (!merged.length) throw new Error('Nothing to send.');
-
   msgs.push(...merged);
 
   // Try each model in fallback chain
@@ -590,19 +596,14 @@ async function aiRequest(messages, systemText) {
           'HTTP-Referer': window.location.href,
           'X-Title': 'ECO GREEN AI'
         },
-        body: JSON.stringify({
-          model: model,
-          messages: msgs,
-          max_tokens: 2048,
-          temperature: 0.85
-        })
+        body: JSON.stringify({ model, messages: msgs, max_tokens: 2048, temperature: 0.85 })
       });
       data = await res.json();
     } catch (netErr) {
       throw new Error('Network error — check your internet connection and try again.');
     }
 
-    // Key error — stop immediately
+    // Bad API key — stop immediately
     if (res.status === 401 || res.status === 403) {
       apiKey = '';
       localStorage.removeItem('eco_or_key');
@@ -611,24 +612,22 @@ async function aiRequest(messages, systemText) {
       throw new Error('bad_key');
     }
 
-    // Model not found / unavailable — try next
+    // Model unavailable — try next
     if (!res.ok) {
-      const msg = String(data?.error?.message || data?.error || res.statusText || '');
-      if (msg.toLowerCase().includes('endpoint') || msg.toLowerCase().includes('no model') || res.status === 404 || res.status === 503) {
-        lastErr = msg;
-        continue; // try next model
-      }
-      throw new Error(msg || 'API error');
+      const errMsg = String(data?.error?.message || data?.error || res.statusText || '');
+      const modelGone = errMsg.toLowerCase().includes('endpoint')
+        || errMsg.toLowerCase().includes('no model')
+        || errMsg.toLowerCase().includes('not found')
+        || res.status === 404 || res.status === 503;
+      if (modelGone) { lastErr = errMsg; continue; }
+      throw new Error(errMsg || 'API error');
     }
 
-    const text = data?.choices?.[0]?.message?.content?.trim() || '';
-    if (text) {
-      OR_MODEL = model; // remember working model
-      return text;
-    }
+    const text = (data?.choices?.[0]?.message?.content || '').trim();
+    if (text) { currentModel = model; return text; }
     lastErr = 'Empty response';
   }
-  throw new Error('All models unavailable. Last error: ' + lastErr + '. Please try again later.');
+  throw new Error('All models unavailable — please try again in a moment. (' + lastErr + ')');
 }
 
 // Single-turn call (idea generation)
