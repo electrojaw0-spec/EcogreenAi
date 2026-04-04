@@ -548,7 +548,7 @@ let ideas = [], saved = [], chatHist = [], chatBusy = false;
 // OpenRouter supports browser requests and has free models
 // Get your free key at: openrouter.ai/keys
 const OR_URL   = 'https://openrouter.ai/api/v1/chat/completions';
-const OR_MODEL = 'mistralai/mistral-7b-instruct:free'; // confirmed free on OpenRouter
+const OR_MODEL = 'meta-llama/llama-3.3-70b-instruct:free'; // confirmed free April 2026
 
 async function aiRequest(messages, systemText) {
   if (!apiKey) { openModal(); throw new Error('no_key'); }
@@ -577,47 +577,58 @@ async function aiRequest(messages, systemText) {
 
   msgs.push(...merged);
 
-  let res, data;
-  try {
-    res = await fetch(OR_URL, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + apiKey,
-        'HTTP-Referer': window.location.href,
-        'X-Title': 'ECO GREEN AI'
-      },
-      body: JSON.stringify({
-        model: OR_MODEL,
-        messages: msgs,
-        max_tokens: 2048,
-        temperature: 0.85
-      })
-    });
-    data = await res.json();
-  } catch (netErr) {
-    throw new Error('Network error — check your internet connection and try again.');
-  }
+  // Try each model in fallback chain
+  let res, data, lastErr = '';
+  for (let mi = 0; mi < OR_MODELS.length; mi++) {
+    const model = OR_MODELS[mi];
+    try {
+      res = await fetch(OR_URL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + apiKey,
+          'HTTP-Referer': window.location.href,
+          'X-Title': 'ECO GREEN AI'
+        },
+        body: JSON.stringify({
+          model: model,
+          messages: msgs,
+          max_tokens: 2048,
+          temperature: 0.85
+        })
+      });
+      data = await res.json();
+    } catch (netErr) {
+      throw new Error('Network error — check your internet connection and try again.');
+    }
 
-  if (!res.ok) {
-    const msg = data?.error?.message || data?.error || res.statusText || 'Unknown error';
-    const isKeyError = res.status === 401 || res.status === 403
-      || String(msg).toLowerCase().includes('key')
-      || String(msg).toLowerCase().includes('auth')
-      || String(msg).toLowerCase().includes('invalid');
-    if (isKeyError) {
+    // Key error — stop immediately
+    if (res.status === 401 || res.status === 403) {
       apiKey = '';
       localStorage.removeItem('eco_or_key');
       updateStatus();
       openModal();
       throw new Error('bad_key');
     }
-    throw new Error(String(msg));
-  }
 
-  const text = data?.choices?.[0]?.message?.content?.trim() || '';
-  if (!text) throw new Error('Received an empty response. Please try again.');
-  return text;
+    // Model not found / unavailable — try next
+    if (!res.ok) {
+      const msg = String(data?.error?.message || data?.error || res.statusText || '');
+      if (msg.toLowerCase().includes('endpoint') || msg.toLowerCase().includes('no model') || res.status === 404 || res.status === 503) {
+        lastErr = msg;
+        continue; // try next model
+      }
+      throw new Error(msg || 'API error');
+    }
+
+    const text = data?.choices?.[0]?.message?.content?.trim() || '';
+    if (text) {
+      OR_MODEL = model; // remember working model
+      return text;
+    }
+    lastErr = 'Empty response';
+  }
+  throw new Error('All models unavailable. Last error: ' + lastErr + '. Please try again later.');
 }
 
 // Single-turn call (idea generation)
