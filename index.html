@@ -4,7 +4,7 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>ECO GREEN — AI Engineering Hub by Modou Jaw</title>
-<meta name="description" content="ECO GREEN is a free AI-powered engineering project idea generator using HuggingFace AI. Created by Modou Jaw, Electrical Engineering student at USET." />
+<meta name="description" content="ECO GREEN is a free AI-powered engineering project idea generator using OpenRouter AI. Created by Modou Jaw, Electrical Engineering student at USET." />
 <meta name="author" content="Modou Jaw" />
 <meta name="robots" content="index, follow" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -292,24 +292,24 @@ footer{border-top:1px solid var(--border);padding:44px 36px;text-align:center;ba
 <div id="api-modal" class="modal-overlay">
   <div class="modal-box">
     <span class="modal-icon">🔑</span>
-    <h2 class="modal-title">Enter Your HuggingFace Token</h2>
+    <h2 class="modal-title">Enter Your OpenRouter API Key</h2>
     <p class="modal-desc">
-      Get your free token from
-      <a href="https://huggingface.co/settings/tokens" target="_blank" rel="noopener">huggingface.co/settings/tokens</a>
+      Get your free key from
+      <a href="https://openrouter.ai/keys" target="_blank" rel="noopener">openrouter.ai/keys</a>
       — no credit card needed!
     </p>
     <div class="modal-input-wrap">
       <input type="password" class="modal-input" id="api-key-input"
-        placeholder="Paste your HuggingFace token here (hf_...)"
+        placeholder="Paste your OpenRouter key here (sk-or-...)"
         autocomplete="off" spellcheck="false" />
       <button class="modal-eye" id="eye-btn" onclick="toggleEye()">👁️</button>
     </div>
-    <p class="modal-hint">🔒 Your token is stored only in your browser's local storage and is never sent to our servers.</p>
+    <p class="modal-hint">🔒 Your key is stored only in your browser's local storage and is never sent to our servers.</p>
     <button class="modal-save-btn" onclick="saveApiKey()">✨ Save Key &amp; Start Building</button><br/>
     <button class="modal-skip" onclick="skipModal()">Skip for now (limited features)</button>
     <div class="modal-lock">
       <span>🔒</span>
-      <span class="modal-lock-text">Your token stays on your device only. We never see or store it anywhere.</span>
+      <span class="modal-lock-text">Your key stays on your device only. We never see or store it anywhere.</span>
     </div>
   </div>
 </div>
@@ -349,7 +349,7 @@ footer{border-top:1px solid var(--border);padding:44px 36px;text-align:center;ba
     <span class="hero-emoji">🌍💚</span>
     <h1 class="hero-headline"><span class="eco-word">ECO GREEN</span><br/>The Energy That<br/>Moves With You</h1>
     <p class="hero-tagline">🌿 "Let's save the world by saving energy, one project at a time."</p>
-    <p class="hero-mission">ECO GREEN is your personal AI engineering mentor powered by <strong>HuggingFace AI</strong>. Generate sustainable project ideas and build solutions that truly matter for our planet.</p>
+    <p class="hero-mission">ECO GREEN is your personal AI engineering mentor powered by <strong>OpenRouter AI (Llama 3.1 Free)</strong>. Generate sustainable project ideas and build solutions that truly matter for our planet.</p>
     <div class="hero-btns">
       <button class="btn-big" onclick="showPage('app')">✨ Generate Green Ideas</button>
       <button class="btn-outline" onclick="showPage('chat')">🌿 Chat with Eco Green AI</button>
@@ -416,7 +416,7 @@ footer{border-top:1px solid var(--border);padding:44px 36px;text-align:center;ba
           <span class="fbadge">🎓 USET</span>
           <span class="fbadge">📅 Year 3 · Sem 2</span>
           <span class="fbadge">🌿 Eco Green Founder</span>
-          <span class="fbadge">🤖 HuggingFace AI</span>
+          <span class="fbadge">🤖 OpenRouter AI</span>
         </div>
       </div>
     </div>
@@ -435,7 +435,7 @@ footer{border-top:1px solid var(--border);padding:44px 36px;text-align:center;ba
       <a onclick="showPage('chat')">Eco Green AI</a>
       <a onclick="showPage('saved')">Saved Projects</a>
     </div>
-    <div class="foot-copy">© 2025 ECO GREEN · Powered by HuggingFace AI · Sustainable Engineering Hub</div>
+    <div class="foot-copy">© 2025 ECO GREEN · Powered by OpenRouter AI · Sustainable Engineering Hub</div>
   </footer>
 </section>
 
@@ -443,13 +443,13 @@ footer{border-top:1px solid var(--border);padding:44px 36px;text-align:center;ba
 <section id="app-section" class="page">
   <div class="app-wrap">
     <h2 class="app-title">💡 AI Project Idea Generator</h2>
-    <p class="app-sub">Powered by HuggingFace AI — get 4 smart, sustainable project ideas tailored just for you! 🌍</p>
+    <p class="app-sub">Powered by OpenRouter AI — get 4 smart, sustainable project ideas tailored just for you! 🌍</p>
 
     <div class="api-banner" id="api-banner" onclick="openModal()">
       <span class="api-b-icon">🔑</span>
       <div style="flex:1">
-        <div class="api-b-title" id="banner-title">HuggingFace Token Required</div>
-        <div class="api-b-sub" id="banner-sub">Click to add your free HuggingFace token and unlock idea generation</div>
+        <div class="api-b-title" id="banner-title">OpenRouter API Key Required</div>
+        <div class="api-b-sub" id="banner-sub">Click to add your free OpenRouter key and unlock idea generation</div>
       </div>
       <span class="api-b-action" id="banner-action">Set Key →</span>
     </div>
@@ -491,7 +491,7 @@ footer{border-top:1px solid var(--border);padding:44px 36px;text-align:center;ba
       <div class="eco-ava">🌿</div>
       <div style="flex:1">
         <div class="eco-name">ECO GREEN AI</div>
-        <div class="eco-status"><span class="sdot"></span>Powered by HuggingFace AI · Always here for you 💚</div>
+        <div class="eco-status"><span class="sdot"></span>Powered by OpenRouter AI · Always here for you 💚</div>
       </div>
       <div class="build-chip" id="build-chip" style="display:none"></div>
     </div>
@@ -522,7 +522,7 @@ footer{border-top:1px solid var(--border);padding:44px 36px;text-align:center;ba
 
 <script>
 // ============================================================
-// ECO GREEN — Powered by HuggingFace AI
+// ECO GREEN — Powered by OpenRouter AI
 // Created by Modou Jaw · USET · Electrical Engineering Year 3
 // ============================================================
 
@@ -544,46 +544,54 @@ const WELCOME = `Hey there! 👋 I'm so glad you're here!\n\nI'm **ECO GREEN AI*
 let apiKey = '', selField = null, selTopic = '', selLevel = 'Intermediate';
 let ideas = [], saved = [], chatHist = [], chatBusy = false;
 
-// ===== HUGGING FACE API =====
-// Using Meta Llama 3.1 8B Instruct — free tier via HuggingFace Inference API
-const HF_MODEL = 'meta-llama/Meta-Llama-3.1-8B-Instruct';
-const HF_URL   = 'https://api-inference.huggingface.co/models/' + HF_MODEL + '/v1/chat/completions';
+// ===== AI API (OpenRouter — free, CORS-enabled) =====
+// OpenRouter supports browser requests and has free models
+// Get your free key at: openrouter.ai/keys
+const OR_URL   = 'https://openrouter.ai/api/v1/chat/completions';
+const OR_MODEL = 'meta-llama/llama-3.1-8b-instruct:free'; // 100% free model
 
-async function hfRequest(messages, systemText) {
+async function aiRequest(messages, systemText) {
   if (!apiKey) { openModal(); throw new Error('no_key'); }
 
-  // Build message array with system prompt first
+  // Build messages array with optional system prompt
   const msgs = [];
   if (systemText) msgs.push({ role: 'system', content: systemText });
-  msgs.push(...messages.map(m => ({ role: m.role === 'assistant' ? 'assistant' : 'user', content: m.content || '' })));
 
-  // Merge consecutive same-role messages (required by some models)
+  // Filter and clean messages
+  const filtered = messages
+    .filter(m => m.role === 'user' || m.role === 'assistant')
+    .map(m => ({ role: m.role, content: m.content || '' }));
+
+  // Merge consecutive same-role messages
   const merged = [];
-  for (const m of msgs) {
+  for (const m of filtered) {
     if (merged.length && merged[merged.length - 1].role === m.role) {
       merged[merged.length - 1].content += '\n' + m.content;
     } else {
       merged.push({ ...m });
     }
   }
-  // Must start with system or user — never assistant
+  // Must not start with assistant
   while (merged.length && merged[0].role === 'assistant') merged.shift();
   if (!merged.length) throw new Error('Nothing to send.');
 
+  msgs.push(...merged);
+
   let res, data;
   try {
-    res = await fetch(HF_URL, {
+    res = await fetch(OR_URL, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + apiKey
+        'Authorization': 'Bearer ' + apiKey,
+        'HTTP-Referer': window.location.href,
+        'X-Title': 'ECO GREEN AI'
       },
       body: JSON.stringify({
-        model: HF_MODEL,
-        messages: merged,
+        model: OR_MODEL,
+        messages: msgs,
         max_tokens: 2048,
-        temperature: 0.85,
-        stream: false
+        temperature: 0.85
       })
     });
     data = await res.json();
@@ -592,21 +600,17 @@ async function hfRequest(messages, systemText) {
   }
 
   if (!res.ok) {
-    const msg = data?.error?.message || data?.error || res.statusText || 'Unknown API error';
+    const msg = data?.error?.message || data?.error || res.statusText || 'Unknown error';
     const isKeyError = res.status === 401 || res.status === 403
-      || String(msg).toLowerCase().includes('token')
-      || String(msg).toLowerCase().includes('unauthorized')
+      || String(msg).toLowerCase().includes('key')
+      || String(msg).toLowerCase().includes('auth')
       || String(msg).toLowerCase().includes('invalid');
     if (isKeyError) {
       apiKey = '';
-      localStorage.removeItem('eco_hf_key');
+      localStorage.removeItem('eco_or_key');
       updateStatus();
       openModal();
       throw new Error('bad_key');
-    }
-    // Model loading — HuggingFace cold-starts can take time
-    if (res.status === 503 || String(msg).toLowerCase().includes('loading')) {
-      throw new Error('Model is loading on HuggingFace servers — please wait 20 seconds and try again! ⏳');
     }
     throw new Error(String(msg));
   }
@@ -618,14 +622,12 @@ async function hfRequest(messages, systemText) {
 
 // Single-turn call (idea generation)
 function callAI(prompt, sys) {
-  return hfRequest([{ role: 'user', content: prompt }], sys);
+  return aiRequest([{ role: 'user', content: prompt }], sys);
 }
 
 // Multi-turn chat call
 function callAIChat(messages, sys) {
-  const filtered = messages.filter(m => m.role === 'user' || m.role === 'assistant');
-  if (!filtered.length) throw new Error('Nothing to send.');
-  return hfRequest(filtered, sys);
+  return aiRequest(messages.filter(m => m.role === 'user' || m.role === 'assistant'), sys);
 }
 
 // ===== THEME =====
@@ -649,16 +651,16 @@ function toggleTheme() {
 
 // ===== API KEY =====
 function loadKey() {
-  apiKey = localStorage.getItem('eco_hf_key') || '';
+  apiKey = localStorage.getItem('eco_or_key') || '';
   updateStatus();
   if (!apiKey) openModal();
 }
 function saveApiKey() {
   const k = document.getElementById('api-key-input').value.trim();
-  if (!k) { alert('Please paste your HuggingFace token first! 😊'); return; }
-  if (!k.startsWith('hf_') && !confirm('This doesn\'t look like a HuggingFace token (usually starts with "hf_"). Save anyway?')) return;
+  if (!k) { alert('Please paste your OpenRouter API key first! 😊'); return; }
+  if (!k.startsWith('sk-or-') && !confirm('This doesn\'t look like an OpenRouter key (usually starts with "sk-or-"). Save anyway?')) return;
   apiKey = k;
-  localStorage.setItem('eco_hf_key', k);
+  localStorage.setItem('eco_or_key', k);
   document.getElementById('api-modal').classList.add('hidden');
   updateStatus();
   confetti();
@@ -684,14 +686,14 @@ function updateStatus() {
   const action = document.getElementById('banner-action');
   const banner = document.getElementById('api-banner');
   if (apiKey) {
-    dot.className = 'sdot-s on'; txt.textContent = 'HuggingFace ✓ Connected';
-    title.textContent = '✅ HuggingFace AI Connected';
-    sub.textContent = 'Powered by Meta Llama 3.1 · Click to change key';
+    dot.className = 'sdot-s on'; txt.textContent = 'OpenRouter ✓ Connected';
+    title.textContent = '✅ OpenRouter AI Connected';
+    sub.textContent = 'Powered by Llama 3.1 (Free) · Click to change key';
     action.textContent = 'Change →'; banner.classList.add('connected');
   } else {
     dot.className = 'sdot-s off'; txt.textContent = 'No API Key';
-    title.textContent = '⚠️ HuggingFace API Token Required';
-    sub.textContent = 'Click to add your free HuggingFace token and unlock all features';
+    title.textContent = '⚠️ OpenRouter API Key Required';
+    sub.textContent = 'Click to add your free OpenRouter key and unlock all features';
     action.textContent = 'Set Key →'; banner.classList.remove('connected');
   }
 }
