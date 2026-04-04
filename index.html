@@ -548,7 +548,7 @@ let ideas = [], saved = [], chatHist = [], chatBusy = false;
 // OpenRouter supports browser requests and has free models
 // Get your free key at: openrouter.ai/keys
 const OR_URL   = 'https://openrouter.ai/api/v1/chat/completions';
-const OR_MODEL = 'meta-llama/llama-3.1-8b-instruct:free'; // 100% free model
+const OR_MODEL = 'mistralai/mistral-7b-instruct:free'; // confirmed free on OpenRouter
 
 async function aiRequest(messages, systemText) {
   if (!apiKey) { openModal(); throw new Error('no_key'); }
