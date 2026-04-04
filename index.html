@@ -547,12 +547,13 @@ let ideas = [], saved = [], chatHist = [], chatBusy = false;
 // ===== AI API (OpenRouter — free, CORS-enabled) =====
 // Get your free key at: openrouter.ai/keys
 const OR_URL = 'https://openrouter.ai/api/v1/chat/completions';
-// Fallback chain — tries each model until one works
 const OR_MODELS = [
   'meta-llama/llama-3.3-70b-instruct:free',
   'google/gemma-3-27b-it:free',
+  'google/gemma-3-12b-it:free',
   'mistralai/devstral-small:free',
   'nvidia/llama-3.1-nemotron-nano-8b-v1:free',
+  'allenai/olmo-3.1-32b-think:free',
   'openrouter/auto'
 ];
 let currentModel = OR_MODELS[0];
@@ -584,9 +585,10 @@ async function aiRequest(messages, systemText) {
   msgs.push(...merged);
 
   // Try each model in fallback chain
-  let res, data, lastErr = '';
+  let lastErr = '';
   for (let mi = 0; mi < OR_MODELS.length; mi++) {
     const model = OR_MODELS[mi];
+    let res, data;
     try {
       res = await fetch(OR_URL, {
         method: 'POST',
@@ -612,22 +614,43 @@ async function aiRequest(messages, systemText) {
       throw new Error('bad_key');
     }
 
-    // Model unavailable — try next
-    if (!res.ok) {
-      const errMsg = String(data?.error?.message || data?.error || res.statusText || '');
-      const modelGone = errMsg.toLowerCase().includes('endpoint')
-        || errMsg.toLowerCase().includes('no model')
-        || errMsg.toLowerCase().includes('not found')
-        || res.status === 404 || res.status === 503;
-      if (modelGone) { lastErr = errMsg; continue; }
+    // Check for any error — if so, try next model
+    if (!res.ok || data?.error) {
+      const errMsg = String(
+        data?.error?.message || data?.error?.code || data?.error || res.statusText || ''
+      ).toLowerCase();
+      lastErr = errMsg;
+      // Always try next model for any of these conditions
+      if (
+        errMsg.includes('endpoint') ||
+        errMsg.includes('no model') ||
+        errMsg.includes('not found') ||
+        errMsg.includes('provider') ||
+        errMsg.includes('overload') ||
+        errMsg.includes('capacity') ||
+        errMsg.includes('unavailable') ||
+        errMsg.includes('error') ||
+        res.status === 404 ||
+        res.status === 429 ||
+        res.status === 500 ||
+        res.status === 502 ||
+        res.status === 503
+      ) {
+        continue; // try next model
+      }
       throw new Error(errMsg || 'API error');
     }
 
     const text = (data?.choices?.[0]?.message?.content || '').trim();
-    if (text) { currentModel = model; return text; }
-    lastErr = 'Empty response';
+    if (text) {
+      currentModel = model;
+      return text;
+    }
+    // Empty response — try next model
+    lastErr = 'empty response';
+    continue;
   }
-  throw new Error('All models unavailable — please try again in a moment. (' + lastErr + ')');
+  throw new Error('Service temporarily unavailable — please try again in a moment.');
 }
 
 // Single-turn call (idea generation)
