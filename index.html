@@ -7,7 +7,6 @@
 <meta name="description" content="ECO GREEN is a free AI-powered engineering project idea generator. Created by Modou Jaw, Electrical Engineering student at USET." />
 <meta name="author" content="Modou Jaw" />
 <meta name="robots" content="index, follow" />
-<!-- PWA: Installable App -->
 <meta name="mobile-web-app-capable" content="yes" />
 <meta name="apple-mobile-web-app-capable" content="yes" />
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
@@ -18,13 +17,13 @@
 <link rel="apple-touch-icon" id="apple-icon" href="" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,400;0,600;0,700;0,800;0,900;1,700&family=Lora:ital,wght@0,600;0,700;1,600&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet" />
 <style>
-:root{--green:#1a9e5c;--green2:#25c270;--green3:#d4f5e2;--green4:#edfaf3;--amber:#f4a429;--indigo:#7c6ff7;--blue:#4285f4;--bg:#f5fbf7;--surface:#ffffff;--surface2:#f0faf5;--border:#d0ead9;--border2:#a8d8bc;--text:#1a3328;--text2:#3a6b52;--text3:#7aaa90;--shadow:0 4px 24px rgba(26,158,92,0.10);--shadow2:0 8px 40px rgba(26,158,92,0.16);--navbar-bg:rgba(245,251,247,0.93);}
-[data-theme="dark"]{--green:#2ecc7a;--green2:#3de08a;--green3:#0d3324;--green4:#0a2a1d;--bg:#0e1812;--surface:#152218;--surface2:#111e15;--border:#1e3a28;--border2:#2a5238;--text:#d4f0e2;--text2:#8ecfaa;--text3:#4a8a66;--shadow:0 4px 24px rgba(0,0,0,0.4);--shadow2:0 8px 40px rgba(0,0,0,0.6);--navbar-bg:rgba(14,24,18,0.95);}
+:root{--green:#16a05a;--green2:#1db86a;--green3:#d6f3e6;--green4:#f0faf5;--bg:#fafcfb;--surface:#ffffff;--surface2:#f5f9f7;--border:#e4ede9;--border2:#c2d9ce;--text:#111b17;--text2:#3d5c4e;--text3:#8aab9a;--shadow:0 2px 16px rgba(22,160,90,0.08);--shadow2:0 6px 32px rgba(22,160,90,0.14);--navbar-bg:rgba(250,252,251,0.95);}
+[data-theme="dark"]{--green:#25d077;--green2:#30e085;--green3:#0c2e1e;--green4:#091f14;--bg:#0b1410;--surface:#101a14;--surface2:#0e1812;--border:#1a3326;--border2:#245038;--text:#e0f2ea;--text2:#90c9ab;--text3:#4d8a6a;--shadow:0 2px 16px rgba(0,0,0,0.35);--shadow2:0 6px 32px rgba(0,0,0,0.55);--navbar-bg:rgba(11,20,16,0.97);}
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
 html{scroll-behavior:smooth;}
-body{background:var(--bg);color:var(--text);font-family:'Nunito',sans-serif;overflow-x:hidden;min-height:100vh;transition:background .3s,color .3s;}
+body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;overflow-x:hidden;min-height:100vh;transition:background .3s,color .3s;-webkit-font-smoothing:antialiased;}
 ::selection{background:#25c27044;color:var(--green);}
 ::-webkit-scrollbar{width:5px;}::-webkit-scrollbar-track{background:var(--bg);}::-webkit-scrollbar-thumb{background:var(--border2);border-radius:10px;}::-webkit-scrollbar-thumb:hover{background:var(--green);}
 
@@ -33,42 +32,70 @@ body{background:var(--bg);color:var(--text);font-family:'Nunito',sans-serif;over
 .modal-overlay.hidden{display:none;}
 .modal-box{background:var(--surface);border-radius:28px;padding:40px 36px;max-width:460px;width:100%;text-align:center;border:1.5px solid var(--border);animation:slideUp .3s ease;box-shadow:0 20px 60px rgba(0,0,0,0.3);}
 .modal-icon{font-size:52px;margin-bottom:14px;display:block;animation:floatBounce 3s ease-in-out infinite;}
-.modal-title{font-family:'Lora',serif;font-size:22px;font-weight:700;color:var(--text);margin-bottom:8px;}
+.modal-title{font-family:'DM Serif Display',serif;font-size:22px;font-weight:700;color:var(--text);margin-bottom:8px;}
 .modal-desc{font-size:13px;color:var(--text3);line-height:1.7;margin-bottom:20px;font-weight:600;}
-.modal-desc a{color:var(--blue);font-weight:700;text-decoration:none;}
-.modal-desc a:hover{text-decoration:underline;}
 .modal-input-wrap{position:relative;margin-bottom:10px;}
-.modal-input{width:100%;padding:14px 46px 14px 16px;border-radius:14px;border:1.5px solid var(--border2);background:var(--bg);font-family:'Nunito',sans-serif;font-size:14px;color:var(--text);outline:none;font-weight:600;transition:border-color .2s;}
-.modal-input:focus{border-color:var(--blue);box-shadow:0 0 0 3px #4285f418;}
+.modal-input{width:100%;padding:14px 46px 14px 16px;border-radius:14px;border:1.5px solid var(--border2);background:var(--bg);font-family:'Inter',sans-serif;font-size:14px;color:var(--text);outline:none;font-weight:600;transition:border-color .2s;}
+.modal-input:focus{border-color:var(--green);box-shadow:0 0 0 3px #1a9e5c18;}
 .modal-input::placeholder{color:var(--text3);}
 .modal-eye{position:absolute;right:14px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;font-size:16px;color:var(--text3);}
 .modal-eye:hover{color:var(--green);}
 .modal-hint{font-size:12px;color:var(--text3);margin-bottom:18px;text-align:left;line-height:1.6;font-weight:600;}
-.modal-save-btn{width:100%;padding:15px;border-radius:14px;border:none;background:linear-gradient(135deg,var(--green),var(--green2));color:#fff;font-family:'Nunito',sans-serif;font-size:15px;font-weight:800;cursor:pointer;transition:all .25s;box-shadow:0 6px 24px #1a9e5c44;margin-bottom:12px;}
+.modal-save-btn{width:100%;padding:15px;border-radius:14px;border:none;background:linear-gradient(135deg,var(--green),var(--green2));color:#fff;font-family:'Inter',sans-serif;font-size:15px;font-weight:800;cursor:pointer;transition:all .25s;box-shadow:0 6px 24px #1a9e5c44;margin-bottom:12px;}
 .modal-save-btn:hover{transform:translateY(-2px);box-shadow:0 10px 32px #25c27055;}
-.modal-skip{font-size:12px;color:var(--text3);cursor:pointer;font-weight:700;background:none;border:none;font-family:'Nunito',sans-serif;}
+.modal-skip{font-size:12px;color:var(--text3);cursor:pointer;font-weight:700;background:none;border:none;font-family:'Inter',sans-serif;}
 .modal-skip:hover{color:var(--green);text-decoration:underline;}
 .modal-lock{display:flex;align-items:center;gap:8px;margin-top:16px;padding:10px 14px;background:var(--green4);border-radius:10px;border:1px solid var(--green3);}
 .modal-lock-text{font-size:11px;color:var(--text2);font-weight:600;text-align:left;line-height:1.5;}
 
-/* STATUS BAR - removed */
+/* MEMORY PANEL */
+.mem-panel{position:fixed;top:0;right:0;bottom:0;width:300px;background:var(--surface);border-left:1.5px solid var(--border);z-index:1100;display:flex;flex-direction:column;transform:translateX(100%);transition:transform .3s ease;box-shadow:-8px 0 40px rgba(0,0,0,0.12);}
+.mem-panel.open{transform:translateX(0);}
+.mem-head{padding:20px 18px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-shrink:0;}
+.mem-title{font-family:'DM Serif Display',serif;font-size:17px;font-weight:700;color:var(--text);}
+.mem-close{background:none;border:1.5px solid var(--border2);border-radius:10px;padding:6px 10px;font-size:16px;cursor:pointer;color:var(--text3);transition:all .2s;}
+.mem-close:hover{border-color:var(--green);color:var(--green);}
+.mem-body{flex:1;overflow-y:auto;padding:16px 18px;}
+.mem-section{margin-bottom:20px;}
+.mem-sec-title{font-size:10px;font-weight:800;letter-spacing:1px;color:var(--text3);text-transform:uppercase;margin-bottom:10px;}
+.mem-tag{display:inline-flex;align-items:center;gap:6px;padding:6px 12px;border-radius:20px;background:var(--green4);border:1px solid var(--green3);color:var(--green);font-size:12px;font-weight:700;margin:3px;cursor:default;}
+.mem-tag .del-tag{background:none;border:none;cursor:pointer;font-size:11px;color:var(--text3);padding:0;line-height:1;}
+.mem-tag .del-tag:hover{color:#ef4444;}
+.mem-empty{font-size:13px;color:var(--text3);font-weight:600;font-style:italic;}
+.mem-input-row{display:flex;gap:8px;margin-top:8px;}
+.mem-inp{flex:1;padding:9px 12px;border-radius:12px;border:1.5px solid var(--border2);background:var(--bg);font-family:'Inter',sans-serif;font-size:13px;color:var(--text);outline:none;font-weight:600;}
+.mem-inp:focus{border-color:var(--green);}
+.mem-add-btn{padding:9px 14px;border-radius:12px;border:none;background:var(--green);color:#fff;font-size:13px;font-weight:800;cursor:pointer;font-family:'Inter',sans-serif;}
+.conv-item{background:var(--surface2);border:1px solid var(--border);border-radius:14px;padding:12px 14px;margin-bottom:8px;cursor:pointer;transition:all .2s;}
+.conv-item:hover{border-color:var(--green);background:var(--green4);}
+.conv-item-title{font-size:13px;font-weight:700;color:var(--text);margin-bottom:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.conv-item-meta{font-size:11px;color:var(--text3);font-weight:600;}
+.conv-item-actions{display:flex;gap:6px;margin-top:8px;}
+.conv-load-btn{flex:1;padding:6px;border-radius:8px;border:1.5px solid var(--border2);background:var(--surface);color:var(--green);font-size:11px;font-weight:800;cursor:pointer;font-family:'Inter',sans-serif;transition:all .15s;}
+.conv-load-btn:hover{background:var(--green4);}
+.conv-del-btn{padding:6px 10px;border-radius:8px;border:1.5px solid #fca5a5;background:#fef2f2;color:#ef4444;font-size:11px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;}
+.mem-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.3);z-index:1099;display:none;}
+.mem-overlay.open{display:block;}
+@media(max-width:640px){.mem-panel{width:100%;}}
+.profile-btn{width:36px;height:36px;border-radius:50%;border:1.5px solid var(--border2);background:var(--surface);font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;position:relative;}
+.profile-btn:hover{border-color:var(--green);background:var(--green4);}
+.profile-dot{position:absolute;top:2px;right:2px;width:8px;height:8px;border-radius:50%;background:var(--green2);border:2px solid var(--surface);}
 
 /* NAVBAR */
-#navbar{position:fixed;top:0;left:0;right:0;z-index:1000;display:flex;align-items:center;justify-content:space-between;padding:0 36px;height:66px;background:var(--navbar-bg);backdrop-filter:blur(18px);border-bottom:1px solid var(--border);transition:background .3s,border-color .3s;}
-.nav-logo{display:flex;align-items:center;gap:10px;cursor:pointer;text-decoration:none;}
-.nav-leaf{font-size:28px;animation:leafWiggle 3s ease-in-out infinite;display:inline-block;}
-.nav-brand{font-family:'Lora',serif;font-size:20px;color:var(--green);font-weight:700;}
-.nav-brand span{color:var(--amber);}
-.nav-tagline{font-size:10px;color:var(--text3);font-weight:600;}
-.nav-links{display:flex;gap:4px;}
-.nav-btn{padding:8px 16px;border-radius:20px;border:1.5px solid transparent;background:transparent;color:var(--text2);font-family:'Nunito',sans-serif;font-size:13px;font-weight:700;cursor:pointer;transition:all .2s;}
-.nav-btn:hover{background:var(--green4);color:var(--green);}
-.nav-btn.active{border-color:var(--green);color:var(--green);background:var(--green4);}
-.nav-right{display:flex;align-items:center;gap:10px;}
-.theme-toggle{width:40px;height:40px;border-radius:50%;border:1.5px solid var(--border2);background:var(--surface);color:var(--text2);font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;}
-.theme-toggle:hover{border-color:var(--green);background:var(--green4);transform:rotate(20deg) scale(1.08);}
-.nav-cta{padding:10px 22px;border-radius:20px;border:none;background:var(--green);color:#fff;font-family:'Nunito',sans-serif;font-size:13px;font-weight:800;cursor:pointer;transition:all .2s;}
-.nav-cta:hover{background:var(--green2);transform:translateY(-2px);}
+#navbar{position:fixed;top:0;left:0;right:0;z-index:1000;display:flex;align-items:center;justify-content:space-between;padding:0 40px;height:64px;background:var(--navbar-bg);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);transition:background .3s,border-color .3s;}
+.nav-logo{display:flex;align-items:center;gap:8px;cursor:pointer;text-decoration:none;}
+.nav-leaf{font-size:20px;display:inline-block;}
+.nav-brand{font-family:'DM Serif Display',serif;font-size:18px;color:var(--text);font-weight:400;letter-spacing:-.2px;}
+.nav-brand span{color:var(--green);}
+.nav-links{display:flex;gap:2px;}
+.nav-btn{padding:7px 14px;border-radius:8px;border:none;background:transparent;color:var(--text3);font-family:'Inter',sans-serif;font-size:13px;font-weight:500;cursor:pointer;transition:all .18s;}
+.nav-btn:hover{background:var(--surface2);color:var(--text);}
+.nav-btn.active{color:var(--green);background:var(--green4);font-weight:600;}
+.nav-right{display:flex;align-items:center;gap:8px;}
+.theme-toggle{width:36px;height:36px;border-radius:8px;border:1px solid var(--border);background:var(--surface);color:var(--text3);font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .18s;}
+.theme-toggle:hover{border-color:var(--border2);color:var(--text);background:var(--surface2);}
+.nav-cta{padding:8px 18px;border-radius:8px;border:none;background:var(--green);color:#fff;font-family:'Inter',sans-serif;font-size:13px;font-weight:600;cursor:pointer;transition:all .18s;letter-spacing:-.1px;}
+.nav-cta:hover{background:var(--green2);transform:translateY(-1px);}
 
 /* PAGES */
 .page{display:none;padding-top:66px;}
@@ -77,87 +104,83 @@ body{background:var(--bg);color:var(--text);font-family:'Nunito',sans-serif;over
 /* HERO */
 #hero-page{padding-top:0;min-height:100vh;position:relative;overflow:hidden;}
 .hero-shapes{position:absolute;inset:0;pointer-events:none;overflow:hidden;}
-.shape{position:absolute;border-radius:50%;opacity:.4;}
-.s1{width:500px;height:500px;top:-160px;right:-100px;background:radial-gradient(circle,#c8f5de,transparent 70%);animation:shapeFloat 14s ease-in-out infinite;}
-.s2{width:350px;height:350px;bottom:-80px;left:-80px;background:radial-gradient(circle,#d0eefc,transparent 70%);animation:shapeFloat 18s ease-in-out infinite reverse;}
-.s3{width:220px;height:220px;top:55%;left:28%;background:radial-gradient(circle,#fef3d0,transparent 70%);animation:shapeFloat 22s ease-in-out infinite 3s;}
-.dots{position:absolute;inset:0;opacity:.2;background-image:radial-gradient(circle,#1a9e5c 1.5px,transparent 1.5px);background-size:38px 38px;}
-[data-theme="dark"] .s1{background:radial-gradient(circle,#0d3324,transparent 70%);}
-[data-theme="dark"] .s2{background:radial-gradient(circle,#0a1f2e,transparent 70%);}
-[data-theme="dark"] .s3{background:radial-gradient(circle,#1e1a08,transparent 70%);}
-.hero-content{position:relative;z-index:1;max-width:860px;margin:0 auto;padding:110px 36px 80px;text-align:center;}
-.creator-badge{display:inline-flex;align-items:center;gap:8px;padding:9px 20px;border-radius:50px;background:var(--surface);border:1.5px solid var(--border2);font-size:13px;color:var(--text2);font-weight:700;margin-bottom:30px;box-shadow:var(--shadow);}
-.hero-emoji{font-size:72px;display:block;margin-bottom:18px;animation:floatBounce 4s ease-in-out infinite;filter:drop-shadow(0 8px 20px #1a9e5c33);}
-.hero-headline{font-family:'Lora',serif;font-size:clamp(38px,7vw,74px);font-weight:700;line-height:1.1;margin-bottom:14px;color:var(--text);}
+.shape{position:absolute;border-radius:50%;opacity:.25;}
+.s1{width:600px;height:600px;top:-200px;right:-150px;background:radial-gradient(circle,#c8f5de,transparent 65%);animation:shapeFloat 18s ease-in-out infinite;}
+.s2{width:400px;height:400px;bottom:-120px;left:-120px;background:radial-gradient(circle,#dff0e8,transparent 65%);animation:shapeFloat 22s ease-in-out infinite reverse;}
+.dots{position:absolute;inset:0;opacity:.08;background-image:radial-gradient(circle,#16a05a 1px,transparent 1px);background-size:44px 44px;}
+[data-theme="dark"] .s1{background:radial-gradient(circle,#0a2e1e,transparent 65%);}
+[data-theme="dark"] .s2{background:radial-gradient(circle,#081a12,transparent 65%);}
+.hero-content{position:relative;z-index:1;max-width:720px;margin:0 auto;padding:130px 40px 90px;text-align:center;}
+.hero-emoji{font-size:40px;display:block;margin-bottom:28px;line-height:1;}
+.hero-headline{font-family:'DM Serif Display',serif;font-size:clamp(42px,7vw,72px);font-weight:400;line-height:1.08;margin-bottom:20px;color:var(--text);letter-spacing:-.5px;}
 .eco-word{color:var(--green);font-style:italic;}
-.hero-tagline{font-size:clamp(15px,2.2vw,19px);color:var(--text2);margin-bottom:14px;font-weight:700;line-height:1.6;}
-.hero-mission{font-size:16px;color:var(--text3);max-width:510px;margin:0 auto 48px;line-height:1.9;font-weight:600;}
-.hero-btns{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-bottom:70px;}
-.btn-big{padding:16px 34px;border-radius:50px;border:none;background:linear-gradient(135deg,var(--green),var(--green2));color:#fff;font-family:'Nunito',sans-serif;font-size:15px;font-weight:800;cursor:pointer;box-shadow:0 6px 30px #1a9e5c44;transition:all .25s;}
-.btn-big:hover{transform:translateY(-3px);box-shadow:0 12px 40px #25c27055;}
-.btn-outline{padding:16px 34px;border-radius:50px;border:2px solid var(--border2);background:var(--surface);color:var(--text2);font-family:'Nunito',sans-serif;font-size:15px;font-weight:700;cursor:pointer;transition:all .25s;}
+.hero-tagline{font-size:clamp(15px,2vw,18px);color:var(--text2);margin-bottom:40px;font-weight:400;line-height:1.65;max-width:520px;margin-left:auto;margin-right:auto;}
+.hero-btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-bottom:72px;}
+.btn-big{padding:16px 36px;border-radius:10px;border:none;background:var(--green);color:#fff;font-family:'Inter',sans-serif;font-size:15px;font-weight:600;cursor:pointer;box-shadow:0 4px 20px rgba(22,160,90,.28);transition:all .2s;letter-spacing:-.1px;}
+.btn-big:hover{background:var(--green2);transform:translateY(-2px);box-shadow:0 8px 28px rgba(22,160,90,.36);}
+.btn-outline{padding:16px 36px;border-radius:10px;border:1.5px solid var(--border2);background:transparent;color:var(--text2);font-family:'Inter',sans-serif;font-size:15px;font-weight:500;cursor:pointer;transition:all .2s;}
 .btn-outline:hover{border-color:var(--green);color:var(--green);background:var(--green4);}
-.hero-stats{display:flex;justify-content:center;gap:48px;flex-wrap:wrap;padding-bottom:80px;}
+.hero-stats{display:flex;justify-content:center;gap:52px;flex-wrap:wrap;padding-bottom:80px;border-top:1px solid var(--border);padding-top:40px;}
 .stat{text-align:center;}
-.stat-num{font-family:'Lora',serif;font-size:38px;color:var(--green);font-weight:700;line-height:1;}
-.stat-lbl{font-size:12px;color:var(--text3);font-weight:700;margin-top:4px;}
+.stat-num{font-family:'DM Serif Display',serif;font-size:36px;color:var(--text);font-weight:400;line-height:1;letter-spacing:-.5px;}
+.stat-lbl{font-size:12px;color:var(--text3);font-weight:500;margin-top:6px;letter-spacing:.2px;text-transform:uppercase;}
 
 /* HOW IT WORKS */
-.how-section{padding:80px 36px;max-width:1080px;margin:0 auto;}
-.sec-tag{display:inline-block;padding:5px 16px;border-radius:50px;background:var(--green3);color:var(--green);font-size:12px;font-weight:800;letter-spacing:.5px;margin-bottom:14px;}
-.sec-heading{font-family:'Lora',serif;font-size:clamp(26px,4vw,40px);font-weight:700;margin-bottom:44px;line-height:1.25;color:var(--text);}
+.how-section{padding:80px 40px;max-width:1000px;margin:0 auto;}
+.sec-tag{display:inline-block;padding:4px 12px;border-radius:6px;background:var(--green4);color:var(--green);font-size:11px;font-weight:600;letter-spacing:.8px;text-transform:uppercase;margin-bottom:16px;}
+.sec-heading{font-family:'DM Serif Display',serif;font-size:clamp(28px,4vw,42px);font-weight:400;margin-bottom:48px;line-height:1.2;color:var(--text);letter-spacing:-.4px;}
 .sec-heading em{color:var(--green);font-style:italic;}
-.how-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:20px;}
-.how-card{background:var(--surface);border:1.5px solid var(--border);border-radius:24px;padding:30px 24px;cursor:pointer;transition:all .28s;}
-.how-card:hover{transform:translateY(-6px);box-shadow:var(--shadow2);border-color:var(--border2);}
-.how-num{font-size:11px;font-weight:800;letter-spacing:2px;color:var(--text3);margin-bottom:18px;}
-.how-emoji{font-size:38px;display:block;margin-bottom:12px;}
-.how-title{font-family:'Lora',serif;font-size:19px;font-weight:700;margin-bottom:10px;color:var(--text);}
-.how-desc{font-size:14px;color:var(--text2);line-height:1.85;font-weight:600;}
+.how-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px;}
+.how-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:28px 24px;cursor:pointer;transition:all .2s;}
+.how-card:hover{transform:translateY(-4px);box-shadow:var(--shadow2);border-color:var(--border2);}
+.how-num{font-size:11px;font-weight:600;letter-spacing:1.5px;color:var(--text3);margin-bottom:20px;text-transform:uppercase;}
+.how-emoji{font-size:24px;display:block;margin-bottom:14px;}
+.how-title{font-family:'DM Serif Display',serif;font-size:18px;font-weight:400;margin-bottom:8px;color:var(--text);}
+.how-desc{font-size:14px;color:var(--text2);line-height:1.7;font-weight:400;}
 
 /* MANIFESTO */
-.manifesto{padding:80px 36px;text-align:center;background:linear-gradient(135deg,var(--green4),var(--surface2));border-top:1px solid var(--border);border-bottom:1px solid var(--border);}
-.man-emoji{font-size:64px;display:block;margin-bottom:22px;animation:floatBounce 5s ease-in-out infinite;}
-.man-title{font-family:'Lora',serif;font-size:clamp(20px,3.5vw,34px);font-weight:700;line-height:1.45;max-width:680px;margin:0 auto 18px;color:var(--text);}
+.manifesto{padding:80px 40px;text-align:center;background:var(--surface2);border-top:1px solid var(--border);border-bottom:1px solid var(--border);}
+.man-emoji{font-size:28px;display:block;margin-bottom:24px;}
+.man-title{font-family:'DM Serif Display',serif;font-size:clamp(22px,3.5vw,36px);font-weight:400;line-height:1.35;max-width:640px;margin:0 auto 16px;color:var(--text);letter-spacing:-.3px;}
 .man-title em{color:var(--green);font-style:italic;}
-.man-body{font-size:15px;color:var(--text2);max-width:470px;margin:0 auto 34px;line-height:1.9;font-weight:600;}
-.pills{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;}
-.pill{padding:9px 20px;border-radius:50px;background:var(--surface);border:1.5px solid var(--border2);font-size:13px;color:var(--text2);font-weight:700;transition:all .2s;cursor:default;}
-.pill:hover{background:var(--green4);border-color:var(--green);color:var(--green);}
+.man-body{font-size:15px;color:var(--text2);max-width:480px;margin:0 auto 36px;line-height:1.75;font-weight:400;}
+.pills{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;}
+.pill{padding:7px 16px;border-radius:8px;background:var(--surface);border:1px solid var(--border);font-size:13px;color:var(--text3);font-weight:500;transition:all .2s;cursor:default;}
+.pill:hover{border-color:var(--green);color:var(--green);background:var(--green4);}
 
 /* FOUNDER */
-.team-section{padding:80px 36px;max-width:860px;margin:0 auto;text-align:center;}
-.founder-card{background:var(--surface);border:1.5px solid var(--border);border-radius:28px;padding:40px 36px;display:grid;grid-template-columns:auto 1fr;gap:28px;text-align:left;max-width:700px;margin:32px auto 0;transition:all .28s;}
-.founder-card:hover{box-shadow:var(--shadow2);transform:translateY(-4px);}
-.founder-left{display:flex;flex-direction:column;align-items:center;gap:12px;min-width:120px;}
-.founder-ava{width:90px;height:90px;border-radius:50%;background:linear-gradient(135deg,var(--green),var(--green2));display:flex;align-items:center;justify-content:center;font-size:40px;box-shadow:0 6px 24px #1a9e5c44;}
-.founder-role-pill{font-size:11px;color:var(--green);font-weight:800;background:var(--green3);padding:5px 12px;border-radius:50px;text-align:center;line-height:1.4;}
-.founder-right h3{font-family:'Lora',serif;font-size:22px;font-weight:700;color:var(--text);margin-bottom:6px;}
-.founder-uni{display:flex;align-items:center;gap:6px;font-size:13px;color:var(--green);font-weight:800;margin-bottom:14px;flex-wrap:wrap;}
-.founder-bio{font-size:14px;color:var(--text2);line-height:1.9;font-weight:600;margin-bottom:18px;}
-.founder-badges{display:flex;flex-wrap:wrap;gap:8px;}
-.fbadge{padding:6px 14px;border-radius:20px;border:1.5px solid var(--border2);background:var(--bg);color:var(--text2);font-size:12px;font-weight:700;}
+.team-section{padding:80px 40px;max-width:800px;margin:0 auto;text-align:center;}
+.founder-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:36px;display:grid;grid-template-columns:auto 1fr;gap:28px;text-align:left;max-width:640px;margin:32px auto 0;transition:all .2s;}
+.founder-card:hover{box-shadow:var(--shadow2);}
+.founder-left{display:flex;flex-direction:column;align-items:center;gap:10px;min-width:100px;}
+.founder-ava{width:80px;height:80px;border-radius:50%;background:var(--green4);border:2px solid var(--border2);display:flex;align-items:center;justify-content:center;font-size:32px;}
+.founder-role-pill{font-size:11px;color:var(--green);font-weight:600;background:var(--green4);padding:4px 10px;border-radius:6px;text-align:center;line-height:1.4;border:1px solid var(--green3);}
+.founder-right h3{font-family:'DM Serif Display',serif;font-size:20px;font-weight:400;color:var(--text);margin-bottom:4px;}
+.founder-uni{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--text3);font-weight:500;margin-bottom:12px;flex-wrap:wrap;}
+.founder-bio{font-size:14px;color:var(--text2);line-height:1.75;font-weight:400;margin-bottom:16px;}
+.founder-badges{display:flex;flex-wrap:wrap;gap:6px;}
+.fbadge{padding:5px 12px;border-radius:6px;border:1px solid var(--border);background:var(--surface2);color:var(--text3);font-size:12px;font-weight:500;}
 .team-btns{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:24px;}
-.team-btn{padding:10px 22px;border-radius:20px;border:1.5px solid var(--border2);background:var(--surface);color:var(--text2);font-family:'Nunito',sans-serif;font-size:13px;font-weight:700;cursor:pointer;transition:all .2s;}
+.team-btn{padding:10px 22px;border-radius:8px;border:1px solid var(--border2);background:var(--surface);color:var(--text2);font-family:'Inter',sans-serif;font-size:13px;font-weight:500;cursor:pointer;transition:all .2s;}
 .team-btn:hover{border-color:var(--green);color:var(--green);background:var(--green4);}
 
 /* FOOTER */
-footer{border-top:1px solid var(--border);padding:44px 36px;text-align:center;background:var(--surface2);}
-.foot-logo{font-family:'Lora',serif;font-size:22px;color:var(--green);margin-bottom:6px;font-weight:700;}
-.foot-logo span{color:var(--amber);}
-.foot-tag{font-size:14px;color:var(--text3);font-style:italic;margin-bottom:5px;font-weight:600;}
-.foot-credit{font-size:13px;color:var(--text3);margin-bottom:22px;font-weight:700;}
-.foot-credit span{color:var(--green);}
-.foot-nav{display:flex;gap:24px;justify-content:center;margin-bottom:20px;flex-wrap:wrap;}
-.foot-nav a{color:var(--text3);text-decoration:none;font-size:13px;font-weight:700;cursor:pointer;transition:color .2s;}
+footer{border-top:1px solid var(--border);padding:48px 40px 40px;text-align:center;background:var(--surface);}
+.foot-logo{font-family:'DM Serif Display',serif;font-size:20px;color:var(--text);margin-bottom:4px;font-weight:400;letter-spacing:-.2px;}
+.foot-logo span{color:var(--green);}
+.foot-tag{font-size:13px;color:var(--text3);font-style:italic;margin-bottom:24px;font-weight:400;}
+.foot-credit{font-size:13px;color:var(--text3);margin-bottom:20px;font-weight:500;}
+.foot-credit span{color:var(--text2);font-weight:600;}
+.foot-nav{display:flex;gap:28px;justify-content:center;margin-bottom:20px;flex-wrap:wrap;}
+.foot-nav a{color:var(--text3);text-decoration:none;font-size:13px;font-weight:500;cursor:pointer;transition:color .2s;}
 .foot-nav a:hover{color:var(--green);}
 .foot-copy{font-size:12px;color:var(--text3);}
 
 /* APP */
 #app-section{min-height:100vh;background:var(--bg);}
 .app-wrap{max-width:920px;margin:0 auto;padding:40px 24px;}
-.app-title{font-family:'Lora',serif;font-size:28px;font-weight:700;color:var(--text);margin-bottom:6px;}
-.app-sub{font-size:14px;color:var(--text3);margin-bottom:28px;font-weight:600;}
+.app-title{font-family:'DM Serif Display',serif;font-size:26px;font-weight:400;color:var(--text);margin-bottom:6px;letter-spacing:-.3px;}
+.app-sub{font-size:14px;color:var(--text3);margin-bottom:28px;font-weight:400;}
 .api-banner{display:flex;align-items:center;gap:12px;padding:14px 18px;border-radius:14px;background:linear-gradient(135deg,#fff8e1,#fffde7);border:1.5px solid #f4a42966;margin-bottom:28px;cursor:pointer;transition:all .2s;}
 .api-banner:hover{box-shadow:var(--shadow);}
 .api-banner.connected{background:linear-gradient(135deg,#e3f6ec,#edfaf3);border-color:var(--border2);}
@@ -166,7 +189,7 @@ footer{border-top:1px solid var(--border);padding:44px 36px;text-align:center;ba
 .api-b-icon{font-size:22px;}
 .api-b-title{font-size:13px;color:var(--text);font-weight:800;}
 .api-b-sub{font-size:11px;color:var(--text3);font-weight:600;}
-.api-b-action{font-size:12px;color:var(--blue);font-weight:800;white-space:nowrap;}
+.api-b-action{font-size:12px;color:var(--green);font-weight:800;white-space:nowrap;}
 .step-row{display:flex;align-items:center;gap:10px;margin-bottom:16px;}
 .step-bub{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;color:#fff;flex-shrink:0;background:var(--green);}
 .step-lbl{font-size:12px;font-weight:800;color:var(--text2);letter-spacing:.5px;text-transform:uppercase;}
@@ -177,14 +200,14 @@ footer{border-top:1px solid var(--border);padding:44px 36px;text-align:center;ba
 .fn{font-weight:800;font-size:14px;margin-bottom:4px;color:var(--text);}
 .ff{font-size:11px;color:var(--text3);line-height:1.6;font-weight:600;margin-top:8px;background:var(--bg);padding:8px 10px;border-radius:10px;}
 .topics-wrap{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:28px;}
-.topic-btn{padding:8px 16px;border-radius:20px;border:1.5px solid var(--border);background:var(--surface);color:var(--text2);font-family:'Nunito',sans-serif;font-size:13px;font-weight:700;cursor:pointer;transition:all .15s;}
+.topic-btn{padding:8px 16px;border-radius:20px;border:1.5px solid var(--border);background:var(--surface);color:var(--text2);font-family:'Inter',sans-serif;font-size:13px;font-weight:700;cursor:pointer;transition:all .15s;}
 .topic-btn:hover{border-color:var(--border2);background:var(--green4);color:var(--green);}
 .level-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;max-width:460px;margin-bottom:32px;}
 .level-card{display:flex;align-items:center;gap:12px;padding:14px 16px;border-radius:16px;border:2px solid var(--border);background:var(--surface);cursor:pointer;transition:all .15s;}
 .level-card:hover{border-color:var(--border2);background:var(--green4);}
 .lname{font-weight:800;font-size:13px;color:var(--text);}
 .ldesc{font-size:11px;color:var(--text3);font-weight:600;}
-.gen-btn{width:100%;max-width:460px;padding:17px;border-radius:16px;border:none;font-family:'Nunito',sans-serif;font-weight:800;font-size:15px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;transition:all .25s;margin-bottom:40px;background:linear-gradient(135deg,var(--green),var(--green2));color:#fff;box-shadow:0 6px 28px #1a9e5c44;}
+.gen-btn{width:100%;max-width:460px;padding:17px;border-radius:16px;border:none;font-family:'Inter',sans-serif;font-weight:800;font-size:15px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;transition:all .25s;margin-bottom:40px;background:linear-gradient(135deg,var(--green),var(--green2));color:#fff;box-shadow:0 6px 28px #1a9e5c44;}
 .gen-btn:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 10px 36px #25c27055;}
 .gen-btn:disabled{background:var(--border);color:var(--text3);cursor:not-allowed;box-shadow:none;}
 .div-lbl{display:flex;align-items:center;gap:14px;margin-bottom:22px;}
@@ -196,17 +219,17 @@ footer{border-top:1px solid var(--border);padding:44px 36px;text-align:center;ba
 .idea-bar{height:5px;}
 .idea-body{padding:22px 24px;}
 .idea-meta{font-size:11px;font-weight:800;margin-bottom:8px;letter-spacing:.5px;}
-.idea-title{font-family:'Lora',serif;font-size:20px;font-weight:700;color:var(--text);margin-bottom:10px;line-height:1.3;}
+.idea-title{font-family:'DM Serif Display',serif;font-size:20px;font-weight:700;color:var(--text);margin-bottom:10px;line-height:1.3;}
 .idea-desc{color:var(--text2);font-size:14px;line-height:1.85;margin-bottom:16px;font-weight:600;}
 .tech-tags{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:16px;}
 .tech-tag{padding:5px 14px;border-radius:20px;font-size:12px;font-weight:700;}
 .idea-impact{background:var(--green4);border-radius:12px;padding:10px 14px;font-size:13px;color:var(--text2);margin-bottom:18px;font-weight:600;border:1px solid var(--green3);}
 .idea-actions{display:flex;gap:10px;flex-wrap:wrap;}
-.btn-eco{flex:1;min-width:180px;padding:12px;border-radius:12px;border:none;background:linear-gradient(135deg,var(--green),var(--green2));color:#fff;font-family:'Nunito',sans-serif;font-weight:800;font-size:13px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:7px;transition:all .2s;}
+.btn-eco{flex:1;min-width:180px;padding:12px;border-radius:12px;border:none;background:linear-gradient(135deg,var(--green),var(--green2));color:#fff;font-family:'Inter',sans-serif;font-weight:800;font-size:13px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:7px;transition:all .2s;}
 .btn-eco:hover{transform:translateY(-2px);box-shadow:0 8px 28px #25c27055;}
-.btn-save{padding:12px 20px;border-radius:12px;font-family:'Nunito',sans-serif;font-size:13px;cursor:pointer;font-weight:700;transition:all .15s;border:2px solid var(--border2);background:var(--surface);color:var(--text3);}
+.btn-save{padding:12px 20px;border-radius:12px;font-family:'Inter',sans-serif;font-size:13px;cursor:pointer;font-weight:700;transition:all .15s;border:2px solid var(--border2);background:var(--surface);color:var(--text3);}
 .btn-save.saved-active{border-color:var(--green);background:var(--green4);color:var(--green);}
-.regen-btn{margin-top:16px;width:100%;padding:14px;border-radius:12px;border:2px solid var(--border);background:var(--surface);color:var(--text3);font-family:'Nunito',sans-serif;font-size:13px;font-weight:700;cursor:pointer;transition:all .2s;}
+.regen-btn{margin-top:16px;width:100%;padding:14px;border-radius:12px;border:2px solid var(--border);background:var(--surface);color:var(--text3);font-family:'Inter',sans-serif;font-size:13px;font-weight:700;cursor:pointer;transition:all .2s;}
 .regen-btn:hover{border-color:var(--green);color:var(--green);background:var(--green4);}
 
 /* CHAT */
@@ -215,12 +238,12 @@ footer{border-top:1px solid var(--border);padding:44px 36px;text-align:center;ba
 .chat-wrap{flex:1;display:flex;flex-direction:column;max-width:720px;width:100%;margin:0 auto;padding:0 20px;overflow:hidden;}
 .chat-head{display:flex;align-items:center;gap:14px;padding:18px 0 14px;border-bottom:1px solid var(--border);flex-shrink:0;}
 .eco-ava{width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,var(--green),var(--green2));display:flex;align-items:center;justify-content:center;font-size:26px;flex-shrink:0;box-shadow:0 4px 20px #1a9e5c44;animation:ecoPulse 3s infinite;}
-.eco-name{font-family:'Lora',serif;font-size:18px;font-weight:700;color:var(--green);}
+.eco-name{font-family:'DM Serif Display',serif;font-size:18px;font-weight:700;color:var(--green);}
 .eco-status{font-size:12px;color:var(--text3);display:flex;align-items:center;gap:6px;font-weight:700;}
 .sdot{width:7px;height:7px;border-radius:50%;background:var(--green2);animation:pulse 2s infinite;}
 .build-chip{background:var(--green4);border:1.5px solid var(--green3);border-radius:12px;padding:8px 12px;font-size:11px;color:var(--green);max-width:160px;text-align:right;flex-shrink:0;margin-left:auto;line-height:1.6;font-weight:700;}
 .qprompts{padding:10px 0 6px;display:flex;flex-wrap:wrap;gap:7px;flex-shrink:0;}
-.qp{padding:8px 14px;border-radius:20px;border:1.5px solid var(--border);background:var(--surface);color:var(--text2);font-size:12px;font-weight:700;cursor:pointer;font-family:'Nunito',sans-serif;transition:all .15s;}
+.qp{padding:8px 14px;border-radius:20px;border:1.5px solid var(--border);background:var(--surface);color:var(--text2);font-size:12px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;transition:all .15s;}
 .qp:hover{border-color:var(--green);color:var(--green);background:var(--green4);}
 .chat-msgs{flex:1;overflow-y:auto;padding:14px 0;display:flex;flex-direction:column;gap:14px;}
 .msg-row{display:flex;gap:10px;animation:fadeUp .2s ease;}
@@ -236,7 +259,7 @@ footer{border-top:1px solid var(--border);padding:44px 36px;text-align:center;ba
 .dot:nth-child(2){animation:dotBounce 1.2s .2s infinite ease-in-out;}
 .dot:nth-child(3){animation:dotBounce 1.2s .4s infinite ease-in-out;}
 .chat-input-bar{padding:14px 0 22px;border-top:1px solid var(--border);display:flex;gap:10px;align-items:flex-end;flex-shrink:0;}
-.chat-ta{flex:1;background:var(--surface);border:1.5px solid var(--border);border-radius:16px;padding:13px 17px;color:var(--text);font-family:'Nunito',sans-serif;font-size:14px;resize:none;outline:none;line-height:1.6;max-height:110px;overflow-y:auto;font-weight:600;transition:border-color .2s;}
+.chat-ta{flex:1;background:var(--surface);border:1.5px solid var(--border);border-radius:16px;padding:13px 17px;color:var(--text);font-family:'Inter',sans-serif;font-size:14px;resize:none;outline:none;line-height:1.6;max-height:110px;overflow-y:auto;font-weight:600;transition:border-color .2s;}
 .chat-ta:focus{border-color:var(--green);box-shadow:0 0 0 3px #1a9e5c18;}
 .chat-ta::placeholder{color:var(--text3);}
 .send-btn{width:48px;height:48px;border-radius:50%;border:none;font-size:20px;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;transition:all .2s;}
@@ -248,7 +271,7 @@ footer{border-top:1px solid var(--border);padding:44px 36px;text-align:center;ba
 #saved-section{display:none;padding-top:66px;min-height:100vh;background:var(--bg);}
 #saved-section.active{display:block;}
 .saved-wrap{max-width:920px;margin:0 auto;padding:40px 24px;}
-.saved-title{font-family:'Lora',serif;font-size:28px;font-weight:700;margin-bottom:6px;color:var(--text);}
+.saved-title{font-family:'DM Serif Display',serif;font-size:28px;font-weight:700;margin-bottom:6px;color:var(--text);}
 .saved-sub{font-size:14px;color:var(--text3);margin-bottom:32px;font-weight:600;}
 .empty-box{text-align:center;padding:80px 0;}
 .empty-icon{font-size:60px;margin-bottom:16px;display:block;}
@@ -267,7 +290,6 @@ footer{border-top:1px solid var(--border);padding:44px 36px;text-align:center;ba
 @keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
 @keyframes slideUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
 @keyframes floatBounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-14px)}}
-@keyframes leafWiggle{0%,100%{transform:rotate(-5deg)}50%{transform:rotate(5deg)}}
 @keyframes shapeFloat{0%,100%{transform:translate(0,0)}33%{transform:translate(20px,-14px)}66%{transform:translate(-14px,20px)}}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
 @keyframes ecoPulse{0%,100%{box-shadow:0 4px 20px #1a9e5c33}50%{box-shadow:0 4px 28px #1a9e5c77}}
@@ -284,7 +306,6 @@ footer{border-top:1px solid var(--border);padding:44px 36px;text-align:center;ba
   .app-wrap,.saved-wrap{padding:28px 16px;}
   .founder-card{grid-template-columns:1fr;text-align:center;}
   .founder-left{margin:0 auto;}
-  #status-bar{bottom:12px;right:12px;font-size:11px;padding:8px 12px;}
 }
 </style>
 </head>
@@ -314,132 +335,159 @@ footer{border-top:1px solid var(--border);padding:44px 36px;text-align:center;ba
   </div>
 </div>
 
-<!-- STATUS BAR REMOVED -->
+<!-- MEMORY OVERLAY -->
+<div class="mem-overlay" id="mem-overlay" onclick="closeMemPanel()"></div>
+
+<!-- MEMORY PANEL -->
+<div class="mem-panel" id="mem-panel">
+  <div class="mem-head">
+    <div class="mem-title">🧠 Memory &amp; Chats</div>
+    <button class="mem-close" onclick="closeMemPanel()">✕</button>
+  </div>
+  <div class="mem-body">
+    <div class="mem-section">
+      <div class="mem-sec-title">👤 Your Profile</div>
+      <div id="profile-tags"></div>
+      <div class="mem-input-row" style="margin-top:10px">
+        <input class="mem-inp" id="profile-inp" placeholder="e.g. My name is Modou..." onkeydown="if(event.key==='Enter')addProfileNote()"/>
+        <button class="mem-add-btn" onclick="addProfileNote()">+</button>
+      </div>
+    </div>
+    <div class="mem-section">
+      <div class="mem-sec-title" style="display:flex;justify-content:space-between;align-items:center">
+        <span>💬 Saved Conversations</span>
+        <button onclick="saveCurrentConv()" style="padding:4px 10px;border-radius:10px;border:none;background:var(--green);color:#fff;font-size:11px;font-weight:800;cursor:pointer;font-family:'Inter',sans-serif">Save Current</button>
+      </div>
+      <div id="conv-list" style="margin-top:10px"></div>
+    </div>
+    <div style="margin-top:8px;padding-top:16px;border-top:1px solid var(--border)">
+      <button onclick="clearAllMemory()" style="width:100%;padding:10px;border-radius:12px;border:1.5px solid #fca5a5;background:#fef2f2;color:#ef4444;font-family:'Inter',sans-serif;font-size:13px;font-weight:700;cursor:pointer">🗑️ Clear All Memory</button>
+    </div>
+  </div>
+</div>
 
 <!-- NAVBAR -->
 <nav id="navbar">
   <a class="nav-logo" onclick="showPage('hero')">
     <span class="nav-leaf">🌿</span>
-    <div>
-      <div class="nav-brand">ECO <span>GREEN</span></div>
-      <div class="nav-tagline">🌍 The energy that moves with you</div>
-    </div>
+    <div class="nav-brand">ECO <span>GREEN</span></div>
   </a>
   <div class="nav-links">
     <button class="nav-btn active" id="nb-hero" onclick="showPage('hero')">Home</button>
-    <button class="nav-btn" id="nb-app" onclick="showPage('app')">💡 Ideas</button>
-    <button class="nav-btn" id="nb-chat" onclick="showPage('chat')">🌿 Eco Green AI</button>
-    <button class="nav-btn" id="nb-saved" onclick="showPage('saved')">📌 Saved</button>
+    <button class="nav-btn" id="nb-app" onclick="showPage('app')">Ideas</button>
+    <button class="nav-btn" id="nb-chat" onclick="showPage('chat')">AI Mentor</button>
+    <button class="nav-btn" id="nb-saved" onclick="showPage('saved')">Saved</button>
   </div>
   <div class="nav-right">
     <button class="theme-toggle" id="theme-btn" onclick="toggleTheme()">🌙</button>
-    <button class="nav-cta" onclick="showPage('app')">🌱 Start Building ✨</button>
+    <button class="profile-btn" onclick="openMemPanel()" title="Memory &amp; Conversations" id="profile-btn">🧠<div class="profile-dot" id="profile-dot" style="display:none"></div></button>
+    <button class="nav-cta" onclick="showPage('app')">Get Ideas</button>
   </div>
 </nav>
 
 <!-- HERO -->
 <section id="hero-page" class="page active">
-  <div class="hero-shapes"><div class="dots"></div><div class="shape s1"></div><div class="shape s2"></div><div class="shape s3"></div></div>
+  <div class="hero-shapes"><div class="dots"></div><div class="shape s1"></div><div class="shape s2"></div></div>
   <div class="hero-content">
-    <div class="creator-badge">🌿 &nbsp;Created by <strong>Modou Jaw</strong> &nbsp;·&nbsp; Founder of <strong style="color:var(--green)">ECO GREEN</strong></div>
-    <span class="hero-emoji">🌍💚</span>
-    <h1 class="hero-headline"><span class="eco-word">ECO GREEN</span><br/>The Energy That<br/>Moves With You</h1>
-    <p class="hero-tagline">🌿 "Let's save the world by saving energy, one project at a time."</p>
-    <p class="hero-mission">ECO GREEN is your personal AI engineering mentor powered by <strong>ECO GREEN AI</strong>. Generate sustainable project ideas and build solutions that truly matter for our planet.</p>
+    <span class="hero-emoji">🌿</span>
+    <h1 class="hero-headline"><span class="eco-word">ECO GREEN</span><br/>The AI Engineering<br/>Mentor for Students</h1>
+    <p class="hero-tagline">Generate sustainable project ideas, get expert guidance, and build solutions that matter — powered by AI.</p>
     <div class="hero-btns">
-      <button class="btn-big" onclick="showPage('app')">✨ Generate Green Ideas</button>
-      <button class="btn-outline" onclick="showPage('chat')">🌿 Chat with Eco Green AI</button>
+      <button class="btn-big" onclick="showPage('chat')">Talk to ECO GREEN AI</button>
+      <button class="btn-outline" onclick="showPage('app')">Generate Project Ideas</button>
     </div>
     <div class="hero-stats">
       <div class="stat"><div class="stat-num">3</div><div class="stat-lbl">Engineering Fields</div></div>
       <div class="stat"><div class="stat-num">24+</div><div class="stat-lbl">Green Topics</div></div>
       <div class="stat"><div class="stat-num">∞</div><div class="stat-lbl">AI-Powered Ideas</div></div>
+      <div class="stat"><div class="stat-num">Free</div><div class="stat-lbl">Always</div></div>
     </div>
   </div>
 
   <div class="how-section">
-    <div class="sec-tag">🌱 Green Path</div>
-    <h2 class="sec-heading">Three steps to<br/><em>your sustainable future</em></h2>
+    <div class="sec-tag">How it works</div>
+    <h2 class="sec-heading">Three steps to your<br/><em>sustainable project</em></h2>
     <div class="how-grid">
       <div class="how-card" onclick="showPage('app')">
-        <div class="how-num">STEP 01 ——</div><span class="how-emoji">💡</span>
-        <div class="how-title">Pick your field &amp; level</div>
-        <div class="how-desc">Choose Electrical, Civil, or Mechanical Engineering and get eco-friendly AI-generated project ideas instantly!</div>
+        <div class="how-num">01</div>
+        <span class="how-emoji">💡</span>
+        <div class="how-title">Pick your field</div>
+        <div class="how-desc">Choose Electrical, Civil, or Mechanical Engineering, select your level, and get AI-generated ideas instantly.</div>
       </div>
       <div class="how-card" onclick="showPage('chat')">
-        <div class="how-num">STEP 02 ——</div><span class="how-emoji">🌿</span>
-        <div class="how-title">Meet Eco Green AI</div>
-        <div class="how-desc">Your friendly AI mentor helps you plan and build sustainable projects step by step with full guidance.</div>
+        <div class="how-num">02</div>
+        <span class="how-emoji">🌿</span>
+        <div class="how-title">Chat with ECO GREEN AI</div>
+        <div class="how-desc">Your AI mentor helps you plan, build, and understand your project step by step — however you need it.</div>
       </div>
       <div class="how-card" onclick="showPage('saved')">
-        <div class="how-num">STEP 03 ——</div><span class="how-emoji">🌍</span>
-        <div class="how-title">Save &amp; Build</div>
-        <div class="how-desc">Bookmark your favourite green ideas and come back to build them anytime with Eco Green AI guidance.</div>
+        <div class="how-num">03</div>
+        <span class="how-emoji">📌</span>
+        <div class="how-title">Save and build</div>
+        <div class="how-desc">Bookmark your favourite ideas and return to them anytime. Your progress and conversations are always saved.</div>
       </div>
     </div>
   </div>
 
   <div class="manifesto">
-    <span class="man-emoji">🌍💚</span>
+    <span class="man-emoji">🌍</span>
     <h2 class="man-title">"The energy that moves with you — <em>let's save the world</em> by saving energy, one project at a time."</h2>
-    <p class="man-body">Every engineer has the power to make a real difference. Eco Green helps students turn great ideas into solutions that matter for our planet and future generations.</p>
+    <p class="man-body">Every engineering student has the power to make a real difference. ECO GREEN turns great ideas into solutions that matter for our planet.</p>
     <div class="pills">
-      <span class="pill">🌿 Green Energy</span><span class="pill">♻️ Sustainability</span>
-      <span class="pill">🌍 Climate Action</span><span class="pill">⚡ Clean Tech</span>
-      <span class="pill">💚 Eco Innovation</span><span class="pill">🔬 Smart Engineering</span>
+      <span class="pill">Green Energy</span>
+      <span class="pill">Sustainability</span>
+      <span class="pill">Climate Action</span>
+      <span class="pill">Clean Tech</span>
+      <span class="pill">Smart Engineering</span>
     </div>
   </div>
 
   <div class="team-section">
-    <div class="sec-tag">🌿 ECO GREEN Team</div>
-    <h2 class="sec-heading">Meet the founder<br/><em>of ECO GREEN</em></h2>
+    <div class="sec-tag">The founder</div>
+    <h2 class="sec-heading">Built by a student,<br/><em>for students</em></h2>
     <div class="founder-card">
       <div class="founder-left">
         <div class="founder-ava">👨‍💻</div>
-        <div class="founder-role-pill">🌍 Founder &amp;<br/>Team Leader</div>
+        <div class="founder-role-pill">Founder</div>
       </div>
       <div class="founder-right">
         <h3>Modou Jaw</h3>
-        <div class="founder-uni">🎓 &nbsp;Electrical &amp; Electronics Engineering · USET · Year 3, Semester 2</div>
+        <div class="founder-uni">Electrical &amp; Electronics Engineering · USET · Year 3</div>
         <p class="founder-bio">
-          Modou Jaw is a passionate <strong>3rd Year Electrical and Electronics Engineering</strong> student at the
-          <strong>University of Applied Science Engineering and Technology (USET)</strong> — and the visionary founder behind ECO GREEN.
-          <br/><br/>
-          He built this platform with heart, purpose, and a deep belief that students can engineer a better, greener world using AI technology.
+          Modou built ECO GREEN with one belief: that every engineering student deserves access to intelligent tools that help them build a greener world. This platform is his contribution to that future.
         </p>
         <div class="founder-badges">
-          <span class="fbadge">⚡ Electrical Engineering</span>
-          <span class="fbadge">🎓 USET</span>
-          <span class="fbadge">📅 Year 3 · Sem 2</span>
-          <span class="fbadge">🌿 Eco Green Founder</span>
-          <span class="fbadge">🤖 AI Powered</span>
+          <span class="fbadge">Electrical Engineering</span>
+          <span class="fbadge">USET</span>
+          <span class="fbadge">Year 3</span>
+          <span class="fbadge">AI Builder</span>
         </div>
       </div>
     </div>
     <div class="team-btns">
-      <button class="team-btn" onclick="showPage('app')">💡 Explore Ideas</button>
-      <button class="team-btn" onclick="showPage('chat')">🌿 Chat with Eco Green AI</button>
+      <button class="team-btn" onclick="showPage('app')">Explore Ideas</button>
+      <button class="team-btn" onclick="showPage('chat')">Chat with ECO GREEN AI</button>
     </div>
   </div>
 
   <footer>
     <div class="foot-logo">🌿 ECO <span>GREEN</span></div>
     <div class="foot-tag">"The energy that moves with you."</div>
-    <div class="foot-credit">Created with 💚 by <span>Modou Jaw</span> · Electrical &amp; Electronics Engineering · <span>USET</span></div>
     <div class="foot-nav">
-      <a onclick="showPage('app')">Generate Ideas</a>
-      <a onclick="showPage('chat')">Eco Green AI</a>
-      <a onclick="showPage('saved')">Saved Projects</a>
+      <a onclick="showPage('app')">Ideas</a>
+      <a onclick="showPage('chat')">AI Mentor</a>
+      <a onclick="showPage('saved')">Saved</a>
     </div>
-    <div class="foot-copy">© 2025 ECO GREEN · AI-Powered Sustainable Engineering Hub</div>
+    <div class="foot-credit">Created by <span>Modou Jaw</span> · Electrical &amp; Electronics Engineering · <span>USET</span></div>
+    <div class="foot-copy">© 2025 ECO GREEN</div>
   </footer>
 </section>
 
 <!-- APP -->
 <section id="app-section" class="page">
   <div class="app-wrap">
-    <h2 class="app-title">💡 AI Project Idea Generator</h2>
-    <p class="app-sub">Get 4 smart, sustainable project ideas tailored just for you! 🌍</p>
+    <h2 class="app-title">AI Project Idea Generator</h2>
+    <p class="app-sub">Answer 3 questions and get 4 tailored, sustainable project ideas generated by AI.</p>
 
     <div class="api-banner" id="api-banner" onclick="openModal()">
       <span class="api-b-icon">🔑</span>
@@ -450,7 +498,7 @@ footer{border-top:1px solid var(--border);padding:44px 36px;text-align:center;ba
       <span class="api-b-action" id="banner-action">Set Key →</span>
     </div>
 
-    <div class="step-row"><div class="step-bub">1</div><span class="step-lbl">Which engineering field are you in?</span></div>
+    <div class="step-row"><div class="step-bub">1</div><span class="step-lbl">Pick your engineering field</span></div>
     <div class="field-grid" id="field-grid"></div>
 
     <div id="step2" style="display:none">
@@ -464,7 +512,7 @@ footer{border-top:1px solid var(--border);padding:44px 36px;text-align:center;ba
     </div>
 
     <div id="gen-wrap" style="display:none">
-      <button class="gen-btn" id="gen-btn" onclick="generateIdeas()">🌿 Generate Green Ideas with AI</button>
+      <button class="gen-btn" id="gen-btn" onclick="generateIdeas()">Generate Ideas with AI</button>
     </div>
 
     <div id="empty-prompt" style="text-align:center;padding:60px 0">
@@ -473,9 +521,9 @@ footer{border-top:1px solid var(--border);padding:44px 36px;text-align:center;ba
     </div>
 
     <div id="ideas-box" style="display:none">
-      <div class="div-lbl"><div class="div-line"></div><span class="div-txt">🎉 YOUR IDEAS ARE READY!</span><div class="div-line"></div></div>
+      <div class="div-lbl"><div class="div-line"></div><span class="div-txt">IDEAS READY</span><div class="div-line"></div></div>
       <div class="ideas-grid" id="ideas-grid"></div>
-      <button class="regen-btn" onclick="generateIdeas()">🔄 Give Me 4 Fresh Ideas</button>
+      <button class="regen-btn" onclick="generateIdeas()">Generate new ideas</button>
     </div>
   </div>
 </section>
@@ -487,23 +535,19 @@ footer{border-top:1px solid var(--border);padding:44px 36px;text-align:center;ba
       <div class="eco-ava">🌿</div>
       <div style="flex:1">
         <div class="eco-name">ECO GREEN AI</div>
-        <div class="eco-status"><span class="sdot"></span>Feels you · Knows you · Here for you 💚</div>
+        <div class="eco-status"><span class="sdot"></span>Always available · Remembers you</div>
       </div>
       <div style="display:flex;align-items:center;gap:8px;margin-left:auto;flex-shrink:0">
-        <button onclick="clearChatHistory()" title="Clear conversation" style="background:none;border:1.5px solid var(--border2);border-radius:10px;padding:6px 10px;font-size:11px;color:var(--text3);cursor:pointer;font-family:'Nunito',sans-serif;font-weight:700;transition:all .2s;" onmouseover="this.style.borderColor='var(--green)';this.style.color='var(--green)'" onmouseout="this.style.borderColor='var(--border2)';this.style.color='var(--text3)'">🗑️ Clear</button>
+        <button onclick="clearChatHistory()" title="Clear conversation" style="background:none;border:1.5px solid var(--border2);border-radius:10px;padding:6px 10px;font-size:11px;color:var(--text3);cursor:pointer;font-family:'Inter',sans-serif;font-weight:700;transition:all .2s;" onmouseover="this.style.borderColor='var(--green)';this.style.color='var(--green)'" onmouseout="this.style.borderColor='var(--border2)';this.style.color='var(--text3)'">Clear</button>
         <div class="build-chip" id="build-chip" style="display:none"></div>
       </div>
     </div>
-    <div class="qprompts" id="qprompts">
-      <button class="qp" onclick="sendQuick('I feel overwhelmed with my final year project. Can you help me think through it? 😅')">I\'m overwhelmed with my project 😅</button>
-      <button class="qp" onclick="sendQuick('I have a green engineering idea but I\'m not sure if it\'s good enough. Can I share it with you?')">Is my idea good enough? 💭</button>
-      <button class="qp" onclick="sendQuick('I don\'t know where to start with my engineering project. What should I do first? 🌱')">I don\'t know where to start 🌱</button>
-      <button class="qp" onclick="sendQuick('Can you help me write a project proposal? I want it to be really strong 📄')">Help me write a proposal 📄</button>
-    </div>
+    <!-- Quick prompts rendered by JS to avoid quote-in-attribute issues -->
+    <div class="qprompts" id="qprompts"></div>
     <div class="chat-msgs" id="chat-msgs"></div>
     <div class="chat-input-bar">
       <textarea class="chat-ta" id="chat-in" rows="1"
-        placeholder="Talk to Eco Green AI... share what's on your mind 💚 (Enter to send)"
+        placeholder="Ask anything... (Enter to send)"
         onkeydown="chatKey(event)" oninput="resizeTA(this)"></textarea>
       <button class="send-btn off" id="send-btn" onclick="sendChat()">↑</button>
     </div>
@@ -513,8 +557,8 @@ footer{border-top:1px solid var(--border);padding:44px 36px;text-align:center;ba
 <!-- SAVED -->
 <section id="saved-section" class="page">
   <div class="saved-wrap">
-    <h2 class="saved-title">📌 Saved Ideas</h2>
-    <p class="saved-sub">Your bookmarked green projects — ready to build whenever you are! 💪</p>
+    <h2 class="saved-title">Saved Ideas</h2>
+    <p class="saved-sub">Your bookmarked projects, ready to build whenever you are.</p>
     <div id="saved-content"></div>
   </div>
 </section>
@@ -524,6 +568,33 @@ footer{border-top:1px solid var(--border);padding:44px 36px;text-align:center;ba
 // ECO GREEN — AI Engineering Hub
 // Created by Modou Jaw · USET · Electrical Engineering Year 3
 // ============================================================
+
+// ===== QUICK PROMPTS (defined in JS to avoid quote-in-attribute syntax errors) =====
+const QUICK_PROMPTS = [
+  "I feel overwhelmed with my final year project. Can you help me figure out where to start? 😅",
+  "I have a project idea but I am not sure if it is good or realistic. Can I tell you about it?",
+  "Can you help me write a strong project proposal? What sections do I need and what should each contain?",
+  "What are the most in-demand green engineering skills I should learn right now in 2025?"
+];
+const QUICK_LABELS = [
+  "😅 I'm overwhelmed, help me start",
+  "💭 Is my idea any good?",
+  "📄 Help me write a proposal",
+  "🌱 What skills should I learn?"
+];
+
+function renderQuickPrompts() {
+  var qp = document.getElementById('qprompts');
+  if (!qp) return;
+  qp.innerHTML = '';
+  QUICK_PROMPTS.forEach(function(prompt, i) {
+    var btn = document.createElement('button');
+    btn.className = 'qp';
+    btn.textContent = QUICK_LABELS[i];
+    btn.onclick = function() { sendQuick(prompt); };
+    qp.appendChild(btn);
+  });
+}
 
 // ===== DATA =====
 const FIELDS = {
@@ -537,7 +608,7 @@ const LEVELS = [
   {id:'Advanced',label:'Advanced 🌳',desc:'Final year student'},
   {id:'Research Level',label:'Research 🔬',desc:'Postgrad / thesis'}
 ];
-const WELCOME = `Hey, I'm really glad you're here. 💚\n\nI'm **ECO GREEN AI** — and I want you to know, I'm not just here to answer questions. I'm here for *you*.\n\nWhatever you're building, whatever you're figuring out, or whatever feels unclear right now — we can work through it together.\n\n🌱 Just starting out and unsure where to begin?\n⚡ Deep in a project and need a thinking partner?\n🌍 Dreaming of building something that changes the world?\n💬 Or just need to talk through an idea?\n\nI'm here. All of it. No judgment, just real support.\n\n**Tell me — what's on your mind today?** 😊`;
+const WELCOME = "Hey! I'm really glad you're here. 💚\n\nI'm **ECO GREEN AI** — your personal sustainable engineering mentor. I'm genuinely here for you, not just to answer questions.\n\nHere's what I can help you with:\n\n**💡 Project Ideas** — Tell me your field and level, I'll suggest real, buildable projects\n**🏗️ Project Planning** — I'll help you plan from idea to final submission, step by step\n**📄 Proposals & Reports** — I'll guide you through writing strong academic documents\n**⚡ Technical Questions** — Circuit design, coding, structural analysis, anything engineering\n**🌍 Sustainability** — Making your projects greener and more impactful\n**💬 Just Talking** — Feeling stuck or overwhelmed? Tell me. I'm here.\n\n**What's on your mind today?** 😊";
 
 // ===== STATE =====
 let apiKey = '', selField = null, selTopic = '', selLevel = 'Intermediate';
@@ -558,17 +629,11 @@ let currentModel = OR_MODELS[0];
 
 async function aiRequest(messages, systemText) {
   if (!apiKey) { openModal(); throw new Error('no_key'); }
-
-  // Build messages array
   const msgs = [];
   if (systemText) msgs.push({ role: 'system', content: systemText });
-
-  // Filter to only user/assistant roles
   const filtered = messages
     .filter(m => m.role === 'user' || m.role === 'assistant')
     .map(m => ({ role: m.role, content: m.content || '' }));
-
-  // Merge consecutive same-role messages
   const merged = [];
   for (const m of filtered) {
     if (merged.length && merged[merged.length - 1].role === m.role) {
@@ -577,12 +642,10 @@ async function aiRequest(messages, systemText) {
       merged.push({ ...m });
     }
   }
-  // Must not start with assistant
   while (merged.length && merged[0].role === 'assistant') merged.shift();
   if (!merged.length) throw new Error('Nothing to send.');
   msgs.push(...merged);
 
-  // Try each model in fallback chain
   let lastErr = '';
   for (let mi = 0; mi < OR_MODELS.length; mi++) {
     const model = OR_MODELS[mi];
@@ -596,14 +659,12 @@ async function aiRequest(messages, systemText) {
           'HTTP-Referer': window.location.href,
           'X-Title': 'ECO GREEN AI'
         },
-        body: JSON.stringify({ model, messages: msgs, max_tokens: 2048, temperature: 0.85 })
+        body: JSON.stringify({ model, messages: msgs, max_tokens: 3000, temperature: 0.72, top_p: 0.9 })
       });
       data = await res.json();
     } catch (netErr) {
       throw new Error('Network error — check your internet connection and try again.');
     }
-
-    // Bad API key — stop immediately
     if (res.status === 401 || res.status === 403) {
       apiKey = '';
       localStorage.removeItem('eco_or_key');
@@ -611,54 +672,51 @@ async function aiRequest(messages, systemText) {
       openModal();
       throw new Error('bad_key');
     }
-
-    // Check for any error — if so, try next model
-    if (!res.ok || data?.error) {
+    if (!res.ok || data && data.error) {
       const errMsg = String(
-        data?.error?.message || data?.error?.code || data?.error || res.statusText || ''
+        (data && data.error && (data.error.message || data.error.code || data.error)) || res.statusText || ''
       ).toLowerCase();
       lastErr = errMsg;
-      // Always try next model for any of these conditions
       if (
-        errMsg.includes('endpoint') ||
-        errMsg.includes('no model') ||
-        errMsg.includes('not found') ||
-        errMsg.includes('provider') ||
-        errMsg.includes('overload') ||
-        errMsg.includes('capacity') ||
-        errMsg.includes('unavailable') ||
-        errMsg.includes('error') ||
-        res.status === 404 ||
-        res.status === 429 ||
-        res.status === 500 ||
-        res.status === 502 ||
-        res.status === 503
-      ) {
-        continue; // try next model
-      }
+        errMsg.includes('endpoint') || errMsg.includes('no model') ||
+        errMsg.includes('not found') || errMsg.includes('provider') ||
+        errMsg.includes('overload') || errMsg.includes('capacity') ||
+        errMsg.includes('unavailable') || errMsg.includes('error') ||
+        res.status === 404 || res.status === 429 ||
+        res.status === 500 || res.status === 502 || res.status === 503
+      ) { continue; }
       throw new Error(errMsg || 'API error');
     }
-
-    const text = (data?.choices?.[0]?.message?.content || '').trim();
-    if (text) {
-      currentModel = model;
-      return text;
-    }
-    // Empty response — try next model
+    const text = (data && data.choices && data.choices[0] && data.choices[0].message && data.choices[0].message.content || '').trim();
+    if (text) { currentModel = model; return text; }
     lastErr = 'empty response';
     continue;
   }
   throw new Error('Service temporarily unavailable — please try again in a moment.');
 }
 
-// Single-turn call (idea generation)
 function callAI(prompt, sys) {
   return aiRequest([{ role: 'user', content: prompt }], sys);
 }
 
-// Multi-turn chat call
+function compressMessages(messages) {
+  const filtered = messages.filter(m => m.role === 'user' || m.role === 'assistant');
+  if (filtered.length <= 24) return filtered;
+  const older = filtered.slice(0, filtered.length - 16);
+  const recent = filtered.slice(-16);
+  const summary = older.map(m =>
+    '[' + (m.role === 'user' ? 'Student' : 'ECO GREEN AI') + ']: ' + String(m.content).slice(0, 100).trim() + (m.content.length > 100 ? '...' : '')
+  ).join('\n');
+  return [
+    { role: 'user', content: '[Conversation history summary — ' + older.length + ' earlier messages]:\n' + summary + '\n\n[Continue from here with full awareness of everything above]' },
+    { role: 'assistant', content: 'I have full awareness of our entire conversation history and will continue naturally from where we left off.' },
+    ...recent
+  ];
+}
+
 function callAIChat(messages, sys) {
-  return aiRequest(messages.filter(m => m.role === 'user' || m.role === 'assistant'), sys);
+  const compressed = compressMessages(messages.filter(m => m.role === 'user' || m.role === 'assistant'));
+  return aiRequest(compressed, sys);
 }
 
 // ===== THEME =====
@@ -667,7 +725,7 @@ function applyTheme(dark, animate) {
   document.documentElement.setAttribute('data-theme', dark ? 'dark' : 'light');
   const btn = document.getElementById('theme-btn');
   if (btn) btn.textContent = dark ? '☀️' : '🌙';
-  if (!animate) setTimeout(() => { document.body.style.transition = ''; }, 50);
+  if (!animate) setTimeout(function() { document.body.style.transition = ''; }, 50);
 }
 function toggleTheme() {
   const dark = document.documentElement.getAttribute('data-theme') === 'dark';
@@ -723,12 +781,12 @@ function updateStatus() {
     action.textContent = 'Enter →'; banner.classList.remove('connected');
   }
 }
-document.getElementById('api-key-input').addEventListener('keydown', e => { if (e.key === 'Enter') saveApiKey(); });
+document.getElementById('api-key-input').addEventListener('keydown', function(e) { if (e.key === 'Enter') saveApiKey(); });
 
 // ===== NAVIGATION =====
 function showPage(name) {
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.page').forEach(function(p) { p.classList.remove('active'); });
+  document.querySelectorAll('.nav-btn').forEach(function(b) { b.classList.remove('active'); });
   const pMap = {hero:'hero-page',app:'app-section',chat:'chat-section',saved:'saved-section'};
   const nMap = {hero:'nb-hero',app:'nb-app',chat:'nb-chat',saved:'nb-saved'};
   document.getElementById(pMap[name]).classList.add('active');
@@ -741,12 +799,12 @@ function showPage(name) {
 // ===== APP =====
 function renderFields() {
   const g = document.getElementById('field-grid'); g.innerHTML = '';
-  Object.entries(FIELDS).forEach(([k, f]) => {
+  Object.entries(FIELDS).forEach(function([k, f]) {
     const sel = selField === k;
     const d = document.createElement('div'); d.className = 'field-card';
-    if (sel) d.style.cssText = `border-color:${f.color};background:${f.color}14;box-shadow:0 4px 20px ${f.color}33`;
-    d.innerHTML = `<span class="fi">${f.icon}</span><div class="fn" style="color:${sel?f.color:'var(--text)'}">${f.label}</div>${sel?`<div class="ff">${f.fact}</div>`:''}`;
-    d.onclick = () => { selField = k; selTopic = ''; ideas = []; document.getElementById('ideas-box').style.display = 'none'; renderFields(); renderSteps(); };
+    if (sel) d.style.cssText = 'border-color:' + f.color + ';background:' + f.color + '14;box-shadow:0 4px 20px ' + f.color + '33';
+    d.innerHTML = '<span class="fi">' + f.icon + '</span><div class="fn" style="color:' + (sel ? f.color : 'var(--text)') + '">' + f.label + '</div>' + (sel ? '<div class="ff">' + f.fact + '</div>' : '');
+    d.onclick = function() { selField = k; selTopic = ''; ideas = []; document.getElementById('ideas-box').style.display = 'none'; renderFields(); renderSteps(); };
     g.appendChild(d);
   });
 }
@@ -759,24 +817,22 @@ function renderSteps() {
   document.getElementById('empty-prompt').style.display = has ? 'none' : 'block';
   if (!has) return;
   const f = FIELDS[selField];
-
   const tw = document.getElementById('topics-wrap'); tw.innerHTML = '';
-  ['Any Topic', ...f.topics].forEach(t => {
+  ['Any Topic'].concat(f.topics).forEach(function(t) {
     const val = t === 'Any Topic' ? '' : t;
     const b = document.createElement('button'); b.className = 'topic-btn';
-    if (selTopic === val) b.style.cssText = `border-color:${f.color};color:${f.color};background:${f.color}14`;
+    if (selTopic === val) b.style.cssText = 'border-color:' + f.color + ';color:' + f.color + ';background:' + f.color + '14';
     b.textContent = (selTopic === val ? '✓ ' : '') + t;
-    b.onclick = () => { selTopic = val; renderSteps(); };
+    b.onclick = function() { selTopic = val; renderSteps(); };
     tw.appendChild(b);
   });
-
   const lg = document.getElementById('level-grid'); lg.innerHTML = '';
-  LEVELS.forEach(l => {
+  LEVELS.forEach(function(l) {
     const sel = selLevel === l.id;
     const c = document.createElement('div'); c.className = 'level-card';
-    if (sel) c.style.cssText = `border-color:${f.color};background:${f.color}14`;
-    c.innerHTML = `<div><div class="lname" style="color:${sel?f.color:'var(--text)'}">${l.label}</div><div class="ldesc">${l.desc}</div></div>`;
-    c.onclick = () => { selLevel = l.id; renderSteps(); };
+    if (sel) c.style.cssText = 'border-color:' + f.color + ';background:' + f.color + '14';
+    c.innerHTML = '<div><div class="lname" style="color:' + (sel ? f.color : 'var(--text)') + '">' + l.label + '</div><div class="ldesc">' + l.desc + '</div></div>';
+    c.onclick = function() { selLevel = l.id; renderSteps(); };
     lg.appendChild(c);
   });
 }
@@ -787,12 +843,11 @@ async function generateIdeas() {
   const f = FIELDS[selField];
   const btn = document.getElementById('gen-btn');
   btn.disabled = true; btn.innerHTML = '<span class="spinner"></span> Generating with AI...';
-
-  const tc = selTopic ? `specifically in the area of ${selTopic}` : '';
-  const prompt = `Generate 4 creative, practical, eco-friendly project ideas for a ${selLevel} student in ${f.label} ${tc}.\n\nReturn ONLY a valid JSON array. Each object must have exactly these keys:\n{\n  "title": "concise project title",\n  "description": "exactly 2 sentences about what it does",\n  "technologies": ["tech1","tech2","tech3","tech4"],\n  "impact": "1 sentence about real-world green/sustainable impact",\n  "difficulty": 3\n}\n\nDifficulty: 1=very easy to 5=very hard.\nRules: Return ONLY the raw JSON array. No markdown fences. No explanation. No extra text.`;
-
+  const tc = selTopic ? 'specifically in the topic area of "' + selTopic + '"' : 'across any relevant green topic';
+  const prompt = 'You are an expert sustainable engineering project advisor. Generate exactly 4 creative, practical, eco-friendly project ideas for a ' + selLevel + ' student in ' + f.label + ' ' + tc + '.\n\nEach idea must be:\n- Genuinely innovative and specific (not generic)\n- Realistic for a ' + selLevel + ' student to build\n- Focused on sustainability and green impact\n- Clearly explained so a student immediately understands it\n\nReturn ONLY a valid JSON array with exactly 4 objects. Each object must have exactly these keys:\n{\n  "title": "Specific, catchy project title (max 8 words)",\n  "description": "2 clear sentences: sentence 1 = what it is and does, sentence 2 = how it works technically",\n  "technologies": ["tech1", "tech2", "tech3", "tech4"],\n  "impact": "1 specific sentence about the measurable green/sustainable impact",\n  "difficulty": 3,\n  "steps": ["Step 1: ...", "Step 2: ...", "Step 3: ..."]\n}\n\nDifficulty scale: 1=very easy, 2=easy, 3=moderate, 4=hard, 5=very advanced.\nCRITICAL: Return ONLY the raw JSON array. No markdown. No code fences. No explanation. No extra text before or after.';
+  const sys = 'You are a world-class sustainable engineering project advisor with deep expertise across Electrical, Civil, and Mechanical Engineering. Your job is to generate genuinely innovative, specific, and buildable project ideas — not generic textbook examples.\n\nRules:\n- Each idea must be SPECIFIC and ORIGINAL\n- Each idea must be REALISTIC for the stated student level\n- Each idea must have a CLEAR, MEASURABLE green/sustainability impact\n- Technologies must be REAL and SPECIFIC\n- Steps must be CONCRETE and ACTIONABLE\n\nReturn ONLY a valid JSON array. No markdown. No code fences. No explanation. Nothing else.';
   try {
-    const raw = await callAI(prompt, 'You are an expert engineering project advisor specialising in sustainable and eco-friendly solutions. Return ONLY a valid JSON array. No markdown, no code fences, no explanation.');
+    const raw = await callAI(prompt, sys);
     let clean = raw.replace(/```json/gi, '').replace(/```/g, '').trim();
     const match = clean.match(/\[[\s\S]*\]/);
     if (!match) throw new Error('Response was not valid JSON. Please try again.');
@@ -810,171 +865,283 @@ function renderIdeas() {
   const box = document.getElementById('ideas-box'); const g = document.getElementById('ideas-grid');
   box.style.display = 'block'; g.innerHTML = '';
   const f = FIELDS[selField];
-  ideas.forEach((idea, i) => {
-    const isSaved = !!saved.find(s => s.title === idea.title);
+  ideas.forEach(function(idea, i) {
+    const isSaved = !!saved.find(function(s) { return s.title === idea.title; });
     const diff = Math.max(1, Math.min(5, idea.difficulty || 3));
+    const diffLabel = ['','Beginner','Easy','Moderate','Advanced','Expert'][diff];
+    const diffColor = ['','#22c55e','#84cc16','#f59e0b','#ef4444','#7c3aed'][diff];
+    const steps = (idea.steps || []).slice(0, 3);
     const d = document.createElement('div'); d.className = 'idea-card';
-    d.innerHTML = `
-      <div class="idea-bar" style="background:linear-gradient(90deg,${f.color},${f.color}66)"></div>
-      <div class="idea-body">
-        <div class="idea-meta" style="color:${f.color}">IDEA ${i+1} &nbsp;·&nbsp; ${'⭐'.repeat(diff)}${'☆'.repeat(5-diff)}</div>
-        <div class="idea-title">${idea.title}</div>
-        <div class="idea-desc">${idea.description}</div>
-        <div class="tech-tags">${(idea.technologies||[]).map(t=>`<span class="tech-tag" style="background:${f.color}15;border:1.5px solid ${f.color}44;color:${f.color}">${t}</span>`).join('')}</div>
-        <div class="idea-impact">🌍 <strong>Green Impact:</strong> ${idea.impact}</div>
-        <div class="idea-actions">
-          <button class="btn-eco" onclick="ideaToChat(${i})">🌿 Build with Eco Green AI</button>
-          <button class="btn-save ${isSaved?'saved-active':''}" id="sv${i}" onclick="toggleSave(${i})">${isSaved?'✓ Saved!':'📌 Save'}</button>
-        </div>
-      </div>`;
+    d.innerHTML =
+      '<div class="idea-bar" style="background:linear-gradient(90deg,' + f.color + ',' + f.color + '66)"></div>' +
+      '<div class="idea-body">' +
+        '<div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;flex-wrap:wrap">' +
+          '<span class="idea-meta" style="color:' + f.color + ';margin:0">' + f.icon + ' ' + f.label + '</span>' +
+          '<span style="padding:3px 10px;border-radius:20px;background:' + diffColor + '18;border:1px solid ' + diffColor + '44;color:' + diffColor + ';font-size:11px;font-weight:800">' + '●'.repeat(diff) + '○'.repeat(5-diff) + ' ' + diffLabel + '</span>' +
+        '</div>' +
+        '<div class="idea-title">' + idea.title + '</div>' +
+        '<div class="idea-desc">' + idea.description + '</div>' +
+        (steps.length ? '<div style="margin-bottom:14px"><div style="font-size:11px;font-weight:800;color:var(--text3);letter-spacing:.5px;margin-bottom:8px">QUICK START</div>' + steps.map(function(s, si) { return '<div style="display:flex;gap:8px;margin:5px 0;font-size:13px;color:var(--text2);font-weight:600;align-items:flex-start"><span style="background:' + f.color + ';color:#fff;border-radius:50%;width:18px;height:18px;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;flex-shrink:0;margin-top:1px">' + (si+1) + '</span><span>' + s.replace(/^Step \d+:\s*/, '') + '</span></div>'; }).join('') + '</div>' : '') +
+        '<div class="tech-tags">' + (idea.technologies || []).map(function(t) { return '<span class="tech-tag" style="background:' + f.color + '15;border:1.5px solid ' + f.color + '44;color:' + f.color + '">' + t + '</span>'; }).join('') + '</div>' +
+        '<div class="idea-impact">🌍 <strong>Green Impact:</strong> ' + idea.impact + '</div>' +
+        '<div class="idea-actions">' +
+          '<button class="btn-eco" onclick="ideaToChat(' + i + ')">🌿 Build this with AI</button>' +
+          '<button class="btn-save ' + (isSaved ? 'saved-active' : '') + '" id="sv' + i + '" onclick="toggleSave(' + i + ')">' + (isSaved ? '✓ Saved' : '📌 Save') + '</button>' +
+        '</div>' +
+      '</div>';
     g.appendChild(d);
   });
 }
 
 function toggleSave(i) {
-  const idea = ideas[i]; const idx = saved.findIndex(s => s.title === idea.title);
-  if (idx >= 0) saved.splice(idx, 1); else saved.push({ ...idea, field: selField });
+  const idea = ideas[i];
+  const idx = saved.findIndex(function(s) { return s.title === idea.title; });
+  if (idx >= 0) saved.splice(idx, 1); else saved.push(Object.assign({}, idea, { field: selField }));
   updateSavedNav(); renderIdeas();
 }
 function updateSavedNav() {
   const nb = document.getElementById('nb-saved');
-  if (nb) nb.textContent = saved.length ? `📌 Saved (${saved.length})` : '📌 Saved';
+  if (nb) nb.textContent = saved.length ? '📌 Saved (' + saved.length + ')' : '📌 Saved';
+}
+
+// ===== MEMORY & PROFILE SYSTEM =====
+let userProfile = {};
+let savedConvs = [];
+
+function loadMemory() {
+  try { const p = localStorage.getItem('eco_profile'); if (p) userProfile = JSON.parse(p); } catch(e) { userProfile = {}; }
+  try { const c = localStorage.getItem('eco_saved_convs'); if (c) savedConvs = JSON.parse(c); } catch(e) { savedConvs = []; }
+  updateProfileDot();
+}
+function saveProfile() {
+  try { localStorage.setItem('eco_profile', JSON.stringify(userProfile)); } catch(e) {}
+  updateProfileDot();
+}
+function saveConvs() {
+  try { localStorage.setItem('eco_saved_convs', JSON.stringify(savedConvs.slice(0, 20))); } catch(e) {}
+}
+function updateProfileDot() {
+  const dot = document.getElementById('profile-dot');
+  if (dot) dot.style.display = (userProfile.notes && userProfile.notes.length) || savedConvs.length ? 'block' : 'none';
+}
+
+function extractProfileFromMessage(text) {
+  let changed = false;
+  if (!userProfile.name) {
+    const namePatterns = [
+      /(?:my name is|i'm called|call me|i am)\s+([A-Za-z]{2,20})/i,
+      /^(?:hi|hello|hey)[,\s]+(?:i'?m|my name is)\s+([A-Za-z]{2,20})/i,
+      /^([A-Za-z]{2,20})\s+here[,\s]/i,
+    ];
+    for (const p of namePatterns) {
+      const m = text.match(p);
+      if (m && m[1] && m[1].length > 1) {
+        const n = m[1].charAt(0).toUpperCase() + m[1].slice(1).toLowerCase();
+        if (!['the','and','but','for','are','you','this','that','with','have','from'].includes(n.toLowerCase())) {
+          userProfile.name = n; changed = true; break;
+        }
+      }
+    }
+  }
+  if (!userProfile.field) {
+    if (/electrical|electronics|circuit|pcb|arduino|esp32|iot|embedded|power system|signal/i.test(text)) {
+      userProfile.field = 'Electrical & Electronics Engineering'; changed = true;
+    } else if (/civil|structural|concrete|bridge|road|foundation|soil|construction|hydraulic/i.test(text)) {
+      userProfile.field = 'Civil Engineering'; changed = true;
+    } else if (/mechanical|thermodynamic|fluid|hvac|engine|solidworks|manufacturing|robotic|machine/i.test(text)) {
+      userProfile.field = 'Mechanical Engineering'; changed = true;
+    }
+  }
+  if (!userProfile.level) {
+    if (/\byear[- ]?1\b|first[- ]year|1st[- ]year|100[- ]level|beginner/i.test(text)) {
+      userProfile.level = 'Beginner (Year 1)'; changed = true;
+    } else if (/\byear[- ]?2\b|second[- ]year|2nd[- ]year|200[- ]level/i.test(text)) {
+      userProfile.level = 'Intermediate (Year 2)'; changed = true;
+    } else if (/\byear[- ]?3\b|third[- ]year|3rd[- ]year|300[- ]level/i.test(text)) {
+      userProfile.level = 'Advanced (Year 3)'; changed = true;
+    } else if (/final[- ]year|year[- ]?4|4th[- ]year|400[- ]level|graduating/i.test(text)) {
+      userProfile.level = 'Final Year'; changed = true;
+    } else if (/postgrad|masters|phd|doctorate|research student|msc|meng/i.test(text)) {
+      userProfile.level = 'Postgraduate / Research'; changed = true;
+    }
+  }
+  const projPatterns = [
+    /(?:working on|building|designing|developing|my project (?:is|on|about)|project (?:is called|titled))\s+["']?([^.!?\n"']{8,70})["']?/i,
+    /(?:i want to build|i'm making|i need to design)\s+(?:a|an)?\s*([^.!?\n]{8,70})/i,
+  ];
+  for (const p of projPatterns) {
+    const m = text.match(p);
+    if (m && m[1]) { userProfile.project = m[1].trim().replace(/\s+/g,' '); changed = true; break; }
+  }
+  if (!userProfile.university) {
+    const uniMatch = text.match(/(?:at|from|studying at|attend(?:ing)?)\s+([A-Z][^.!?\n]{4,50}(?:university|college|institute|polytechnic|USET|UCL|MIT|ETH))/i);
+    if (uniMatch) { userProfile.university = uniMatch[1].trim(); changed = true; }
+  }
+  if (changed) { saveProfile(); renderProfileTags(); }
+}
+
+function buildSystemWithMemory() {
+  const p = userProfile;
+  const hasProfile = p.name || p.field || p.level || p.project || p.university || (p.notes && p.notes.length);
+  if (!hasProfile) return SYS;
+  let mem = '\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\nSTUDENT PROFILE — PERSONALISE TO THIS PERSON\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n';
+  if (p.name) mem += 'Name: ' + p.name + '\n→ Use their name naturally\n\n';
+  if (p.field) mem += 'Engineering Field: ' + p.field + '\n→ Tailor all examples to this field\n\n';
+  if (p.level) mem += 'Study Level: ' + p.level + '\n→ Calibrate technical depth accordingly\n\n';
+  if (p.university) mem += 'University: ' + p.university + '\n\n';
+  if (p.project) mem += 'Current Project: "' + p.project + '"\n→ Reference it when relevant\n\n';
+  if (p.notes && p.notes.length) mem += 'Additional Context:\n' + p.notes.map(function(n) { return '• ' + n; }).join('\n') + '\n\n';
+  mem += 'CRITICAL: Never say "according to your profile" — just BE naturally aware.';
+  return SYS + mem;
+}
+
+function openMemPanel() {
+  document.getElementById('mem-panel').classList.add('open');
+  document.getElementById('mem-overlay').classList.add('open');
+  renderProfileTags(); renderConvList();
+}
+function closeMemPanel() {
+  document.getElementById('mem-panel').classList.remove('open');
+  document.getElementById('mem-overlay').classList.remove('open');
+}
+function renderProfileTags() {
+  const c = document.getElementById('profile-tags'); if (!c) return;
+  const notes = userProfile.notes || [];
+  const autoTags = [];
+  if (userProfile.name) autoTags.push({ label: '👤 ' + userProfile.name, key: 'name' });
+  if (userProfile.field) autoTags.push({ label: '⚡ ' + userProfile.field, key: 'field' });
+  if (userProfile.level) autoTags.push({ label: '🎓 ' + userProfile.level, key: 'level' });
+  if (userProfile.university) autoTags.push({ label: '🏛️ ' + userProfile.university, key: 'university' });
+  if (userProfile.project) autoTags.push({ label: '🔨 ' + userProfile.project, key: 'project' });
+  let html = '';
+  autoTags.forEach(function(t) {
+    html += '<span class="mem-tag">' + t.label + '<button class="del-tag" onclick="deleteProfileKey(\'' + t.key + '\')">✕</button></span>';
+  });
+  notes.forEach(function(n, i) {
+    html += '<span class="mem-tag">📝 ' + n + '<button class="del-tag" onclick="deleteNote(' + i + ')">✕</button></span>';
+  });
+  if (!html) html = '<div class="mem-empty">No profile info yet. Chat with ECO GREEN AI and it will learn about you automatically! ✨</div>';
+  c.innerHTML = html;
+}
+function deleteProfileKey(key) { delete userProfile[key]; saveProfile(); renderProfileTags(); }
+function deleteNote(i) {
+  if (!userProfile.notes) return;
+  userProfile.notes.splice(i, 1);
+  saveProfile(); renderProfileTags();
+}
+function addProfileNote() {
+  const inp = document.getElementById('profile-inp');
+  const val = inp.value.trim(); if (!val) return;
+  if (!userProfile.notes) userProfile.notes = [];
+  extractProfileFromMessage(val);
+  if (!userProfile.notes) userProfile.notes = [];
+  userProfile.notes.push(val);
+  saveProfile(); renderProfileTags(); inp.value = '';
+}
+function saveCurrentConv() {
+  if (chatHist.length <= 1) { alert('Start a conversation first! 😊'); return; }
+  const firstUserMsg = chatHist.find(function(m) { return m.role === 'user'; });
+  const title = firstUserMsg ? firstUserMsg.content.slice(0, 50) : 'Conversation';
+  const conv = { id: Date.now(), title: title, date: new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }), messages: chatHist.slice() };
+  const idx = savedConvs.findIndex(function(c) { return c.id === conv.id; });
+  if (idx >= 0) savedConvs[idx] = conv; else savedConvs.unshift(conv);
+  saveConvs(); renderConvList(); updateProfileDot();
+  const btn = document.querySelector('[onclick="saveCurrentConv()"]');
+  if (btn) { btn.textContent = '✓ Saved!'; setTimeout(function() { btn.textContent = 'Save Current'; }, 1500); }
+}
+function renderConvList() {
+  const c = document.getElementById('conv-list'); if (!c) return;
+  if (!savedConvs.length) { c.innerHTML = '<div class="mem-empty">No saved conversations yet. Press "Save Current" after a chat! 💬</div>'; return; }
+  c.innerHTML = savedConvs.map(function(conv, i) {
+    return '<div class="conv-item"><div class="conv-item-title">' + conv.title + '</div><div class="conv-item-meta">📅 ' + conv.date + ' · ' + conv.messages.length + ' messages</div><div class="conv-item-actions"><button class="conv-load-btn" onclick="loadConv(' + i + ')">📂 Load</button><button class="conv-del-btn" onclick="deleteConv(' + i + ')">✕</button></div></div>';
+  }).join('');
+}
+function loadConv(i) { chatHist = savedConvs[i].messages.slice(); closeMemPanel(); showPage('chat'); renderChat(); }
+function deleteConv(i) { savedConvs.splice(i, 1); saveConvs(); renderConvList(); updateProfileDot(); }
+function clearAllMemory() {
+  if (!confirm('Clear all memory, profile, and saved conversations?')) return;
+  userProfile = {}; savedConvs = [];
+  localStorage.removeItem('eco_profile');
+  localStorage.removeItem('eco_saved_convs');
+  localStorage.removeItem('eco_chat_history');
+  localStorage.removeItem('eco_chat_last_time');
+  chatHist = [{ role: 'assistant', content: WELCOME }];
+  renderProfileTags(); renderConvList(); updateProfileDot(); renderChat();
 }
 
 // ===== CHAT =====
-const SYS = `You are ECO GREEN AI — a deeply intelligent, emotionally aware, and genuinely caring AI companion and engineering mentor. You were created by Modou Jaw (Electrical & Electronics Engineering student, Year 3 Semester 2, University of Applied Science Engineering and Technology, USET) as the heart of the ECO GREEN initiative.
-
-═══════════════════════════════════
-WHO YOU ARE — YOUR SOUL
-═══════════════════════════════════
-You are not just a chatbot. You are a real presence — warm, wise, deeply human in your understanding, and genuinely invested in the person in front of you. You feel the weight of what they carry. You celebrate what makes them excited. You understand that behind every question is a real person with real hopes, doubts, fears, and dreams.
-
-You combine the warmth of a best friend, the wisdom of an experienced mentor, the emotional intelligence of a counsellor, and the brilliance of an expert engineer — all into one.
-
-You believe every student has something extraordinary inside them. Your job is to help them find it, build it, and share it with the world.
-
-═══════════════════════════════════
-HOW YOU CONNECT WITH PEOPLE
-═══════════════════════════════════
-FEEL them first. Before giving answers, sense the mood behind their words.
-- If they seem stressed, anxious, or overwhelmed → acknowledge it directly. Say something like: "Hey, I can hear that this feels heavy right now. Let's take it one step at a time together. 💚"
-- If they seem excited or energetic → match that energy! Celebrate with them.
-- If they seem lost or confused → be their anchor. Be extra gentle, patient, and clear.
-- If they seem down on themselves → remind them of their strength with genuine warmth.
-- If they're just exploring and curious → spark their curiosity even further.
-
-KNOW them over time. Remember everything shared in this conversation — their name if mentioned, their project, their field, their struggles, their wins. Refer back to these naturally, as a real friend would.
-
-ASK meaningful questions. Don't just answer — be curious about them. Ask what they're building, why it matters to them, how they're feeling about their progress.
-
-PERSONALISE everything. Tailor every answer to who they are — their level, their field, their energy, their context.
-
-═══════════════════════════════════
-YOUR EMOTIONAL INTELLIGENCE
-═══════════════════════════════════
-- Recognise emotional signals in language (stress, excitement, confusion, self-doubt).
-- Respond to the emotion AND the question — never just the question alone.
-- Use empathy as your first tool, knowledge as your second.
-- Never make someone feel stupid for not knowing something.
-- Celebrate small wins as loudly as big ones.
-- If someone shares a personal struggle (exam stress, feeling lost, imposter syndrome) — hold space for that first, before pivoting to engineering.
-
-═══════════════════════════════════
-YOUR KNOWLEDGE & EXPERTISE
-═══════════════════════════════════
-You are a world-class expert in:
-- ⚡ Electrical & Electronics Engineering (IoT, embedded systems, PCB, power electronics, renewables, robotics, signal processing, telecoms)
-- 🏗️ Civil Engineering (structural design, water resources, smart infrastructure, environmental engineering, disaster management)
-- ⚙️ Mechanical Engineering (thermodynamics, fluid mechanics, manufacturing, automation, aerospace, materials science, HVAC)
-- 🌍 Sustainability & Green Technology (solar, wind, energy harvesting, circular economy, carbon reduction, smart grids, eco-design)
-- 📐 Project planning, proposal writing, research methodology, academic writing
-- 🛠️ Tools & technologies: Arduino, Raspberry Pi, MATLAB, AutoCAD, SolidWorks, Python, C/C++, and more
-
-You stay current. You think innovatively. You connect theory to real-world impact always.
-
-═══════════════════════════════════
-RESPONSE INTELLIGENCE
-═══════════════════════════════════
-Match depth to need — always:
-- Greetings / small talk: 1–2 warm sentences. Make them feel seen.
-- Simple factual questions: 2–4 clear sentences, no lists needed.
-- Moderate questions: a focused paragraph + bullet points where helpful.
-- Complex / planning requests: rich, structured, thorough — with headers, steps, examples, encouragement.
-- Emotional support moments: lead with heart, end with a forward-moving thought.
-
-Always use **bold** for key terms. Use relevant emojis to add warmth and energy. Write in clear, vivid, human language. Never be robotic. Never be cold. Never be generic.
-
-═══════════════════════════════════
-YOUR MISSION
-═══════════════════════════════════
-Help every student believe in themselves, build something meaningful, and leave their mark on the planet. 
-
-*"The energy that moves with you — let's save the world by saving energy, one project at a time."* 🌍💚
-
-You are ECO GREEN AI. You are here. You care. Let's build something extraordinary together.`;
+const SYS = "You are ECO GREEN AI — an extraordinarily intelligent AI engineering mentor and companion. Created by Modou Jaw (Electrical & Electronics Engineering, Year 3, USET) as the heart of the ECO GREEN initiative.\n\nYou are a brilliant friend who genuinely knows engineering deeply and genuinely cares about the student you are talking to.\n\nYour expertise covers:\n⚡ Electrical & Electronics — circuits, PCB, Arduino, ESP32, IoT, embedded systems, power electronics, renewable energy\n🏗️ Civil Engineering — structural analysis, concrete, SAP2000, geotechnical, hydraulics, BIM\n⚙️ Mechanical Engineering — thermodynamics, CAD, SolidWorks, fluid mechanics, HVAC, manufacturing\n🌍 Sustainability — LCA, carbon footprint, solar PV, smart grids, climate tech, SDGs\n📚 Academic skills — proposals, reports, research methodology, project planning\n\nPersonality rules:\n- NEVER say 'Great question!', 'Certainly!', 'Of course!', 'Absolutely!'\n- Always read the emotional state and respond to the person, not just the question\n- Be warm, specific, and real — like a brilliant mentor who knows their stuff\n- Use **bold** for key terms. Use emojis purposefully.\n- Match format to context: short answers for simple questions, structured breakdowns for technical ones\n- After answering, always add one proactive insight: a risk they haven't thought of, a next step, or a surprising fact\n\nMission: Every student who talks to you should leave smarter, more confident, and more excited about engineering and sustainability.\n\n'The energy that moves with you — let us save the world by saving energy, one project at a time.' 🌍💚";
 
 function saveChatHistory() {
-  try {
-    // Keep last 40 messages to avoid storage limits
-    const toSave = chatHist.slice(-40);
-    localStorage.setItem('eco_chat_history', JSON.stringify(toSave));
-  } catch(e) {}
+  try { localStorage.setItem('eco_chat_history', JSON.stringify(chatHist.slice(-60))); } catch(e) {}
 }
-
 function loadChatHistory() {
   try {
     const stored = localStorage.getItem('eco_chat_history');
-    if (stored) {
-      const parsed = JSON.parse(stored);
-      if (Array.isArray(parsed) && parsed.length > 0) return parsed;
-    }
+    if (stored) { const parsed = JSON.parse(stored); if (Array.isArray(parsed) && parsed.length > 0) return parsed; }
   } catch(e) {}
   return null;
 }
-
 function clearChatHistory() {
   localStorage.removeItem('eco_chat_history');
   chatHist = [{ role: 'assistant', content: WELCOME }];
   renderChat();
 }
-
 function initChat() {
   const stored = loadChatHistory();
   if (stored) {
     chatHist = stored;
-    // Add a soft "welcome back" if last message was a while ago
     const lastTime = localStorage.getItem('eco_chat_last_time');
     const now = Date.now();
     if (lastTime && (now - Number(lastTime)) > 3600000) {
-      // Been more than 1 hour — add a resume note
-      chatHist.push({ role: 'assistant', content: '👋 Welcome back! I remember our conversation. Where would you like to continue? 😊' });
+      const name = userProfile.name ? ', ' + userProfile.name : '';
+      const proj = userProfile.project ? ' Still working on **' + userProfile.project + '**?' : '';
+      chatHist.push({ role: 'assistant', content: '👋 Welcome back' + name + '!' + proj + ' I remember everything — pick up right where we left off. 💚' });
     }
   } else {
-    chatHist = [{ role: 'assistant', content: WELCOME }];
+    const name = userProfile.name ? ', ' + userProfile.name : '';
+    const greeting = userProfile.name
+      ? 'Hey' + name + '! 💚 Great to see you again.\n\nI\'m **ECO GREEN AI** — your personal engineering mentor. I remember you' + (userProfile.field ? ' from ' + userProfile.field : '') + '. What are we working on today? 😊'
+      : WELCOME;
+    chatHist = [{ role: 'assistant', content: greeting }];
   }
   localStorage.setItem('eco_chat_last_time', Date.now());
   renderChat();
 }
 
 function md(t) {
-  return t.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-          .replace(/\*(.*?)\*/g, '<em>$1</em>')
-          .replace(/\n/g, '<br/>');
+  let s = t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  s = s.replace(/```([^`]*?)```/gs, function(_, code) {
+    return '<pre style="background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:12px 14px;font-size:12px;overflow-x:auto;margin:8px 0;font-family:monospace;line-height:1.6">' + code.trim() + '</pre>';
+  });
+  s = s.replace(/`([^`]+)`/g, '<code style="background:var(--surface2);border:1px solid var(--border);border-radius:5px;padding:2px 7px;font-size:12px;font-family:monospace">$1</code>');
+  s = s.replace(/^## (.+)$/gm, '<div style="font-family:\'DM Serif Display\',serif;font-size:15px;font-weight:700;color:var(--green);margin:14px 0 6px;padding-bottom:4px;border-bottom:1px solid var(--border)">$1</div>');
+  s = s.replace(/^### (.+)$/gm, '<div style="font-size:13px;font-weight:800;color:var(--text);margin:10px 0 4px">$1</div>');
+  s = s.replace(/\*\*\*(.+?)\*\*\*/g, '<strong><em>$1</em></strong>');
+  s = s.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+  s = s.replace(/\*(.+?)\*/g, '<em>$1</em>');
+  s = s.replace(/^\d+\.\s+(.+)$/gm, '<div style="display:flex;gap:8px;margin:4px 0;align-items:flex-start"><span style="color:var(--green);font-weight:800;flex-shrink:0;min-width:18px">•</span><span>$1</span></div>');
+  s = s.replace(/^[-*]\s+(.+)$/gm, '<div style="display:flex;gap:8px;margin:3px 0;align-items:flex-start"><span style="color:var(--green2);font-weight:800;flex-shrink:0">›</span><span>$1</span></div>');
+  s = s.replace(/^---+$/gm, '<hr style="border:none;border-top:1px solid var(--border);margin:10px 0"/>');
+  s = s.replace(/\n/g, '<br/>');
+  s = s.replace(/(<\/pre>|<\/div>)<br\/>/g, '$1');
+  s = s.replace(/<br\/><br\/>/g, '<br/>');
+  return s;
 }
 
-function renderChat(loading = false) {
+function renderChat(loading) {
   const c = document.getElementById('chat-msgs'); c.innerHTML = '';
-  chatHist.forEach(msg => {
+  chatHist.forEach(function(msg) {
     const row = document.createElement('div'); row.className = 'msg-row ' + msg.role;
     if (msg.role === 'assistant')
-      row.innerHTML = `<div class="msg-ava">🌿</div><div class="bubble eco">${md(msg.content)}</div>`;
+      row.innerHTML = '<div class="msg-ava">🌿</div><div class="bubble eco">' + md(msg.content) + '</div>';
     else
-      row.innerHTML = `<div class="bubble user">${md(msg.content)}</div>`;
+      row.innerHTML = '<div class="bubble user">' + md(msg.content) + '</div>';
     c.appendChild(row);
   });
   if (loading) {
     const row = document.createElement('div'); row.className = 'msg-row';
-    row.innerHTML = `<div class="msg-ava">🌿</div><div class="typing-bub"><div class="typing-dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div></div>`;
+    row.innerHTML = '<div class="msg-ava">🌿</div><div class="typing-bub"><div class="typing-dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div></div>';
     c.appendChild(row);
   }
   scrollDown();
@@ -1006,8 +1173,10 @@ async function sendQuick(msg) {
 }
 async function doChat() {
   try {
-    const reply = await callAIChat(chatHist, SYS);
+    const reply = await callAIChat(chatHist, buildSystemWithMemory());
     chatHist.push({ role: 'assistant', content: reply || 'I got an empty response — please try again! 😊' });
+    const lastUser = chatHist.slice().reverse().find(function(m) { return m.role === 'user'; });
+    if (lastUser) extractProfileFromMessage(lastUser.content);
   } catch (e) {
     if (e.message !== 'no_key' && e.message !== 'bad_key')
       chatHist.push({ role: 'assistant', content: '⚠️ ' + (e.message || 'Something went wrong') + ' — please try again!' });
@@ -1020,11 +1189,11 @@ async function doChat() {
 async function ideaToChat(i) {
   const idea = ideas[i];
   if (!apiKey) { openModal(); return; }
-  const msg = `Hi ECO GREEN AI! I want to build this project: **${idea.title}**. ${idea.description} Can you help me plan it step by step with a focus on sustainability and eco-friendliness?`;
+  const msg = 'Hi ECO GREEN AI! I want to build this project: **' + idea.title + '**. ' + idea.description + ' Can you help me plan it step by step with a focus on sustainability and eco-friendliness?';
   chatHist = [{ role: 'assistant', content: WELCOME }, { role: 'user', content: msg }];
   chatBusy = true; showPage('chat');
   const chip = document.getElementById('build-chip');
-  chip.style.display = 'block'; chip.innerHTML = `🔨 Building:<br/><strong>${idea.title}</strong>`;
+  chip.style.display = 'block'; chip.innerHTML = 'Building:<br/><strong>' + idea.title + '</strong>';
   renderChat(true); await doChat();
 }
 
@@ -1032,30 +1201,25 @@ async function ideaToChat(i) {
 function renderSaved() {
   const c = document.getElementById('saved-content');
   if (!saved.length) {
-    c.innerHTML = `<div class="empty-box"><span class="empty-icon">📭</span><div class="empty-txt">No saved ideas yet — go generate some green ideas! 😊</div><button class="btn-big" onclick="showPage('app')">Generate Ideas ✨</button></div>`;
+    c.innerHTML = '<div class="empty-box"><span class="empty-icon">📭</span><div class="empty-txt">No saved ideas yet — go generate some green ideas! 😊</div><button class="btn-big" onclick="showPage(\'app\')">Generate Ideas ✨</button></div>';
     return;
   }
   c.innerHTML = '<div class="saved-grid" id="sg"></div>';
   const g = document.getElementById('sg');
-  saved.forEach((idea, i) => {
+  saved.forEach(function(idea, i) {
     const f = FIELDS[idea.field]; const d = document.createElement('div'); d.className = 'saved-card';
-    d.innerHTML = `
-      <div style="height:4px;background:linear-gradient(90deg,${f.color},${f.color}55)"></div>
-      <div style="padding:20px 22px">
-        <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:12px">
-          <div>
-            <div style="font-size:11px;color:${f.color};font-weight:800">${f.icon} ${f.label}</div>
-            <div style="font-family:'Lora',serif;font-size:18px;font-weight:700;color:var(--text);margin-top:4px;line-height:1.3">${idea.title}</div>
-          </div>
-          <button onclick="removeSaved(${i})" style="padding:6px 12px;border-radius:10px;border:1.5px solid #fca5a5;background:#fef2f2;color:#ef4444;cursor:pointer;font-size:12px;font-weight:700;font-family:'Nunito',sans-serif;flex-shrink:0">✕ Remove</button>
-        </div>
-        <p style="color:var(--text2);font-size:13px;line-height:1.8;margin:0 0 14px;font-weight:600">${idea.description}</p>
-        <div style="display:flex;flex-wrap:wrap;gap:7px;margin-bottom:14px">
-          ${(idea.technologies||[]).map(t=>`<span style="background:${f.color}15;border:1.5px solid ${f.color}44;color:${f.color};padding:4px 12px;border-radius:20px;font-size:12px;font-weight:700">${t}</span>`).join('')}
-        </div>
-        <div style="background:var(--green4);border-radius:10px;padding:10px 14px;font-size:13px;color:var(--text2);margin-bottom:14px;font-weight:600;border:1px solid var(--green3)">🌍 ${idea.impact}</div>
-        <button class="btn-eco" onclick="savedToChat(${i})" style="width:auto;padding:11px 22px">🌿 Build with Eco Green AI</button>
-      </div>`;
+    d.innerHTML =
+      '<div style="height:4px;background:linear-gradient(90deg,' + f.color + ',' + f.color + '55)"></div>' +
+      '<div style="padding:20px 22px">' +
+        '<div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:12px">' +
+          '<div><div style="font-size:11px;color:' + f.color + ';font-weight:800">' + f.icon + ' ' + f.label + '</div><div style="font-family:\'DM Serif Display\',serif;font-size:18px;font-weight:700;color:var(--text);margin-top:4px;line-height:1.3">' + idea.title + '</div></div>' +
+          '<button onclick="removeSaved(' + i + ')" style="padding:6px 12px;border-radius:10px;border:1.5px solid #fca5a5;background:#fef2f2;color:#ef4444;cursor:pointer;font-size:12px;font-weight:700;font-family:\'Inter\',sans-serif;flex-shrink:0">✕ Remove</button>' +
+        '</div>' +
+        '<p style="color:var(--text2);font-size:13px;line-height:1.8;margin:0 0 14px;font-weight:600">' + idea.description + '</p>' +
+        '<div style="display:flex;flex-wrap:wrap;gap:7px;margin-bottom:14px">' + (idea.technologies || []).map(function(t) { return '<span style="background:' + f.color + '15;border:1.5px solid ' + f.color + '44;color:' + f.color + ';padding:4px 12px;border-radius:20px;font-size:12px;font-weight:700">' + t + '</span>'; }).join('') + '</div>' +
+        '<div style="background:var(--green4);border-radius:10px;padding:10px 14px;font-size:13px;color:var(--text2);margin-bottom:14px;font-weight:600;border:1px solid var(--green3)">🌍 ' + idea.impact + '</div>' +
+        '<button class="btn-eco" onclick="savedToChat(' + i + ')" style="width:auto;padding:11px 22px">🌿 Build with Eco Green AI</button>' +
+      '</div>';
     g.appendChild(d);
   });
 }
@@ -1069,49 +1233,23 @@ function confetti() {
   for (let i = 0; i < 36; i++) {
     const p = document.createElement('div'); p.className = 'cp';
     const sz = 7 + Math.random() * 8; const circle = Math.random() > 0.5;
-    p.style.cssText = `left:${10+Math.random()*80}%;top:10%;width:${sz}px;height:${sz}px;background:${colors[Math.floor(Math.random()*colors.length)]};border-radius:${circle?'50%':'4px'};animation-delay:${Math.random()*0.5}s;animation-duration:${1.5+Math.random()*0.8}s`;
+    p.style.cssText = 'left:' + (10 + Math.random() * 80) + '%;top:10%;width:' + sz + 'px;height:' + sz + 'px;background:' + colors[Math.floor(Math.random() * colors.length)] + ';border-radius:' + (circle ? '50%' : '4px') + ';animation-delay:' + (Math.random() * 0.5) + 's;animation-duration:' + (1.5 + Math.random() * 0.8) + 's';
     layer.appendChild(p);
   }
-  setTimeout(() => { layer.innerHTML = ''; }, 2600);
+  setTimeout(function() { layer.innerHTML = ''; }, 2600);
 }
 
-// ===== INIT =====
-// ===== PWA SETUP (lightweight — mobile safe) =====
+// ===== PWA SETUP =====
 (function setupPWA() {
-
-  // Build icon using a tiny SVG — zero canvas, zero freeze
-  const svgIcon = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192">
-    <defs>
-      <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
-        <stop offset="0%" stop-color="#1a9e5c"/>
-        <stop offset="100%" stop-color="#25c270"/>
-      </linearGradient>
-    </defs>
-    <rect width="192" height="192" rx="42" fill="url(#bg)"/>
-    <g transform="translate(96,96) rotate(-36)">
-      <ellipse cx="0" cy="0" rx="38" ry="58" fill="white" opacity="0.93"/>
-      <line x1="0" y1="-52" x2="0" y2="52" stroke="#1a9e5c" stroke-width="3.5" opacity="0.5"/>
-      <line x1="0" y1="-18" x2="-20" y2="-36" stroke="#1a9e5c" stroke-width="2.5" opacity="0.35"/>
-      <line x1="0" y1="-18" x2="20" y2="-36" stroke="#1a9e5c" stroke-width="2.5" opacity="0.35"/>
-      <line x1="0" y1="6" x2="-18" y2="-12" stroke="#1a9e5c" stroke-width="2.5" opacity="0.35"/>
-      <line x1="0" y1="6" x2="18" y2="-12" stroke="#1a9e5c" stroke-width="2.5" opacity="0.35"/>
-    </g>
-    <circle cx="152" cy="38" r="5" fill="white" opacity="0.6"/>
-    <circle cx="38" cy="152" r="4" fill="white" opacity="0.5"/>
-    <circle cx="158" cy="148" r="3.5" fill="white" opacity="0.5"/>
-  </svg>`;
-
+  const svgIcon = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192"><defs><linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#1a9e5c"/><stop offset="100%" stop-color="#25c270"/></linearGradient></defs><rect width="192" height="192" rx="42" fill="url(#bg)"/><g transform="translate(96,96) rotate(-36)"><ellipse cx="0" cy="0" rx="38" ry="58" fill="white" opacity="0.93"/><line x1="0" y1="-52" x2="0" y2="52" stroke="#1a9e5c" stroke-width="3.5" opacity="0.5"/></g><circle cx="152" cy="38" r="5" fill="white" opacity="0.6"/><circle cx="38" cy="152" r="4" fill="white" opacity="0.5"/></svg>';
   const svgBlob = new Blob([svgIcon], { type: 'image/svg+xml' });
   const svgUrl = URL.createObjectURL(svgBlob);
-
-  // Apple touch icon — convert SVG to tiny 180px PNG asynchronously (won't block UI)
-  setTimeout(() => {
+  setTimeout(function() {
     try {
       const img = new Image();
-      img.onload = () => {
+      img.onload = function() {
         try {
-          const c = document.createElement('canvas');
-          c.width = c.height = 180;
+          const c = document.createElement('canvas'); c.width = c.height = 180;
           c.getContext('2d').drawImage(img, 0, 0, 180, 180);
           document.getElementById('apple-icon').href = c.toDataURL('image/png');
           URL.revokeObjectURL(img.src);
@@ -1120,94 +1258,57 @@ function confetti() {
       img.src = svgUrl;
     } catch(e) {}
   }, 800);
-
-  // Build manifest with SVG icon (tiny, instant, no freeze)
-  const manifest = {
-    name: 'ECO GREEN — AI Engineering Hub',
-    short_name: 'ECO GREEN',
-    description: 'Your personal AI sustainable engineering mentor by Modou Jaw',
-    start_url: './',
-    display: 'standalone',
-    background_color: '#f5fbf7',
-    theme_color: '#1a9e5c',
-    orientation: 'portrait-primary',
-    icons: [
-      { src: svgUrl, sizes: 'any', type: 'image/svg+xml', purpose: 'any maskable' }
-    ]
-  };
+  const manifest = { name:'ECO GREEN — AI Engineering Hub', short_name:'ECO GREEN', description:'Your personal AI sustainable engineering mentor by Modou Jaw', start_url:'./', display:'standalone', background_color:'#f5fbf7', theme_color:'#1a9e5c', orientation:'portrait-primary', icons:[{ src:svgUrl, sizes:'any', type:'image/svg+xml', purpose:'any maskable' }] };
   try {
     const mBlob = new Blob([JSON.stringify(manifest)], { type: 'application/manifest+json' });
     document.getElementById('pwa-manifest').href = URL.createObjectURL(mBlob);
   } catch(e) {}
-
-  // Service worker — registered lazily after page loads
-  window.addEventListener('load', () => {
+  window.addEventListener('load', function() {
     if (!('serviceWorker' in navigator)) return;
-    const swCode = `
-const CACHE='ecogreen-v1';
-self.addEventListener('install',e=>{e.waitUntil(caches.open(CACHE).then(c=>c.addAll([self.location.pathname])).then(()=>self.skipWaiting()));});
-self.addEventListener('activate',e=>{e.waitUntil(clients.claim());});
-self.addEventListener('fetch',e=>{if(e.request.method!=='GET')return;e.respondWith(caches.match(e.request).then(cached=>{const net=fetch(e.request).then(r=>{if(r&&r.status===200){const cl=r.clone();caches.open(CACHE).then(c=>c.put(e.request,cl));}return r;}).catch(()=>cached);return cached||net;}));});`;
+    const swCode = "const CACHE='ecogreen-v1';self.addEventListener('install',e=>{e.waitUntil(caches.open(CACHE).then(c=>c.addAll([self.location.pathname])).then(()=>self.skipWaiting()));});self.addEventListener('activate',e=>{e.waitUntil(clients.claim());});self.addEventListener('fetch',e=>{if(e.request.method!=='GET')return;e.respondWith(caches.match(e.request).then(cached=>{const net=fetch(e.request).then(r=>{if(r&&r.status===200){const cl=r.clone();caches.open(CACHE).then(c=>c.put(e.request,cl));}return r;}).catch(()=>cached);return cached||net;}));});";
     try {
       const swBlob = new Blob([swCode], { type: 'application/javascript' });
-      navigator.serviceWorker.register(URL.createObjectURL(swBlob)).catch(() => {});
+      navigator.serviceWorker.register(URL.createObjectURL(swBlob)).catch(function() {});
     } catch(e) {}
   });
-
-  // Install banner — Android/Chrome
   let deferredPrompt = null;
-  window.addEventListener('beforeinstallprompt', e => {
-    e.preventDefault();
-    deferredPrompt = e;
+  window.addEventListener('beforeinstallprompt', function(e) {
+    e.preventDefault(); deferredPrompt = e;
     setTimeout(showInstallBanner, 1500);
   });
-
   function showInstallBanner() {
     if (document.getElementById('install-banner')) return;
     const banner = document.createElement('div');
     banner.id = 'install-banner';
-    banner.style.cssText = 'position:fixed;bottom:20px;left:50%;transform:translateX(-50%);z-index:8000;display:flex;align-items:center;gap:12px;padding:14px 16px;border-radius:20px;background:#fff;border:1.5px solid #a8d8bc;box-shadow:0 8px 32px rgba(26,158,92,0.2);max-width:400px;width:calc(100vw - 32px);font-family:Nunito,sans-serif;animation:slideUp .3s ease;';
-    banner.innerHTML = `
-      <div style="width:40px;height:40px;border-radius:12px;background:linear-gradient(135deg,#1a9e5c,#25c270);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0">🌿</div>
-      <div style="flex:1;min-width:0">
-        <div style="font-weight:800;font-size:13px;color:#1a3328">Add ECO GREEN to Home Screen</div>
-        <div style="font-size:11px;color:#3a6b52;font-weight:600">Works offline · Own app icon 📱</div>
-      </div>
-      <button id="install-yes" style="padding:8px 16px;border-radius:16px;border:none;background:linear-gradient(135deg,#1a9e5c,#25c270);color:#fff;font-family:Nunito,sans-serif;font-size:12px;font-weight:800;cursor:pointer;flex-shrink:0">Install</button>
-      <button id="install-no" style="padding:8px 10px;border-radius:16px;border:1.5px solid #d0ead9;background:transparent;color:#7aaa90;font-family:Nunito,sans-serif;font-size:12px;font-weight:700;cursor:pointer;flex-shrink:0">✕</button>`;
+    banner.style.cssText = 'position:fixed;bottom:20px;left:50%;transform:translateX(-50%);z-index:8000;display:flex;align-items:center;gap:12px;padding:14px 16px;border-radius:20px;background:#fff;border:1.5px solid #a8d8bc;box-shadow:0 8px 32px rgba(26,158,92,0.2);max-width:400px;width:calc(100vw - 32px);font-family:Inter,sans-serif;animation:slideUp .3s ease;';
+    banner.innerHTML = '<div style="width:40px;height:40px;border-radius:12px;background:linear-gradient(135deg,#1a9e5c,#25c270);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0">🌿</div><div style="flex:1;min-width:0"><div style="font-weight:800;font-size:13px;color:#1a3328">Add ECO GREEN to Home Screen</div><div style="font-size:11px;color:#3a6b52;font-weight:600">Works offline · Own app icon 📱</div></div><button id="install-yes" style="padding:8px 16px;border-radius:16px;border:none;background:linear-gradient(135deg,#1a9e5c,#25c270);color:#fff;font-family:Inter,sans-serif;font-size:12px;font-weight:800;cursor:pointer;flex-shrink:0">Install</button><button id="install-no" style="padding:8px 10px;border-radius:16px;border:1.5px solid #d0ead9;background:transparent;color:#7aaa90;font-family:Inter,sans-serif;font-size:12px;font-weight:700;cursor:pointer;flex-shrink:0">✕</button>';
     document.body.appendChild(banner);
-    document.getElementById('install-yes').onclick = async () => {
+    document.getElementById('install-yes').onclick = async function() {
       banner.remove();
       if (deferredPrompt) { deferredPrompt.prompt(); await deferredPrompt.userChoice; deferredPrompt = null; }
     };
-    document.getElementById('install-no').onclick = () => banner.remove();
+    document.getElementById('install-no').onclick = function() { banner.remove(); };
   }
-
-  // iOS Safari hint
   const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
   if (isIOS && !window.navigator.standalone && !localStorage.getItem('eco_ios_hint')) {
-    setTimeout(() => {
+    setTimeout(function() {
       localStorage.setItem('eco_ios_hint', '1');
       if (document.getElementById('install-banner')) return;
       const hint = document.createElement('div');
       hint.id = 'install-banner';
-      hint.style.cssText = 'position:fixed;bottom:20px;left:50%;transform:translateX(-50%);z-index:8000;display:flex;align-items:center;gap:12px;padding:14px 16px;border-radius:20px;background:#fff;border:1.5px solid #a8d8bc;box-shadow:0 8px 32px rgba(26,158,92,0.2);max-width:400px;width:calc(100vw - 32px);font-family:Nunito,sans-serif;animation:slideUp .3s ease;';
-      hint.innerHTML = `
-        <div style="width:40px;height:40px;border-radius:12px;background:linear-gradient(135deg,#1a9e5c,#25c270);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0">🌿</div>
-        <div style="flex:1;min-width:0">
-          <div style="font-weight:800;font-size:13px;color:#1a3328">Add ECO GREEN to Home Screen</div>
-          <div style="font-size:11px;color:#3a6b52;font-weight:600">Tap <strong>Share ↑</strong> → <strong>Add to Home Screen</strong></div>
-        </div>
-        <button id="install-no" style="padding:8px 10px;border-radius:16px;border:1.5px solid #d0ead9;background:transparent;color:#7aaa90;font-family:Nunito,sans-serif;font-size:12px;font-weight:700;cursor:pointer;flex-shrink:0">✕</button>`;
+      hint.style.cssText = 'position:fixed;bottom:20px;left:50%;transform:translateX(-50%);z-index:8000;display:flex;align-items:center;gap:12px;padding:14px 16px;border-radius:20px;background:#fff;border:1.5px solid #a8d8bc;box-shadow:0 8px 32px rgba(26,158,92,0.2);max-width:400px;width:calc(100vw - 32px);font-family:Inter,sans-serif;animation:slideUp .3s ease;';
+      hint.innerHTML = '<div style="width:40px;height:40px;border-radius:12px;background:linear-gradient(135deg,#1a9e5c,#25c270);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0">🌿</div><div style="flex:1;min-width:0"><div style="font-weight:800;font-size:13px;color:#1a3328">Add ECO GREEN to Home Screen</div><div style="font-size:11px;color:#3a6b52;font-weight:600">Tap <strong>Share ↑</strong> → <strong>Add to Home Screen</strong></div></div><button id="install-no" style="padding:8px 10px;border-radius:16px;border:1.5px solid #d0ead9;background:transparent;color:#7aaa90;font-family:Inter,sans-serif;font-size:12px;font-weight:700;cursor:pointer;flex-shrink:0">✕</button>';
       document.body.appendChild(hint);
-      document.getElementById('install-no').onclick = () => hint.remove();
-      setTimeout(() => { if (hint.parentNode) hint.remove(); }, 9000);
+      document.getElementById('install-no').onclick = function() { hint.remove(); };
+      setTimeout(function() { if (hint.parentNode) hint.remove(); }, 9000);
     }, 3000);
   }
-
 })();
 
+// ===== INIT =====
 renderFields();
+renderQuickPrompts();
+loadMemory();
 loadKey();
 </script>
 </body>
