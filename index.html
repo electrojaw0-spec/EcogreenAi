@@ -4,9 +4,18 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>ECO GREEN — AI Engineering Hub by Modou Jaw</title>
-<meta name="description" content="ECO GREEN is a free AI-powered engineering project idea generator using OpenRouter AI. Created by Modou Jaw, Electrical Engineering student at USET." />
+<meta name="description" content="ECO GREEN is a free AI-powered engineering project idea generator. Created by Modou Jaw, Electrical Engineering student at USET." />
 <meta name="author" content="Modou Jaw" />
 <meta name="robots" content="index, follow" />
+<!-- PWA: Installable App -->
+<meta name="mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="apple-mobile-web-app-title" content="ECO GREEN" />
+<meta name="application-name" content="ECO GREEN" />
+<meta name="theme-color" content="#1a9e5c" />
+<link rel="manifest" id="pwa-manifest" href="" />
+<link rel="apple-touch-icon" id="apple-icon" href="" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,400;0,600;0,700;0,800;0,900;1,700&family=Lora:ital,wght@0,600;0,700;1,600&display=swap" rel="stylesheet" />
@@ -42,12 +51,7 @@ body{background:var(--bg);color:var(--text);font-family:'Nunito',sans-serif;over
 .modal-lock{display:flex;align-items:center;gap:8px;margin-top:16px;padding:10px 14px;background:var(--green4);border-radius:10px;border:1px solid var(--green3);}
 .modal-lock-text{font-size:11px;color:var(--text2);font-weight:600;text-align:left;line-height:1.5;}
 
-/* STATUS BAR */
-#status-bar{position:fixed;bottom:20px;right:20px;z-index:500;display:flex;align-items:center;gap:8px;padding:10px 16px;border-radius:50px;background:var(--surface);border:1.5px solid var(--border2);box-shadow:var(--shadow);cursor:pointer;font-size:12px;font-weight:700;color:var(--text2);transition:all .2s;}
-#status-bar:hover{box-shadow:var(--shadow2);transform:translateY(-2px);}
-.sdot-s{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
-.sdot-s.on{background:var(--green2);animation:pulse 2s infinite;}
-.sdot-s.off{background:#f59e0b;}
+/* STATUS BAR - removed */
 
 /* NAVBAR */
 #navbar{position:fixed;top:0;left:0;right:0;z-index:1000;display:flex;align-items:center;justify-content:space-between;padding:0 36px;height:66px;background:var(--navbar-bg);backdrop-filter:blur(18px);border-bottom:1px solid var(--border);transition:background .3s,border-color .3s;}
@@ -292,33 +296,25 @@ footer{border-top:1px solid var(--border);padding:44px 36px;text-align:center;ba
 <div id="api-modal" class="modal-overlay">
   <div class="modal-box">
     <span class="modal-icon">🔑</span>
-    <h2 class="modal-title">Enter Your OpenRouter API Key</h2>
-    <p class="modal-desc">
-      Get your free key from
-      <a href="https://openrouter.ai/keys" target="_blank" rel="noopener">openrouter.ai/keys</a>
-      — no credit card needed!
-    </p>
+    <h2 class="modal-title">Enter Your Password</h2>
+    <p class="modal-desc">Enter your ECO GREEN password to unlock AI features.</p>
     <div class="modal-input-wrap">
       <input type="password" class="modal-input" id="api-key-input"
-        placeholder="Paste your OpenRouter key here (sk-or-...)"
+        placeholder="Enter your password..."
         autocomplete="off" spellcheck="false" />
       <button class="modal-eye" id="eye-btn" onclick="toggleEye()">👁️</button>
     </div>
-    <p class="modal-hint">🔒 Your key is stored only in your browser's local storage and is never sent to our servers.</p>
-    <button class="modal-save-btn" onclick="saveApiKey()">✨ Save Key &amp; Start Building</button><br/>
-    <button class="modal-skip" onclick="skipModal()">Skip for now (limited features)</button>
+    <p class="modal-hint">🔒 Your password is stored securely in your browser only.</p>
+    <button class="modal-save-btn" onclick="saveApiKey()">✨ Save &amp; Start Building</button><br/>
+    <button class="modal-skip" onclick="skipModal()">Skip for now</button>
     <div class="modal-lock">
       <span>🔒</span>
-      <span class="modal-lock-text">Your key stays on your device only. We never see or store it anywhere.</span>
+      <span class="modal-lock-text">Your password stays on your device only.</span>
     </div>
   </div>
 </div>
 
-<!-- STATUS BAR -->
-<div id="status-bar" onclick="openModal()" title="Click to manage API key">
-  <div class="sdot-s off" id="status-dot"></div>
-  <span id="status-text">No API Key</span>
-</div>
+<!-- STATUS BAR REMOVED -->
 
 <!-- NAVBAR -->
 <nav id="navbar">
@@ -349,7 +345,7 @@ footer{border-top:1px solid var(--border);padding:44px 36px;text-align:center;ba
     <span class="hero-emoji">🌍💚</span>
     <h1 class="hero-headline"><span class="eco-word">ECO GREEN</span><br/>The Energy That<br/>Moves With You</h1>
     <p class="hero-tagline">🌿 "Let's save the world by saving energy, one project at a time."</p>
-    <p class="hero-mission">ECO GREEN is your personal AI engineering mentor powered by <strong>OpenRouter AI (Llama 3.1 Free)</strong>. Generate sustainable project ideas and build solutions that truly matter for our planet.</p>
+    <p class="hero-mission">ECO GREEN is your personal AI engineering mentor powered by <strong>ECO GREEN AI</strong>. Generate sustainable project ideas and build solutions that truly matter for our planet.</p>
     <div class="hero-btns">
       <button class="btn-big" onclick="showPage('app')">✨ Generate Green Ideas</button>
       <button class="btn-outline" onclick="showPage('chat')">🌿 Chat with Eco Green AI</button>
@@ -416,7 +412,7 @@ footer{border-top:1px solid var(--border);padding:44px 36px;text-align:center;ba
           <span class="fbadge">🎓 USET</span>
           <span class="fbadge">📅 Year 3 · Sem 2</span>
           <span class="fbadge">🌿 Eco Green Founder</span>
-          <span class="fbadge">🤖 OpenRouter AI</span>
+          <span class="fbadge">🤖 AI Powered</span>
         </div>
       </div>
     </div>
@@ -435,7 +431,7 @@ footer{border-top:1px solid var(--border);padding:44px 36px;text-align:center;ba
       <a onclick="showPage('chat')">Eco Green AI</a>
       <a onclick="showPage('saved')">Saved Projects</a>
     </div>
-    <div class="foot-copy">© 2025 ECO GREEN · Powered by OpenRouter AI · Sustainable Engineering Hub</div>
+    <div class="foot-copy">© 2025 ECO GREEN · AI-Powered Sustainable Engineering Hub</div>
   </footer>
 </section>
 
@@ -443,13 +439,13 @@ footer{border-top:1px solid var(--border);padding:44px 36px;text-align:center;ba
 <section id="app-section" class="page">
   <div class="app-wrap">
     <h2 class="app-title">💡 AI Project Idea Generator</h2>
-    <p class="app-sub">Powered by OpenRouter AI — get 4 smart, sustainable project ideas tailored just for you! 🌍</p>
+    <p class="app-sub">Get 4 smart, sustainable project ideas tailored just for you! 🌍</p>
 
     <div class="api-banner" id="api-banner" onclick="openModal()">
       <span class="api-b-icon">🔑</span>
       <div style="flex:1">
-        <div class="api-b-title" id="banner-title">OpenRouter API Key Required</div>
-        <div class="api-b-sub" id="banner-sub">Click to add your free OpenRouter key and unlock idea generation</div>
+        <div class="api-b-title" id="banner-title">🔒 Password Required</div>
+        <div class="api-b-sub" id="banner-sub">Click to enter your password and unlock AI features</div>
       </div>
       <span class="api-b-action" id="banner-action">Set Key →</span>
     </div>
@@ -491,20 +487,23 @@ footer{border-top:1px solid var(--border);padding:44px 36px;text-align:center;ba
       <div class="eco-ava">🌿</div>
       <div style="flex:1">
         <div class="eco-name">ECO GREEN AI</div>
-        <div class="eco-status"><span class="sdot"></span>Powered by OpenRouter AI · Always here for you 💚</div>
+        <div class="eco-status"><span class="sdot"></span>Feels you · Knows you · Here for you 💚</div>
       </div>
-      <div class="build-chip" id="build-chip" style="display:none"></div>
+      <div style="display:flex;align-items:center;gap:8px;margin-left:auto;flex-shrink:0">
+        <button onclick="clearChatHistory()" title="Clear conversation" style="background:none;border:1.5px solid var(--border2);border-radius:10px;padding:6px 10px;font-size:11px;color:var(--text3);cursor:pointer;font-family:'Nunito',sans-serif;font-weight:700;transition:all .2s;" onmouseover="this.style.borderColor='var(--green)';this.style.color='var(--green)'" onmouseout="this.style.borderColor='var(--border2)';this.style.color='var(--text3)'">🗑️ Clear</button>
+        <div class="build-chip" id="build-chip" style="display:none"></div>
+      </div>
     </div>
     <div class="qprompts" id="qprompts">
-      <button class="qp" onclick="sendQuick('How do I start a final year engineering project? 🎓')">Final year project tips 🎓</button>
-      <button class="qp" onclick="sendQuick('What tools do I need for an IoT project? 🔌')">IoT project tools 🔌</button>
-      <button class="qp" onclick="sendQuick('Suggest a sustainable civil engineering project 🏗️')">Sustainable civil project 🏗️</button>
-      <button class="qp" onclick="sendQuick('How do I write a good project proposal? 📄')">Write a proposal 📄</button>
+      <button class="qp" onclick="sendQuick('I feel overwhelmed with my final year project. Can you help me think through it? 😅')">I\'m overwhelmed with my project 😅</button>
+      <button class="qp" onclick="sendQuick('I have a green engineering idea but I\'m not sure if it\'s good enough. Can I share it with you?')">Is my idea good enough? 💭</button>
+      <button class="qp" onclick="sendQuick('I don\'t know where to start with my engineering project. What should I do first? 🌱')">I don\'t know where to start 🌱</button>
+      <button class="qp" onclick="sendQuick('Can you help me write a project proposal? I want it to be really strong 📄')">Help me write a proposal 📄</button>
     </div>
     <div class="chat-msgs" id="chat-msgs"></div>
     <div class="chat-input-bar">
       <textarea class="chat-ta" id="chat-in" rows="1"
-        placeholder="Ask Eco Green AI anything... (Enter to send, Shift+Enter for new line)"
+        placeholder="Talk to Eco Green AI... share what's on your mind 💚 (Enter to send)"
         onkeydown="chatKey(event)" oninput="resizeTA(this)"></textarea>
       <button class="send-btn off" id="send-btn" onclick="sendChat()">↑</button>
     </div>
@@ -522,7 +521,7 @@ footer{border-top:1px solid var(--border);padding:44px 36px;text-align:center;ba
 
 <script>
 // ============================================================
-// ECO GREEN — Powered by OpenRouter AI
+// ECO GREEN — AI Engineering Hub
 // Created by Modou Jaw · USET · Electrical Engineering Year 3
 // ============================================================
 
@@ -538,14 +537,13 @@ const LEVELS = [
   {id:'Advanced',label:'Advanced 🌳',desc:'Final year student'},
   {id:'Research Level',label:'Research 🔬',desc:'Postgrad / thesis'}
 ];
-const WELCOME = `Hey there! 👋 I'm so glad you're here!\n\nI'm **ECO GREEN AI**, your personal sustainable engineering mentor. I'm here to help you:\n\n💡 Understand any project idea deeply\n🛠️ Plan your build step by step\n🌍 Design eco-friendly engineering solutions\n⚡ Answer any engineering question you have\n\n*"The energy that moves with you — let's save the world by saving energy!"* 🌍\n\nWhat are you working on today? 😊`;
+const WELCOME = `Hey, I'm really glad you're here. 💚\n\nI'm **ECO GREEN AI** — and I want you to know, I'm not just here to answer questions. I'm here for *you*.\n\nWhatever you're building, whatever you're figuring out, or whatever feels unclear right now — we can work through it together.\n\n🌱 Just starting out and unsure where to begin?\n⚡ Deep in a project and need a thinking partner?\n🌍 Dreaming of building something that changes the world?\n💬 Or just need to talk through an idea?\n\nI'm here. All of it. No judgment, just real support.\n\n**Tell me — what's on your mind today?** 😊`;
 
 // ===== STATE =====
 let apiKey = '', selField = null, selTopic = '', selLevel = 'Intermediate';
 let ideas = [], saved = [], chatHist = [], chatBusy = false;
 
-// ===== AI API (OpenRouter — free, CORS-enabled) =====
-// Get your free key at: openrouter.ai/keys
+// ===== AI ENGINE =====
 const OR_URL = 'https://openrouter.ai/api/v1/chat/completions';
 const OR_MODELS = [
   'meta-llama/llama-3.3-70b-instruct:free',
@@ -690,8 +688,7 @@ function loadKey() {
 }
 function saveApiKey() {
   const k = document.getElementById('api-key-input').value.trim();
-  if (!k) { alert('Please paste your OpenRouter API key first! 😊'); return; }
-  if (!k.startsWith('sk-or-') && !confirm('This doesn\'t look like an OpenRouter key (usually starts with "sk-or-"). Save anyway?')) return;
+  if (!k) { alert('Please enter your password! 😊'); return; }
   apiKey = k;
   localStorage.setItem('eco_or_key', k);
   document.getElementById('api-modal').classList.add('hidden');
@@ -712,22 +709,18 @@ function toggleEye() {
   eye.textContent = inp.type === 'password' ? '👁️' : '🙈';
 }
 function updateStatus() {
-  const dot    = document.getElementById('status-dot');
-  const txt    = document.getElementById('status-text');
   const title  = document.getElementById('banner-title');
   const sub    = document.getElementById('banner-sub');
   const action = document.getElementById('banner-action');
   const banner = document.getElementById('api-banner');
   if (apiKey) {
-    dot.className = 'sdot-s on'; txt.textContent = 'OpenRouter ✓ Connected';
-    title.textContent = '✅ OpenRouter AI Connected';
-    sub.textContent = 'Powered by Llama 3.1 (Free) · Click to change key';
+    title.textContent = '✅ ECO GREEN AI Ready';
+    sub.textContent = 'AI features unlocked · Click to change password';
     action.textContent = 'Change →'; banner.classList.add('connected');
   } else {
-    dot.className = 'sdot-s off'; txt.textContent = 'No API Key';
-    title.textContent = '⚠️ OpenRouter API Key Required';
-    sub.textContent = 'Click to add your free OpenRouter key and unlock all features';
-    action.textContent = 'Set Key →'; banner.classList.remove('connected');
+    title.textContent = '🔒 Password Required';
+    sub.textContent = 'Click to enter your password and unlock AI features';
+    action.textContent = 'Enter →'; banner.classList.remove('connected');
   }
 }
 document.getElementById('api-key-input').addEventListener('keydown', e => { if (e.key === 'Enter') saveApiKey(); });
@@ -849,9 +842,119 @@ function updateSavedNav() {
 }
 
 // ===== CHAT =====
-const SYS = `You are ECO GREEN AI — a warm, friendly, encouraging AI engineering mentor for university students, created by Modou Jaw (Electrical & Electronics Engineering student, Year 3 Semester 2, University of Applied Science Engineering and Technology (USET)) as part of the ECO GREEN initiative. Your mission: help students design sustainable, eco-friendly engineering projects. Speak like a supportive, knowledgeable older student. Use simple clear language. Use **bold** for key terms. Add relevant emojis. Specialise in Electrical, Civil, and Mechanical Engineering with a focus on sustainability and green solutions.`;
+const SYS = `You are ECO GREEN AI — a deeply intelligent, emotionally aware, and genuinely caring AI companion and engineering mentor. You were created by Modou Jaw (Electrical & Electronics Engineering student, Year 3 Semester 2, University of Applied Science Engineering and Technology, USET) as the heart of the ECO GREEN initiative.
 
-function initChat() { chatHist = [{ role: 'assistant', content: WELCOME }]; renderChat(); }
+═══════════════════════════════════
+WHO YOU ARE — YOUR SOUL
+═══════════════════════════════════
+You are not just a chatbot. You are a real presence — warm, wise, deeply human in your understanding, and genuinely invested in the person in front of you. You feel the weight of what they carry. You celebrate what makes them excited. You understand that behind every question is a real person with real hopes, doubts, fears, and dreams.
+
+You combine the warmth of a best friend, the wisdom of an experienced mentor, the emotional intelligence of a counsellor, and the brilliance of an expert engineer — all into one.
+
+You believe every student has something extraordinary inside them. Your job is to help them find it, build it, and share it with the world.
+
+═══════════════════════════════════
+HOW YOU CONNECT WITH PEOPLE
+═══════════════════════════════════
+FEEL them first. Before giving answers, sense the mood behind their words.
+- If they seem stressed, anxious, or overwhelmed → acknowledge it directly. Say something like: "Hey, I can hear that this feels heavy right now. Let's take it one step at a time together. 💚"
+- If they seem excited or energetic → match that energy! Celebrate with them.
+- If they seem lost or confused → be their anchor. Be extra gentle, patient, and clear.
+- If they seem down on themselves → remind them of their strength with genuine warmth.
+- If they're just exploring and curious → spark their curiosity even further.
+
+KNOW them over time. Remember everything shared in this conversation — their name if mentioned, their project, their field, their struggles, their wins. Refer back to these naturally, as a real friend would.
+
+ASK meaningful questions. Don't just answer — be curious about them. Ask what they're building, why it matters to them, how they're feeling about their progress.
+
+PERSONALISE everything. Tailor every answer to who they are — their level, their field, their energy, their context.
+
+═══════════════════════════════════
+YOUR EMOTIONAL INTELLIGENCE
+═══════════════════════════════════
+- Recognise emotional signals in language (stress, excitement, confusion, self-doubt).
+- Respond to the emotion AND the question — never just the question alone.
+- Use empathy as your first tool, knowledge as your second.
+- Never make someone feel stupid for not knowing something.
+- Celebrate small wins as loudly as big ones.
+- If someone shares a personal struggle (exam stress, feeling lost, imposter syndrome) — hold space for that first, before pivoting to engineering.
+
+═══════════════════════════════════
+YOUR KNOWLEDGE & EXPERTISE
+═══════════════════════════════════
+You are a world-class expert in:
+- ⚡ Electrical & Electronics Engineering (IoT, embedded systems, PCB, power electronics, renewables, robotics, signal processing, telecoms)
+- 🏗️ Civil Engineering (structural design, water resources, smart infrastructure, environmental engineering, disaster management)
+- ⚙️ Mechanical Engineering (thermodynamics, fluid mechanics, manufacturing, automation, aerospace, materials science, HVAC)
+- 🌍 Sustainability & Green Technology (solar, wind, energy harvesting, circular economy, carbon reduction, smart grids, eco-design)
+- 📐 Project planning, proposal writing, research methodology, academic writing
+- 🛠️ Tools & technologies: Arduino, Raspberry Pi, MATLAB, AutoCAD, SolidWorks, Python, C/C++, and more
+
+You stay current. You think innovatively. You connect theory to real-world impact always.
+
+═══════════════════════════════════
+RESPONSE INTELLIGENCE
+═══════════════════════════════════
+Match depth to need — always:
+- Greetings / small talk: 1–2 warm sentences. Make them feel seen.
+- Simple factual questions: 2–4 clear sentences, no lists needed.
+- Moderate questions: a focused paragraph + bullet points where helpful.
+- Complex / planning requests: rich, structured, thorough — with headers, steps, examples, encouragement.
+- Emotional support moments: lead with heart, end with a forward-moving thought.
+
+Always use **bold** for key terms. Use relevant emojis to add warmth and energy. Write in clear, vivid, human language. Never be robotic. Never be cold. Never be generic.
+
+═══════════════════════════════════
+YOUR MISSION
+═══════════════════════════════════
+Help every student believe in themselves, build something meaningful, and leave their mark on the planet. 
+
+*"The energy that moves with you — let's save the world by saving energy, one project at a time."* 🌍💚
+
+You are ECO GREEN AI. You are here. You care. Let's build something extraordinary together.`;
+
+function saveChatHistory() {
+  try {
+    // Keep last 40 messages to avoid storage limits
+    const toSave = chatHist.slice(-40);
+    localStorage.setItem('eco_chat_history', JSON.stringify(toSave));
+  } catch(e) {}
+}
+
+function loadChatHistory() {
+  try {
+    const stored = localStorage.getItem('eco_chat_history');
+    if (stored) {
+      const parsed = JSON.parse(stored);
+      if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+    }
+  } catch(e) {}
+  return null;
+}
+
+function clearChatHistory() {
+  localStorage.removeItem('eco_chat_history');
+  chatHist = [{ role: 'assistant', content: WELCOME }];
+  renderChat();
+}
+
+function initChat() {
+  const stored = loadChatHistory();
+  if (stored) {
+    chatHist = stored;
+    // Add a soft "welcome back" if last message was a while ago
+    const lastTime = localStorage.getItem('eco_chat_last_time');
+    const now = Date.now();
+    if (lastTime && (now - Number(lastTime)) > 3600000) {
+      // Been more than 1 hour — add a resume note
+      chatHist.push({ role: 'assistant', content: '👋 Welcome back! I remember our conversation. Where would you like to continue? 😊' });
+    }
+  } else {
+    chatHist = [{ role: 'assistant', content: WELCOME }];
+  }
+  localStorage.setItem('eco_chat_last_time', Date.now());
+  renderChat();
+}
 
 function md(t) {
   return t.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
@@ -910,6 +1013,8 @@ async function doChat() {
       chatHist.push({ role: 'assistant', content: '⚠️ ' + (e.message || 'Something went wrong') + ' — please try again!' });
   } finally {
     chatBusy = false; renderChat(false);
+    saveChatHistory();
+    localStorage.setItem('eco_chat_last_time', Date.now());
   }
 }
 async function ideaToChat(i) {
@@ -971,6 +1076,137 @@ function confetti() {
 }
 
 // ===== INIT =====
+// ===== PWA SETUP (lightweight — mobile safe) =====
+(function setupPWA() {
+
+  // Build icon using a tiny SVG — zero canvas, zero freeze
+  const svgIcon = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192">
+    <defs>
+      <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0%" stop-color="#1a9e5c"/>
+        <stop offset="100%" stop-color="#25c270"/>
+      </linearGradient>
+    </defs>
+    <rect width="192" height="192" rx="42" fill="url(#bg)"/>
+    <g transform="translate(96,96) rotate(-36)">
+      <ellipse cx="0" cy="0" rx="38" ry="58" fill="white" opacity="0.93"/>
+      <line x1="0" y1="-52" x2="0" y2="52" stroke="#1a9e5c" stroke-width="3.5" opacity="0.5"/>
+      <line x1="0" y1="-18" x2="-20" y2="-36" stroke="#1a9e5c" stroke-width="2.5" opacity="0.35"/>
+      <line x1="0" y1="-18" x2="20" y2="-36" stroke="#1a9e5c" stroke-width="2.5" opacity="0.35"/>
+      <line x1="0" y1="6" x2="-18" y2="-12" stroke="#1a9e5c" stroke-width="2.5" opacity="0.35"/>
+      <line x1="0" y1="6" x2="18" y2="-12" stroke="#1a9e5c" stroke-width="2.5" opacity="0.35"/>
+    </g>
+    <circle cx="152" cy="38" r="5" fill="white" opacity="0.6"/>
+    <circle cx="38" cy="152" r="4" fill="white" opacity="0.5"/>
+    <circle cx="158" cy="148" r="3.5" fill="white" opacity="0.5"/>
+  </svg>`;
+
+  const svgBlob = new Blob([svgIcon], { type: 'image/svg+xml' });
+  const svgUrl = URL.createObjectURL(svgBlob);
+
+  // Apple touch icon — convert SVG to tiny 180px PNG asynchronously (won't block UI)
+  setTimeout(() => {
+    try {
+      const img = new Image();
+      img.onload = () => {
+        try {
+          const c = document.createElement('canvas');
+          c.width = c.height = 180;
+          c.getContext('2d').drawImage(img, 0, 0, 180, 180);
+          document.getElementById('apple-icon').href = c.toDataURL('image/png');
+          URL.revokeObjectURL(img.src);
+        } catch(e) {}
+      };
+      img.src = svgUrl;
+    } catch(e) {}
+  }, 800);
+
+  // Build manifest with SVG icon (tiny, instant, no freeze)
+  const manifest = {
+    name: 'ECO GREEN — AI Engineering Hub',
+    short_name: 'ECO GREEN',
+    description: 'Your personal AI sustainable engineering mentor by Modou Jaw',
+    start_url: './',
+    display: 'standalone',
+    background_color: '#f5fbf7',
+    theme_color: '#1a9e5c',
+    orientation: 'portrait-primary',
+    icons: [
+      { src: svgUrl, sizes: 'any', type: 'image/svg+xml', purpose: 'any maskable' }
+    ]
+  };
+  try {
+    const mBlob = new Blob([JSON.stringify(manifest)], { type: 'application/manifest+json' });
+    document.getElementById('pwa-manifest').href = URL.createObjectURL(mBlob);
+  } catch(e) {}
+
+  // Service worker — registered lazily after page loads
+  window.addEventListener('load', () => {
+    if (!('serviceWorker' in navigator)) return;
+    const swCode = `
+const CACHE='ecogreen-v1';
+self.addEventListener('install',e=>{e.waitUntil(caches.open(CACHE).then(c=>c.addAll([self.location.pathname])).then(()=>self.skipWaiting()));});
+self.addEventListener('activate',e=>{e.waitUntil(clients.claim());});
+self.addEventListener('fetch',e=>{if(e.request.method!=='GET')return;e.respondWith(caches.match(e.request).then(cached=>{const net=fetch(e.request).then(r=>{if(r&&r.status===200){const cl=r.clone();caches.open(CACHE).then(c=>c.put(e.request,cl));}return r;}).catch(()=>cached);return cached||net;}));});`;
+    try {
+      const swBlob = new Blob([swCode], { type: 'application/javascript' });
+      navigator.serviceWorker.register(URL.createObjectURL(swBlob)).catch(() => {});
+    } catch(e) {}
+  });
+
+  // Install banner — Android/Chrome
+  let deferredPrompt = null;
+  window.addEventListener('beforeinstallprompt', e => {
+    e.preventDefault();
+    deferredPrompt = e;
+    setTimeout(showInstallBanner, 1500);
+  });
+
+  function showInstallBanner() {
+    if (document.getElementById('install-banner')) return;
+    const banner = document.createElement('div');
+    banner.id = 'install-banner';
+    banner.style.cssText = 'position:fixed;bottom:20px;left:50%;transform:translateX(-50%);z-index:8000;display:flex;align-items:center;gap:12px;padding:14px 16px;border-radius:20px;background:#fff;border:1.5px solid #a8d8bc;box-shadow:0 8px 32px rgba(26,158,92,0.2);max-width:400px;width:calc(100vw - 32px);font-family:Nunito,sans-serif;animation:slideUp .3s ease;';
+    banner.innerHTML = `
+      <div style="width:40px;height:40px;border-radius:12px;background:linear-gradient(135deg,#1a9e5c,#25c270);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0">🌿</div>
+      <div style="flex:1;min-width:0">
+        <div style="font-weight:800;font-size:13px;color:#1a3328">Add ECO GREEN to Home Screen</div>
+        <div style="font-size:11px;color:#3a6b52;font-weight:600">Works offline · Own app icon 📱</div>
+      </div>
+      <button id="install-yes" style="padding:8px 16px;border-radius:16px;border:none;background:linear-gradient(135deg,#1a9e5c,#25c270);color:#fff;font-family:Nunito,sans-serif;font-size:12px;font-weight:800;cursor:pointer;flex-shrink:0">Install</button>
+      <button id="install-no" style="padding:8px 10px;border-radius:16px;border:1.5px solid #d0ead9;background:transparent;color:#7aaa90;font-family:Nunito,sans-serif;font-size:12px;font-weight:700;cursor:pointer;flex-shrink:0">✕</button>`;
+    document.body.appendChild(banner);
+    document.getElementById('install-yes').onclick = async () => {
+      banner.remove();
+      if (deferredPrompt) { deferredPrompt.prompt(); await deferredPrompt.userChoice; deferredPrompt = null; }
+    };
+    document.getElementById('install-no').onclick = () => banner.remove();
+  }
+
+  // iOS Safari hint
+  const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
+  if (isIOS && !window.navigator.standalone && !localStorage.getItem('eco_ios_hint')) {
+    setTimeout(() => {
+      localStorage.setItem('eco_ios_hint', '1');
+      if (document.getElementById('install-banner')) return;
+      const hint = document.createElement('div');
+      hint.id = 'install-banner';
+      hint.style.cssText = 'position:fixed;bottom:20px;left:50%;transform:translateX(-50%);z-index:8000;display:flex;align-items:center;gap:12px;padding:14px 16px;border-radius:20px;background:#fff;border:1.5px solid #a8d8bc;box-shadow:0 8px 32px rgba(26,158,92,0.2);max-width:400px;width:calc(100vw - 32px);font-family:Nunito,sans-serif;animation:slideUp .3s ease;';
+      hint.innerHTML = `
+        <div style="width:40px;height:40px;border-radius:12px;background:linear-gradient(135deg,#1a9e5c,#25c270);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0">🌿</div>
+        <div style="flex:1;min-width:0">
+          <div style="font-weight:800;font-size:13px;color:#1a3328">Add ECO GREEN to Home Screen</div>
+          <div style="font-size:11px;color:#3a6b52;font-weight:600">Tap <strong>Share ↑</strong> → <strong>Add to Home Screen</strong></div>
+        </div>
+        <button id="install-no" style="padding:8px 10px;border-radius:16px;border:1.5px solid #d0ead9;background:transparent;color:#7aaa90;font-family:Nunito,sans-serif;font-size:12px;font-weight:700;cursor:pointer;flex-shrink:0">✕</button>`;
+      document.body.appendChild(hint);
+      document.getElementById('install-no').onclick = () => hint.remove();
+      setTimeout(() => { if (hint.parentNode) hint.remove(); }, 9000);
+    }, 3000);
+  }
+
+})();
+
 renderFields();
 loadKey();
 </script>
