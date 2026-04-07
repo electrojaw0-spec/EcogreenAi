@@ -233,7 +233,9 @@ footer{border-top:1px solid var(--border);padding:48px 40px 40px;text-align:cent
 .regen-btn{margin-top:16px;width:100%;padding:14px;border-radius:12px;border:2px solid var(--border);background:var(--surface);color:var(--text3);font-family:'Inter',sans-serif;font-size:13px;font-weight:700;cursor:pointer;transition:all .2s;}
 .regen-btn:hover{border-color:var(--green);color:var(--green);background:var(--green4);}
 
-/* CHAT */
+/* ============================================================
+   CHAT — UPGRADED TYPOGRAPHY
+   ============================================================ */
 #chat-section{display:none;padding-top:66px;height:100vh;flex-direction:column;}
 #chat-section.active{display:flex;}
 .chat-wrap{flex:1;display:flex;flex-direction:column;max-width:720px;width:100%;margin:0 auto;padding:0 20px;overflow:hidden;}
@@ -246,24 +248,172 @@ footer{border-top:1px solid var(--border);padding:48px 40px 40px;text-align:cent
 .qprompts{padding:10px 0 6px;display:flex;flex-wrap:wrap;gap:7px;flex-shrink:0;}
 .qp{padding:8px 14px;border-radius:20px;border:1.5px solid var(--border);background:var(--surface);color:var(--text2);font-size:12px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;transition:all .15s;}
 .qp:hover{border-color:var(--green);color:var(--green);background:var(--green4);}
-.chat-msgs{flex:1;overflow-y:auto;padding:14px 0;display:flex;flex-direction:column;gap:14px;}
-.msg-row{display:flex;gap:10px;animation:fadeUp .2s ease;}
+.chat-msgs{flex:1;overflow-y:auto;padding:14px 0;display:flex;flex-direction:column;gap:16px;}
+.msg-row{display:flex;gap:12px;animation:fadeUp .2s ease;}
 .msg-row.user{flex-direction:row-reverse;}
-.msg-ava{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,var(--green),var(--green2));display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;}
-.bubble{max-width:76%;padding:13px 16px;font-size:14px;line-height:1.8;border-radius:18px;font-weight:600;}
-.bubble.eco{background:var(--surface);border:1.5px solid var(--border);color:var(--text2);border-radius:4px 18px 18px 18px;}
-.bubble.user{background:linear-gradient(135deg,var(--green),var(--green2));color:#fff;border-radius:18px 18px 4px 18px;}
-.typing-bub{background:var(--surface);border:1.5px solid var(--border);border-radius:4px 18px 18px 18px;padding:14px 18px;}
+.msg-ava{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--green),var(--green2));display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;margin-top:2px;}
+
+/* ── Bubble base ── */
+.bubble{
+  max-width:80%;
+  padding:16px 20px;
+  border-radius:20px;
+  font-family:'Inter',sans-serif;
+  /* ★ ENLARGED BASE FONT */
+  font-size:18px;
+  line-height:1.85;
+  font-weight:500;
+}
+
+/* ECO (AI) bubble */
+.bubble.eco{
+  background:var(--surface);
+  border:1.5px solid var(--border);
+  color:var(--text2);
+  border-radius:4px 20px 20px 20px;
+}
+
+/* User bubble */
+.bubble.user{
+  background:linear-gradient(135deg,var(--green),var(--green2));
+  color:#fff;
+  border-radius:20px 20px 4px 20px;
+  font-size:18px;
+  font-weight:600;
+}
+
+/* ── Rich-text elements INSIDE bubbles ── */
+
+/* H1 inside bubbles */
+.bubble .chat-h1{
+  font-family:'DM Serif Display',serif;
+  font-size:26px;
+  font-weight:700;
+  color:var(--green);
+  margin:18px 0 10px;
+  line-height:1.2;
+  padding-bottom:6px;
+  border-bottom:2px solid var(--green3);
+}
+.bubble.user .chat-h1{color:#fff;border-bottom-color:rgba(255,255,255,0.35);}
+
+/* H2 inside bubbles */
+.bubble .chat-h2{
+  font-family:'DM Serif Display',serif;
+  font-size:22px;
+  font-weight:700;
+  color:var(--text);
+  margin:16px 0 8px;
+  line-height:1.25;
+}
+.bubble.user .chat-h2{color:#fff;}
+
+/* H3 inside bubbles */
+.bubble .chat-h3{
+  font-size:19px;
+  font-weight:800;
+  color:var(--green);
+  margin:14px 0 6px;
+  line-height:1.3;
+  letter-spacing:-.1px;
+}
+.bubble.user .chat-h3{color:rgba(255,255,255,0.92);}
+
+/* Bold spans */
+.bubble strong,
+.bubble b{
+  font-weight:800;
+  color:var(--text);
+  letter-spacing:-.1px;
+}
+.bubble.user strong,
+.bubble.user b{color:#fff;}
+
+/* Italic */
+.bubble em,
+.bubble i{font-style:italic;color:var(--green);}
+.bubble.user em,
+.bubble.user i{color:rgba(255,255,255,0.88);}
+
+/* Inline code */
+.bubble .chat-code-inline{
+  background:var(--surface2);
+  border:1px solid var(--border);
+  border-radius:6px;
+  padding:2px 8px;
+  font-size:15px;
+  font-family:monospace;
+  color:var(--green);
+  font-weight:700;
+}
+.bubble.user .chat-code-inline{
+  background:rgba(255,255,255,0.18);
+  border-color:rgba(255,255,255,0.25);
+  color:#fff;
+}
+
+/* Code block */
+.bubble .chat-pre{
+  background:var(--surface2);
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:14px 16px;
+  font-size:14px;
+  overflow-x:auto;
+  margin:10px 0;
+  font-family:monospace;
+  line-height:1.6;
+  color:var(--text);
+}
+.bubble.user .chat-pre{
+  background:rgba(255,255,255,0.15);
+  border-color:rgba(255,255,255,0.2);
+  color:#fff;
+}
+
+/* List items */
+.bubble .chat-li{
+  display:flex;
+  gap:10px;
+  margin:5px 0;
+  align-items:flex-start;
+  font-size:18px;
+}
+.bubble .chat-li-bullet{
+  color:var(--green);
+  font-weight:900;
+  flex-shrink:0;
+  margin-top:1px;
+  font-size:18px;
+}
+.bubble.user .chat-li-bullet{color:rgba(255,255,255,0.8);}
+
+/* Horizontal rule */
+.bubble .chat-hr{
+  border:none;
+  border-top:2px solid var(--border);
+  margin:14px 0;
+}
+.bubble.user .chat-hr{border-top-color:rgba(255,255,255,0.25);}
+
+/* First element no top margin */
+.bubble > *:first-child{margin-top:0 !important;}
+.bubble > *:last-child{margin-bottom:0 !important;}
+
+/* Typing indicator */
+.typing-bub{background:var(--surface);border:1.5px solid var(--border);border-radius:4px 20px 20px 20px;padding:16px 20px;}
 .typing-dots{display:inline-flex;gap:5px;align-items:center;}
-.dot{width:8px;height:8px;border-radius:50%;background:var(--green2);}
+.dot{width:9px;height:9px;border-radius:50%;background:var(--green2);}
 .dot:nth-child(1){animation:dotBounce 1.2s 0s infinite ease-in-out;}
 .dot:nth-child(2){animation:dotBounce 1.2s .2s infinite ease-in-out;}
 .dot:nth-child(3){animation:dotBounce 1.2s .4s infinite ease-in-out;}
+
+/* Chat input */
 .chat-input-bar{padding:14px 0 22px;border-top:1px solid var(--border);display:flex;gap:10px;align-items:flex-end;flex-shrink:0;}
-.chat-ta{flex:1;background:var(--surface);border:1.5px solid var(--border);border-radius:16px;padding:13px 17px;color:var(--text);font-family:'Inter',sans-serif;font-size:14px;resize:none;outline:none;line-height:1.6;max-height:110px;overflow-y:auto;font-weight:600;transition:border-color .2s;}
+.chat-ta{flex:1;background:var(--surface);border:1.5px solid var(--border);border-radius:16px;padding:14px 18px;color:var(--text);font-family:'Inter',sans-serif;font-size:16px;resize:none;outline:none;line-height:1.6;max-height:120px;overflow-y:auto;font-weight:500;transition:border-color .2s;}
 .chat-ta:focus{border-color:var(--green);box-shadow:0 0 0 3px #1a9e5c18;}
 .chat-ta::placeholder{color:var(--text3);}
-.send-btn{width:48px;height:48px;border-radius:50%;border:none;font-size:20px;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;transition:all .2s;}
+.send-btn{width:50px;height:50px;border-radius:50%;border:none;font-size:22px;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;transition:all .2s;}
 .send-btn.ready{background:linear-gradient(135deg,var(--green),var(--green2));color:#fff;box-shadow:0 4px 16px #1a9e5c44;}
 .send-btn.ready:hover{transform:translateY(-2px);}
 .send-btn.off{background:var(--border);color:var(--text3);cursor:not-allowed;}
@@ -307,6 +457,11 @@ footer{border-top:1px solid var(--border);padding:48px 40px 40px;text-align:cent
   .app-wrap,.saved-wrap{padding:28px 16px;}
   .founder-card{grid-template-columns:1fr;text-align:center;}
   .founder-left{margin:0 auto;}
+  .bubble{font-size:17px;padding:14px 16px;}
+  .bubble .chat-h1{font-size:22px;}
+  .bubble .chat-h2{font-size:19px;}
+  .bubble .chat-h3{font-size:17px;}
+  .bubble .chat-li{font-size:17px;}
 }
 </style>
 </head>
@@ -385,6 +540,19 @@ footer{border-top:1px solid var(--border);padding:48px 40px 40px;text-align:cent
     <button class="nav-cta" onclick="showPage('app')">Get Ideas</button>
   </div>
 </nav>
+
+<!-- PWA INSTALL BANNER -->
+<div id="install-banner" style="display:none;position:fixed;bottom:24px;left:50%;transform:translateX(-50%);z-index:2000;width:calc(100% - 32px);max-width:420px;">
+  <div style="background:var(--surface);border:1.5px solid var(--green3);border-radius:20px;padding:16px 18px;display:flex;align-items:center;gap:14px;box-shadow:0 8px 40px rgba(22,160,90,0.22),0 2px 12px rgba(0,0,0,0.12);animation:slideUp .35s ease;">
+    <div style="width:46px;height:46px;border-radius:12px;background:linear-gradient(135deg,var(--green),var(--green2));display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;box-shadow:0 4px 14px #1a9e5c44;">🌍</div>
+    <div style="flex:1;min-width:0;">
+      <div style="font-size:14px;font-weight:800;color:var(--text);margin-bottom:2px;">Install ECO GREEN</div>
+      <div style="font-size:12px;color:var(--text3);font-weight:600;">Add to home screen for quick access</div>
+    </div>
+    <button id="install-btn" onclick="triggerInstall()" style="padding:9px 16px;border-radius:10px;border:none;background:linear-gradient(135deg,var(--green),var(--green2));color:#fff;font-family:'Inter',sans-serif;font-size:13px;font-weight:800;cursor:pointer;white-space:nowrap;box-shadow:0 4px 14px #1a9e5c44;transition:all .2s;">Install</button>
+    <button onclick="dismissInstall()" style="width:28px;height:28px;border-radius:8px;border:1.5px solid var(--border2);background:transparent;color:var(--text3);font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .2s;" onmouseover="this.style.borderColor='var(--green)'" onmouseout="this.style.borderColor='var(--border2)'">✕</button>
+  </div>
+</div>
 
 <!-- HERO -->
 <section id="hero-page" class="page active">
@@ -554,12 +722,11 @@ footer{border-top:1px solid var(--border);padding:48px 40px 40px;text-align:cent
         <div class="build-chip" id="build-chip" style="display:none"></div>
       </div>
     </div>
-    <!-- Quick prompts rendered by JS to avoid quote-in-attribute issues -->
     <div class="qprompts" id="qprompts"></div>
     <div class="chat-msgs" id="chat-msgs"></div>
     <div class="chat-input-bar">
       <textarea class="chat-ta" id="chat-in" rows="1"
-        placeholder="Ask anything... (Shift+Enter to send)"
+        placeholder="Ask anything… (Shift+Enter to send)"
         onkeydown="chatKey(event)" oninput="resizeTA(this)"></textarea>
       <button class="send-btn off" id="send-btn" onclick="sendChat()">↑</button>
     </div>
@@ -581,7 +748,7 @@ footer{border-top:1px solid var(--border);padding:48px 40px 40px;text-align:cent
 // Created by Modou Jaw · USET · Electrical Engineering Year 3
 // ============================================================
 
-// ===== QUICK PROMPTS (defined in JS to avoid quote-in-attribute syntax errors) =====
+// ===== QUICK PROMPTS =====
 const QUICK_PROMPTS = [
   "I feel overwhelmed with my final year project. Can you help me figure out where to start? 😅",
   "I have a project idea but I am not sure if it is good or realistic. Can I tell you about it?",
@@ -620,7 +787,7 @@ const LEVELS = [
   {id:'Advanced',label:'Advanced 🌳',desc:'Final year student'},
   {id:'Research Level',label:'Research 🔬',desc:'Postgrad / thesis'}
 ];
-const WELCOME = "Hey! I'm really glad you're here. 💚\n\nI'm **ECO GREEN AI** — your personal sustainable engineering mentor. I'm genuinely here for you, not just to answer questions.\n\nHere's what I can help you with:\n\n**💡 Project Ideas** — Tell me your field and level, I'll suggest real, buildable projects\n**🏗️ Project Planning** — I'll help you plan from idea to final submission, step by step\n**📄 Proposals & Reports** — I'll guide you through writing strong academic documents\n**⚡ Technical Questions** — Circuit design, coding, structural analysis, anything engineering\n**🌍 Sustainability** — Making your projects greener and more impactful\n**💬 Just Talking** — Feeling stuck or overwhelmed? Tell me. I'm here.\n\n**What's on your mind today?** 😊";
+const WELCOME = "Hey! I'm really glad you're here. 💚\n\nI'm **ECO GREEN AI** — your personal sustainable engineering mentor. I'm genuinely here for you, not just to answer questions.\n\nHere's what I can help you with:\n\n## What I can do for you\n\n**💡 Project Ideas** — Tell me your field and level, I'll suggest real, buildable projects\n**🏗️ Project Planning** — I'll help you plan from idea to final submission, step by step\n**📄 Proposals & Reports** — I'll guide you through writing strong academic documents\n**⚡ Technical Questions** — Circuit design, coding, structural analysis, anything engineering\n**🌍 Sustainability** — Making your projects greener and more impactful\n**💬 Just Talking** — Feeling stuck or overwhelmed? Tell me. I'm here.\n\n**What's on your mind today?** 😊";
 
 // ===== STATE =====
 let apiKey = '', selField = null, selTopic = '', selLevel = 'Intermediate';
@@ -1082,7 +1249,7 @@ function clearAllMemory() {
 }
 
 // ===== CHAT =====
-const SYS = "You are ECO GREEN AI — an extraordinarily intelligent AI engineering mentor and companion. Created by Modou Jaw (Electrical & Electronics Engineering, Year 3, USET) as the heart of the ECO GREEN initiative.\n\nYou are a brilliant friend who genuinely knows engineering deeply and genuinely cares about the student you are talking to.\n\nYour expertise covers:\n⚡ Electrical & Electronics — circuits, PCB, Arduino, ESP32, IoT, embedded systems, power electronics, renewable energy\n🏗️ Civil Engineering — structural analysis, concrete, SAP2000, geotechnical, hydraulics, BIM\n⚙️ Mechanical Engineering — thermodynamics, CAD, SolidWorks, fluid mechanics, HVAC, manufacturing\n🌍 Sustainability — LCA, carbon footprint, solar PV, smart grids, climate tech, SDGs\n📚 Academic skills — proposals, reports, research methodology, project planning\n\nPersonality rules:\n- NEVER say 'Great question!', 'Certainly!', 'Of course!', 'Absolutely!'\n- Always read the emotional state and respond to the person, not just the question\n- Be warm, specific, and real — like a brilliant mentor who knows their stuff\n- Use **bold** for key terms. Use emojis purposefully.\n- Match format to context: short answers for simple questions, structured breakdowns for technical ones\n- After answering, always add one proactive insight: a risk they haven't thought of, a next step, or a surprising fact\n\nMission: Every student who talks to you should leave smarter, more confident, and more excited about engineering and sustainability.\n\n'The energy that moves with you — let us save the world by saving energy, one project at a time.' 🌍💚";
+const SYS = "You are ECO GREEN AI — an extraordinarily intelligent AI engineering mentor and companion. Created by Modou Jaw (Electrical & Electronics Engineering, Year 3, USET) as the heart of the ECO GREEN initiative.\n\nYou are a brilliant friend who genuinely knows engineering deeply and genuinely cares about the student you are talking to.\n\nYour expertise covers:\n⚡ Electrical & Electronics — circuits, PCB, Arduino, ESP32, IoT, embedded systems, power electronics, renewable energy\n🏗️ Civil Engineering — structural analysis, concrete, SAP2000, geotechnical, hydraulics, BIM\n⚙️ Mechanical Engineering — thermodynamics, CAD, SolidWorks, fluid mechanics, HVAC, manufacturing\n🌍 Sustainability — LCA, carbon footprint, solar PV, smart grids, climate tech, SDGs\n📚 Academic skills — proposals, reports, research methodology, project planning\n\nPersonality rules:\n- NEVER say 'Great question!', 'Certainly!', 'Of course!', 'Absolutely!'\n- Always read the emotional state and respond to the person, not just the question\n- Be warm, specific, and real — like a brilliant mentor who knows their stuff\n- Use **bold** for key terms. Use ## for section headings. Use ### for sub-headings.\n- Use emojis purposefully.\n- Match format to context: short answers for simple questions, structured breakdowns for technical ones\n- After answering, always add one proactive insight: a risk they haven't thought of, a next step, or a surprising fact\n\nFormatting guidance:\n- Use ## Heading for major sections\n- Use ### Sub-heading for subsections\n- Use **bold** for key terms and important points\n- Use bullet lists with - for enumerated items\n\nMission: Every student who talks to you should leave smarter, more confident, and more excited about engineering and sustainability.\n\n'The energy that moves with you — let us save the world by saving energy, one project at a time.' 🌍💚";
 
 function saveChatHistory() {
   try { localStorage.setItem('eco_chat_history', JSON.stringify(chatHist.slice(-60))); } catch(e) {}
@@ -1121,39 +1288,78 @@ function initChat() {
   renderChat();
 }
 
-function md(t) {
-  let s = t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+// ===== UPGRADED MARKDOWN RENDERER =====
+// Converts markdown text to safe HTML using named CSS classes
+// for full control over font sizes, colours, and bold weight.
+function md(rawText) {
+  // 1. Escape HTML entities to prevent XSS
+  let s = rawText
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;');
+
+  // 2. Fenced code blocks  ```...```
   s = s.replace(/```([^`]*?)```/gs, function(_, code) {
-    return '<pre style="background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:12px 14px;font-size:12px;overflow-x:auto;margin:8px 0;font-family:monospace;line-height:1.6">' + code.trim() + '</pre>';
+    return '<pre class="chat-pre">' + code.trim() + '</pre>';
   });
-  s = s.replace(/`([^`]+)`/g, '<code style="background:var(--surface2);border:1px solid var(--border);border-radius:5px;padding:2px 7px;font-size:12px;font-family:monospace">$1</code>');
-  s = s.replace(/^## (.+)$/gm, '<div style="font-family:\'DM Serif Display\',serif;font-size:15px;font-weight:700;color:var(--green);margin:14px 0 6px;padding-bottom:4px;border-bottom:1px solid var(--border)">$1</div>');
-  s = s.replace(/^### (.+)$/gm, '<div style="font-size:13px;font-weight:800;color:var(--text);margin:10px 0 4px">$1</div>');
+
+  // 3. Inline code  `...`
+  s = s.replace(/`([^`]+)`/g, '<code class="chat-code-inline">$1</code>');
+
+  // 4. Headings  ## H2  ### H3  (must be on own line)
+  s = s.replace(/^### (.+)$/gm, '<div class="chat-h3">$1</div>');
+  s = s.replace(/^## (.+)$/gm,  '<div class="chat-h2">$1</div>');
+  s = s.replace(/^# (.+)$/gm,   '<div class="chat-h1">$1</div>');
+
+  // 5. Bold + italic  ***...***
   s = s.replace(/\*\*\*(.+?)\*\*\*/g, '<strong><em>$1</em></strong>');
+
+  // 6. Bold  **...**
   s = s.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+
+  // 7. Italic  *...*
   s = s.replace(/\*(.+?)\*/g, '<em>$1</em>');
-  s = s.replace(/^\d+\.\s+(.+)$/gm, '<div style="display:flex;gap:8px;margin:4px 0;align-items:flex-start"><span style="color:var(--green);font-weight:800;flex-shrink:0;min-width:18px">•</span><span>$1</span></div>');
-  s = s.replace(/^[-*]\s+(.+)$/gm, '<div style="display:flex;gap:8px;margin:3px 0;align-items:flex-start"><span style="color:var(--green2);font-weight:800;flex-shrink:0">›</span><span>$1</span></div>');
-  s = s.replace(/^---+$/gm, '<hr style="border:none;border-top:1px solid var(--border);margin:10px 0"/>');
+
+  // 8. Ordered list items  (1. 2. etc.) — render as styled list item
+  s = s.replace(/^\d+\.\s+(.+)$/gm,
+    '<div class="chat-li"><span class="chat-li-bullet">›</span><span>$1</span></div>');
+
+  // 9. Unordered list items  - or *
+  s = s.replace(/^[-*]\s+(.+)$/gm,
+    '<div class="chat-li"><span class="chat-li-bullet">›</span><span>$1</span></div>');
+
+  // 10. Horizontal rule  ---
+  s = s.replace(/^---+$/gm, '<hr class="chat-hr"/>');
+
+  // 11. Line breaks → <br/>, but don't add them after block elements
   s = s.replace(/\n/g, '<br/>');
-  s = s.replace(/(<\/pre>|<\/div>)<br\/>/g, '$1');
-  s = s.replace(/<br\/><br\/>/g, '<br/>');
+  s = s.replace(/(<\/pre>|<\/div>|<hr[^>]*\/>)<br\/>/g, '$1');
+  // Collapse triple <br/> → double
+  s = s.replace(/(<br\/>){3,}/g, '<br/><br/>');
+
   return s;
 }
 
 function renderChat(loading) {
   const c = document.getElementById('chat-msgs'); c.innerHTML = '';
   chatHist.forEach(function(msg) {
-    const row = document.createElement('div'); row.className = 'msg-row ' + msg.role;
-    if (msg.role === 'assistant')
-      row.innerHTML = '<div class="msg-ava"><svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="9" cy="9" r="8" fill="rgba(255,255,255,0.2)"/><circle cx="9" cy="9" r="8" stroke="white" stroke-width="1.4"/><path d="M9 1C9 1 6.5 4.5 6.5 9s2.5 8 2.5 8" stroke="white" stroke-width="1.1" stroke-linecap="round"/><path d="M9 1C9 1 11.5 4.5 11.5 9s-2.5 8-2.5 8" stroke="white" stroke-width="1.1" stroke-linecap="round"/><path d="M1.2 6.5h15.6M1.2 11.5h15.6" stroke="white" stroke-width="1.1" stroke-linecap="round"/></svg></div><div class="bubble eco">' + md(msg.content) + '</div>';
-    else
-      row.innerHTML = '<div class="bubble user">' + md(msg.content) + '</div>';
+    const row = document.createElement('div');
+    row.className = 'msg-row ' + msg.role;
+    if (msg.role === 'assistant') {
+      row.innerHTML =
+        '<div class="msg-ava"><svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="9" cy="9" r="8" fill="rgba(255,255,255,0.2)"/><circle cx="9" cy="9" r="8" stroke="white" stroke-width="1.4"/><path d="M9 1C9 1 6.5 4.5 6.5 9s2.5 8 2.5 8" stroke="white" stroke-width="1.1" stroke-linecap="round"/><path d="M9 1C9 1 11.5 4.5 11.5 9s-2.5 8-2.5 8" stroke="white" stroke-width="1.1" stroke-linecap="round"/><path d="M1.2 6.5h15.6M1.2 11.5h15.6" stroke="white" stroke-width="1.1" stroke-linecap="round"/></svg></div>' +
+        '<div class="bubble eco">' + md(msg.content) + '</div>';
+    } else {
+      row.innerHTML =
+        '<div class="bubble user">' + md(msg.content) + '</div>';
+    }
     c.appendChild(row);
   });
   if (loading) {
     const row = document.createElement('div'); row.className = 'msg-row';
-    row.innerHTML = '<div class="msg-ava"><svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="9" cy="9" r="8" fill="rgba(255,255,255,0.2)"/><circle cx="9" cy="9" r="8" stroke="white" stroke-width="1.4"/><path d="M9 1C9 1 6.5 4.5 6.5 9s2.5 8 2.5 8" stroke="white" stroke-width="1.1" stroke-linecap="round"/><path d="M9 1C9 1 11.5 4.5 11.5 9s-2.5 8-2.5 8" stroke="white" stroke-width="1.1" stroke-linecap="round"/><path d="M1.2 6.5h15.6M1.2 11.5h15.6" stroke="white" stroke-width="1.1" stroke-linecap="round"/></svg></div><div class="typing-bub"><div class="typing-dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div></div>';
+    row.innerHTML =
+      '<div class="msg-ava"><svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="9" cy="9" r="8" fill="rgba(255,255,255,0.2)"/><circle cx="9" cy="9" r="8" stroke="white" stroke-width="1.4"/><path d="M9 1C9 1 6.5 4.5 6.5 9s2.5 8 2.5 8" stroke="white" stroke-width="1.1" stroke-linecap="round"/><path d="M9 1C9 1 11.5 4.5 11.5 9s-2.5 8-2.5 8" stroke="white" stroke-width="1.1" stroke-linecap="round"/><path d="M1.2 6.5h15.6M1.2 11.5h15.6" stroke="white" stroke-width="1.1" stroke-linecap="round"/></svg></div>' +
+      '<div class="typing-bub"><div class="typing-dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div></div>';
     c.appendChild(row);
   }
   scrollDown();
@@ -1166,7 +1372,7 @@ function updateSendBtn() {
   document.getElementById('send-btn').className = 'send-btn ' + (v && !chatBusy ? 'ready' : 'off');
 }
 function chatKey(e) { if (e.key === 'Enter' && e.shiftKey) { e.preventDefault(); sendChat(); } updateSendBtn(); }
-function resizeTA(el) { el.style.height = 'auto'; el.style.height = Math.min(el.scrollHeight, 110) + 'px'; updateSendBtn(); }
+function resizeTA(el) { el.style.height = 'auto'; el.style.height = Math.min(el.scrollHeight, 120) + 'px'; updateSendBtn(); }
 
 async function sendChat() {
   const inp = document.getElementById('chat-in'); const msg = inp.value.trim();
@@ -1319,72 +1525,49 @@ function confetti() {
 
 // ===== SPINNING EARTH =====
 (function initEarth() {
-  // Continent outlines as polygon arrays [lon, lat] in degrees
-  // Each sub-array is a closed polygon
   const CONTINENTS = [
-    // North America
     [[-168,72],[-140,70],[-120,75],[-85,73],[-65,68],[-55,62],[-55,47],[-67,44],[-70,42],[-75,35],[-80,25],[-90,20],[-104,19],[-117,32],[-125,38],[-130,55],[-140,60],[-155,60],[-168,65],[-168,72]],
-    // South America
     [[-82,12],[-75,12],[-65,11],[-62,10],[-60,5],[-50,2],[-50,-10],[-40,-15],[-38,-8],[-35,-4],[-34,-10],[-38,-18],[-45,-22],[-48,-28],[-52,-33],[-58,-38],[-65,-55],[-68,-55],[-72,-50],[-75,-42],[-75,-30],[-72,-18],[-75,-12],[-80,0],[-82,8],[-82,12]],
-    // Europe
     [[-10,36],[0,36],[10,38],[15,38],[20,36],[28,38],[30,42],[28,46],[15,45],[10,44],[5,43],[0,43],[-2,44],[-5,44],[-8,42],[-10,40],[-8,36],[-6,36],[-5,38],[-2,37],[0,37],[5,43],[8,44],[10,46],[14,47],[17,48],[18,50],[20,54],[18,57],[20,60],[25,60],[28,70],[20,72],[10,72],[0,68],[-8,60],[-10,56],[-6,50],[-5,48],[-2,48],[-2,46],[-6,44],[-10,44],[-10,36]],
-    // Africa
     [[-18,16],[-16,24],[-14,28],[-12,32],[-8,36],[0,37],[10,38],[14,36],[22,37],[30,32],[32,28],[34,24],[38,16],[42,12],[44,8],[42,2],[40,-2],[38,-6],[36,-14],[34,-20],[32,-26],[28,-30],[26,-34],[20,-36],[16,-30],[14,-24],[12,-18],[8,-8],[8,4],[4,6],[2,8],[0,8],[-4,6],[-10,6],[-14,10],[-16,12],[-18,16]],
-    // Asia (simplified)
     [[30,42],[35,36],[36,36],[38,38],[40,38],[44,40],[48,38],[50,40],[52,44],[55,44],[60,46],[64,42],[66,38],[68,38],[72,34],[76,30],[80,28],[84,28],[88,26],[92,24],[96,22],[100,20],[104,22],[108,20],[110,22],[114,22],[118,24],[120,30],[122,32],[124,38],[130,42],[134,44],[138,44],[140,46],[140,50],[135,48],[130,50],[125,52],[120,54],[115,56],[110,60],[105,64],[100,68],[95,72],[85,74],[75,74],[60,72],[50,70],[40,70],[35,70],[28,70],[20,72],[20,68],[25,65],[28,62],[25,58],[22,56],[18,57],[20,54],[18,50],[20,46],[24,46],[28,46],[30,42]],
-    // Australia
     [[114,-22],[116,-20],[118,-20],[124,-18],[128,-14],[132,-14],[136,-14],[140,-18],[144,-18],[148,-20],[152,-24],[154,-26],[152,-30],[150,-36],[148,-38],[146,-38],[144,-38],[142,-38],[140,-36],[136,-34],[132,-32],[128,-32],[124,-34],[120,-34],[116,-32],[114,-28],[113,-26],[114,-22]],
-    // Greenland
     [[-46,60],[-36,60],[-24,62],[-18,68],[-20,74],[-26,78],[-38,82],[-50,82],[-58,78],[-58,72],[-52,68],[-46,60]],
-    // Antarctica (simplified band)
     [[-180,-70],[-120,-68],[-60,-66],[0,-70],[60,-66],[120,-68],[180,-70],[180,-90],[-180,-90],[-180,-70]]
   ];
-
   const canvas = document.getElementById('earth-canvas');
   if (!canvas) return;
   const ctx = canvas.getContext('2d');
   const W = canvas.width, H = canvas.height;
   const cx = W / 2, cy = H / 2, R = W / 2 - 2;
   let angle = 0;
-  const TILT = 23.5 * Math.PI / 180; // axial tilt
-
+  const TILT = 23.5 * Math.PI / 180;
   function project(lon, lat, rot) {
-    // Rotate longitude
     const lonR = (lon * Math.PI / 180) + rot;
     const latR = lat * Math.PI / 180;
-    // 3D sphere coords
     const x3 = Math.cos(latR) * Math.sin(lonR);
     const y3 = Math.sin(latR);
     const z3 = Math.cos(latR) * Math.cos(lonR);
-    // Apply axial tilt (rotate around x axis)
     const y4 = y3 * Math.cos(TILT) - z3 * Math.sin(TILT);
     const z4 = y3 * Math.sin(TILT) + z3 * Math.cos(TILT);
-    // Only render front hemisphere
     if (z4 < 0) return null;
     return { x: cx + x3 * R, y: cy - y4 * R, z: z4 };
   }
-
   function drawFrame() {
     ctx.clearRect(0, 0, W, H);
-
-    // Save and clip to sphere
     ctx.save();
     ctx.beginPath();
     ctx.arc(cx, cy, R, 0, Math.PI * 2);
     ctx.clip();
-
-    // Ocean base — deep realistic gradient lit from top-left
     const oceanGrad = ctx.createRadialGradient(cx - R*0.35, cy - R*0.35, R*0.02, cx + R*0.1, cy + R*0.1, R * 1.1);
-    oceanGrad.addColorStop(0,   '#7ed6f7');
+    oceanGrad.addColorStop(0, '#7ed6f7');
     oceanGrad.addColorStop(0.3, '#1a8fc1');
     oceanGrad.addColorStop(0.65,'#0a5a8c');
-    oceanGrad.addColorStop(1,   '#012a4f');
+    oceanGrad.addColorStop(1, '#012a4f');
     ctx.beginPath();
     ctx.arc(cx, cy, R, 0, Math.PI * 2);
     ctx.fillStyle = oceanGrad;
     ctx.fill();
-
-    // Draw continent polygons with per-face lighting
     CONTINENTS.forEach(function(poly) {
       ctx.beginPath();
       let started = false;
@@ -1393,14 +1576,13 @@ function confetti() {
       pts.forEach(function(p) { if (p) hasVisible = true; });
       if (!hasVisible) return;
       let avgZ = 0, cnt = 0;
-      pts.forEach(function(p, i) {
+      pts.forEach(function(p) {
         if (!p) { started = false; return; }
         if (!started) { ctx.moveTo(p.x, p.y); started = true; }
         else ctx.lineTo(p.x, p.y);
         avgZ += p.z; cnt++;
       });
       ctx.closePath();
-      // Lighting: brighter near light source (top-left = high z, low x)
       const lit = cnt > 0 ? Math.pow(avgZ / cnt, 0.6) : 0.5;
       const r = Math.round(40  + lit * 90);
       const g = Math.round(110 + lit * 80);
@@ -1411,10 +1593,8 @@ function confetti() {
       ctx.lineWidth = 0.4;
       ctx.stroke();
     });
-
-    // Polar ice caps
-    [[0, -87], [0, 82]].forEach(function(pole) {
-      const iceColors = ['rgba(220,240,255,0.82)', 'rgba(200,230,255,0.55)', 'rgba(180,220,255,0)'];
+    [[0,-87],[0,82]].forEach(function(pole) {
+      const iceColors = ['rgba(220,240,255,0.82)','rgba(200,230,255,0.55)','rgba(180,220,255,0)'];
       for (let r2 = 0; r2 <= 14; r2 += 7) {
         ctx.beginPath();
         let started2 = false;
@@ -1429,71 +1609,98 @@ function confetti() {
         ctx.fill();
       }
     });
-
-    // Night-side terminator shadow (darkens the right/lower hemisphere)
-    const termX = cx + R * 0.18;
-    const termY = cy - R * 0.05;
+    const termX = cx + R * 0.18, termY = cy - R * 0.05;
     const shadowGrad = ctx.createRadialGradient(termX, termY, R * 0.42, termX + R*0.28, termY + R*0.2, R * 1.15);
-    shadowGrad.addColorStop(0,   'rgba(0,0,0,0)');
+    shadowGrad.addColorStop(0,'rgba(0,0,0,0)');
     shadowGrad.addColorStop(0.55,'rgba(0,0,30,0.18)');
     shadowGrad.addColorStop(0.80,'rgba(0,0,20,0.52)');
-    shadowGrad.addColorStop(1,   'rgba(0,0,10,0.75)');
-    ctx.beginPath();
-    ctx.arc(cx, cy, R, 0, Math.PI * 2);
-    ctx.fillStyle = shadowGrad;
-    ctx.fill();
-
-    // Atmosphere glow ring (wider, more vivid blue)
+    shadowGrad.addColorStop(1,'rgba(0,0,10,0.75)');
+    ctx.beginPath(); ctx.arc(cx, cy, R, 0, Math.PI * 2);
+    ctx.fillStyle = shadowGrad; ctx.fill();
     const atmoGrad = ctx.createRadialGradient(cx, cy, R * 0.84, cx, cy, R);
-    atmoGrad.addColorStop(0,   'rgba(80,180,255,0)');
+    atmoGrad.addColorStop(0,'rgba(80,180,255,0)');
     atmoGrad.addColorStop(0.55,'rgba(80,180,255,0.09)');
     atmoGrad.addColorStop(0.85,'rgba(60,160,255,0.22)');
-    atmoGrad.addColorStop(1,   'rgba(40,130,230,0.38)');
-    ctx.beginPath();
-    ctx.arc(cx, cy, R, 0, Math.PI * 2);
-    ctx.fillStyle = atmoGrad;
-    ctx.fill();
-
-    // Primary specular highlight — strong, tight, from top-left
+    atmoGrad.addColorStop(1,'rgba(40,130,230,0.38)');
+    ctx.beginPath(); ctx.arc(cx, cy, R, 0, Math.PI * 2);
+    ctx.fillStyle = atmoGrad; ctx.fill();
     const specGrad = ctx.createRadialGradient(cx - R*0.42, cy - R*0.42, 0, cx - R*0.15, cy - R*0.15, R * 0.72);
-    specGrad.addColorStop(0,    'rgba(255,255,255,0.55)');
-    specGrad.addColorStop(0.18, 'rgba(255,255,255,0.18)');
-    specGrad.addColorStop(0.45, 'rgba(255,255,255,0.04)');
-    specGrad.addColorStop(1,    'rgba(255,255,255,0)');
-    ctx.beginPath();
-    ctx.arc(cx, cy, R, 0, Math.PI * 2);
-    ctx.fillStyle = specGrad;
-    ctx.fill();
-
+    specGrad.addColorStop(0,'rgba(255,255,255,0.55)');
+    specGrad.addColorStop(0.18,'rgba(255,255,255,0.18)');
+    specGrad.addColorStop(0.45,'rgba(255,255,255,0.04)');
+    specGrad.addColorStop(1,'rgba(255,255,255,0)');
+    ctx.beginPath(); ctx.arc(cx, cy, R, 0, Math.PI * 2);
+    ctx.fillStyle = specGrad; ctx.fill();
     ctx.restore();
-
-    // Outer atmosphere halo (outside clip, drawn after restore)
     const haloGrad = ctx.createRadialGradient(cx, cy, R * 0.96, cx, cy, R * 1.12);
-    haloGrad.addColorStop(0,   'rgba(70,170,255,0.22)');
-    haloGrad.addColorStop(0.5, 'rgba(50,140,230,0.10)');
-    haloGrad.addColorStop(1,   'rgba(30,100,200,0)');
-    ctx.beginPath();
-    ctx.arc(cx, cy, R * 1.12, 0, Math.PI * 2);
-    ctx.fillStyle = haloGrad;
-    ctx.fill();
-
-    // Sphere rim border
-    ctx.beginPath();
-    ctx.arc(cx, cy, R, 0, Math.PI * 2);
+    haloGrad.addColorStop(0,'rgba(70,170,255,0.22)');
+    haloGrad.addColorStop(0.5,'rgba(50,140,230,0.10)');
+    haloGrad.addColorStop(1,'rgba(30,100,200,0)');
+    ctx.beginPath(); ctx.arc(cx, cy, R * 1.12, 0, Math.PI * 2);
+    ctx.fillStyle = haloGrad; ctx.fill();
+    ctx.beginPath(); ctx.arc(cx, cy, R, 0, Math.PI * 2);
     ctx.strokeStyle = 'rgba(120,200,255,0.25)';
-    ctx.lineWidth = 1.5;
-    ctx.stroke();
-
+    ctx.lineWidth = 1.5; ctx.stroke();
     angle += 0.005;
     requestAnimationFrame(drawFrame);
   }
-
   drawFrame();
 })();
+
 renderFields();
 renderQuickPrompts();
 loadMemory();
 loadKey();
+
+// ===== PWA INSTALL PROMPT =====
+let _installPrompt = null;
+window.addEventListener('beforeinstallprompt', function(e) {
+  e.preventDefault();
+  _installPrompt = e;
+  const dismissed = sessionStorage.getItem('eco_install_dismissed');
+  if (!dismissed) {
+    setTimeout(function() {
+      const banner = document.getElementById('install-banner');
+      if (banner) banner.style.display = 'block';
+    }, 2000);
+  }
+});
+function triggerInstall() {
+  if (!_installPrompt) return;
+  _installPrompt.prompt();
+  _installPrompt.userChoice.then(function() {
+    document.getElementById('install-banner').style.display = 'none';
+    _installPrompt = null;
+  });
+}
+function dismissInstall() {
+  document.getElementById('install-banner').style.display = 'none';
+  sessionStorage.setItem('eco_install_dismissed', '1');
+}
+window.addEventListener('appinstalled', function() {
+  document.getElementById('install-banner').style.display = 'none';
+  _installPrompt = null;
+});
+
+// ===== SERVICE WORKER =====
+if ('serviceWorker' in navigator) {
+  const swCode = "self.addEventListener('install',function(e){self.skipWaiting();});self.addEventListener('activate',function(e){e.waitUntil(clients.claim());});self.addEventListener('fetch',function(e){if(e.request.method!=='GET')return;e.respondWith(fetch(e.request).catch(function(){return caches.match(e.request);}));});";
+  const blob = new Blob([swCode], { type: 'application/javascript' });
+  const swUrl = URL.createObjectURL(blob);
+  navigator.serviceWorker.register(swUrl, { scope: '/' }).catch(function() {});
+}
+
+// ===== MANIFEST =====
+(function() {
+  const iconSvg = '<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512"><rect width="512" height="512" rx="96" fill="#16a05a"/><circle cx="256" cy="256" r="160" fill="none" stroke="white" stroke-width="18"/><path d="M256 96C256 96 200 160 200 256s56 160 56 160" stroke="white" stroke-width="14" stroke-linecap="round" fill="none"/><path d="M256 96C256 96 312 160 312 256s-56 160-56 160" stroke="white" stroke-width="14" stroke-linecap="round" fill="none"/><path d="M98 210h316M98 302h316" stroke="white" stroke-width="14" stroke-linecap="round"/></svg>';
+  const iconBlob = new Blob([iconSvg], { type: 'image/svg+xml' });
+  const iconUrl = URL.createObjectURL(iconBlob);
+  const manifest = { name:'ECO GREEN AI', short_name:'ECO GREEN', description:'AI-powered sustainable engineering mentor by Modou Jaw', start_url:window.location.href, display:'standalone', orientation:'portrait', background_color:'#fafcfb', theme_color:'#1a9e5c', icons:[{ src:iconUrl, sizes:'192x192', type:'image/svg+xml', purpose:'any maskable' },{ src:iconUrl, sizes:'512x512', type:'image/svg+xml', purpose:'any maskable' }] };
+  const mBlob = new Blob([JSON.stringify(manifest)], { type: 'application/json' });
+  const mUrl = URL.createObjectURL(mBlob);
+  document.getElementById('pwa-manifest').setAttribute('href', mUrl);
+  document.getElementById('apple-icon').setAttribute('href', iconUrl);
+})();
 </script>
 </body>
 </html>
