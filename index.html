@@ -27,6 +27,46 @@ body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;overf
 ::selection{background:#25c27044;color:var(--green);}
 ::-webkit-scrollbar{width:5px;}::-webkit-scrollbar-track{background:var(--bg);}::-webkit-scrollbar-thumb{background:var(--border2);border-radius:10px;}::-webkit-scrollbar-thumb:hover{background:var(--green);}
 
+/* =============================================
+   CUSTOM TEXT BOX
+   - font-size: 18px
+   - border: 3px solid (uses --green for theme fit)
+   - padding: 10px all sides
+   - border-radius: 12px (rounded corners)
+   ============================================= */
+.custom-textbox {
+  width: 100%;
+  font-family: 'Inter', sans-serif;
+  font-size: 18px;
+  padding: 10px;
+  border: 3px solid var(--green);
+  border-radius: 12px;
+  background: var(--surface);
+  color: var(--text);
+  outline: none;
+  resize: vertical;
+  line-height: 1.6;
+  font-weight: 500;
+  transition: border-color .2s, box-shadow .2s;
+  margin-bottom: 24px;
+  min-height: 80px;
+}
+.custom-textbox:focus {
+  border-color: var(--green2);
+  box-shadow: 0 0 0 4px rgba(22,160,90,0.12);
+}
+.custom-textbox::placeholder {
+  color: var(--text3);
+}
+.custom-textbox-label {
+  display: block;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text2);
+  margin-bottom: 8px;
+  letter-spacing: .3px;
+}
+
 /* MODAL */
 .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.65);backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:center;z-index:9999;padding:20px;animation:fadeIn .3s ease;}
 .modal-overlay.hidden{display:none;}
@@ -259,7 +299,6 @@ footer{border-top:1px solid var(--border);padding:48px 40px 40px;text-align:cent
   padding:16px 20px;
   border-radius:20px;
   font-family:'Inter',sans-serif;
-  /* ★ ENLARGED BASE FONT */
   font-size:18px;
   line-height:1.85;
   font-weight:500;
@@ -283,120 +322,25 @@ footer{border-top:1px solid var(--border);padding:48px 40px 40px;text-align:cent
 }
 
 /* ── Rich-text elements INSIDE bubbles ── */
-
-/* H1 inside bubbles */
-.bubble .chat-h1{
-  font-family:'DM Serif Display',serif;
-  font-size:26px;
-  font-weight:700;
-  color:var(--green);
-  margin:18px 0 10px;
-  line-height:1.2;
-  padding-bottom:6px;
-  border-bottom:2px solid var(--green3);
-}
+.bubble .chat-h1{font-family:'DM Serif Display',serif;font-size:26px;font-weight:700;color:var(--green);margin:18px 0 10px;line-height:1.2;padding-bottom:6px;border-bottom:2px solid var(--green3);}
 .bubble.user .chat-h1{color:#fff;border-bottom-color:rgba(255,255,255,0.35);}
-
-/* H2 inside bubbles */
-.bubble .chat-h2{
-  font-family:'DM Serif Display',serif;
-  font-size:22px;
-  font-weight:700;
-  color:var(--text);
-  margin:16px 0 8px;
-  line-height:1.25;
-}
+.bubble .chat-h2{font-family:'DM Serif Display',serif;font-size:22px;font-weight:700;color:var(--text);margin:16px 0 8px;line-height:1.25;}
 .bubble.user .chat-h2{color:#fff;}
-
-/* H3 inside bubbles */
-.bubble .chat-h3{
-  font-size:19px;
-  font-weight:800;
-  color:var(--green);
-  margin:14px 0 6px;
-  line-height:1.3;
-  letter-spacing:-.1px;
-}
+.bubble .chat-h3{font-size:19px;font-weight:800;color:var(--green);margin:14px 0 6px;line-height:1.3;letter-spacing:-.1px;}
 .bubble.user .chat-h3{color:rgba(255,255,255,0.92);}
-
-/* Bold spans */
-.bubble strong,
-.bubble b{
-  font-weight:800;
-  color:var(--text);
-  letter-spacing:-.1px;
-}
-.bubble.user strong,
-.bubble.user b{color:#fff;}
-
-/* Italic */
-.bubble em,
-.bubble i{font-style:italic;color:var(--green);}
-.bubble.user em,
-.bubble.user i{color:rgba(255,255,255,0.88);}
-
-/* Inline code */
-.bubble .chat-code-inline{
-  background:var(--surface2);
-  border:1px solid var(--border);
-  border-radius:6px;
-  padding:2px 8px;
-  font-size:15px;
-  font-family:monospace;
-  color:var(--green);
-  font-weight:700;
-}
-.bubble.user .chat-code-inline{
-  background:rgba(255,255,255,0.18);
-  border-color:rgba(255,255,255,0.25);
-  color:#fff;
-}
-
-/* Code block */
-.bubble .chat-pre{
-  background:var(--surface2);
-  border:1px solid var(--border);
-  border-radius:12px;
-  padding:14px 16px;
-  font-size:14px;
-  overflow-x:auto;
-  margin:10px 0;
-  font-family:monospace;
-  line-height:1.6;
-  color:var(--text);
-}
-.bubble.user .chat-pre{
-  background:rgba(255,255,255,0.15);
-  border-color:rgba(255,255,255,0.2);
-  color:#fff;
-}
-
-/* List items */
-.bubble .chat-li{
-  display:flex;
-  gap:10px;
-  margin:5px 0;
-  align-items:flex-start;
-  font-size:18px;
-}
-.bubble .chat-li-bullet{
-  color:var(--green);
-  font-weight:900;
-  flex-shrink:0;
-  margin-top:1px;
-  font-size:18px;
-}
+.bubble strong,.bubble b{font-weight:800;color:var(--text);letter-spacing:-.1px;}
+.bubble.user strong,.bubble.user b{color:#fff;}
+.bubble em,.bubble i{font-style:italic;color:var(--green);}
+.bubble.user em,.bubble.user i{color:rgba(255,255,255,0.88);}
+.bubble .chat-code-inline{background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:2px 8px;font-size:15px;font-family:monospace;color:var(--green);font-weight:700;}
+.bubble.user .chat-code-inline{background:rgba(255,255,255,0.18);border-color:rgba(255,255,255,0.25);color:#fff;}
+.bubble .chat-pre{background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:14px 16px;font-size:14px;overflow-x:auto;margin:10px 0;font-family:monospace;line-height:1.6;color:var(--text);}
+.bubble.user .chat-pre{background:rgba(255,255,255,0.15);border-color:rgba(255,255,255,0.2);color:#fff;}
+.bubble .chat-li{display:flex;gap:10px;margin:5px 0;align-items:flex-start;font-size:18px;}
+.bubble .chat-li-bullet{color:var(--green);font-weight:900;flex-shrink:0;margin-top:1px;font-size:18px;}
 .bubble.user .chat-li-bullet{color:rgba(255,255,255,0.8);}
-
-/* Horizontal rule */
-.bubble .chat-hr{
-  border:none;
-  border-top:2px solid var(--border);
-  margin:14px 0;
-}
+.bubble .chat-hr{border:none;border-top:2px solid var(--border);margin:14px 0;}
 .bubble.user .chat-hr{border-top-color:rgba(255,255,255,0.25);}
-
-/* First element no top margin */
 .bubble > *:first-child{margin-top:0 !important;}
 .bubble > *:last-child{margin-bottom:0 !important;}
 
@@ -668,6 +612,24 @@ footer{border-top:1px solid var(--border);padding:48px 40px 40px;text-align:cent
   <div class="app-wrap">
     <h2 class="app-title">AI Project Idea Generator</h2>
     <p class="app-sub">Answer 3 questions and get 4 tailored, sustainable project ideas generated by AI.</p>
+
+    <!-- =============================================
+         CUSTOM TEXT BOX
+         - font-size: 18px
+         - border: 3px solid var(--green)
+         - padding: 10px all sides
+         - border-radius: 12px (rounded corners)
+         ============================================= -->
+    <label class="custom-textbox-label" for="custom-notes-box">
+      💬 Notes / Additional Context <span style="color:var(--text3);font-weight:500">(optional)</span>
+    </label>
+    <textarea
+      id="custom-notes-box"
+      class="custom-textbox"
+      placeholder="Add any extra details, constraints, or goals for your project ideas… e.g. 'I want to focus on solar energy in rural areas' or 'Must use Arduino'"
+      rows="3"
+    ></textarea>
+    <!-- ============================================= -->
 
     <div class="api-banner" id="api-banner" onclick="openModal()">
       <span class="api-b-icon">🔑</span>
@@ -1022,8 +984,10 @@ async function generateIdeas() {
   const f = FIELDS[selField];
   const btn = document.getElementById('gen-btn');
   btn.disabled = true; btn.innerHTML = '<span class="spinner"></span> Generating with AI...';
+  const notesVal = document.getElementById('custom-notes-box') ? document.getElementById('custom-notes-box').value.trim() : '';
+  const notesContext = notesVal ? '\n\nAdditional student context / constraints:\n' + notesVal : '';
   const tc = selTopic ? 'specifically in the topic area of "' + selTopic + '"' : 'across any relevant green topic';
-  const prompt = 'You are an expert sustainable engineering project advisor. Generate exactly 4 creative, practical, eco-friendly project ideas for a ' + selLevel + ' student in ' + f.label + ' ' + tc + '.\n\nEach idea must be:\n- Genuinely innovative and specific (not generic)\n- Realistic for a ' + selLevel + ' student to build\n- Focused on sustainability and green impact\n- Clearly explained so a student immediately understands it\n\nReturn ONLY a valid JSON array with exactly 4 objects. Each object must have exactly these keys:\n{\n  "title": "Specific, catchy project title (max 8 words)",\n  "description": "2 clear sentences: sentence 1 = what it is and does, sentence 2 = how it works technically",\n  "technologies": ["tech1", "tech2", "tech3", "tech4"],\n  "impact": "1 specific sentence about the measurable green/sustainable impact",\n  "difficulty": 3,\n  "steps": ["Step 1: ...", "Step 2: ...", "Step 3: ..."]\n}\n\nDifficulty scale: 1=very easy, 2=easy, 3=moderate, 4=hard, 5=very advanced.\nCRITICAL: Return ONLY the raw JSON array. No markdown. No code fences. No explanation. No extra text before or after.';
+  const prompt = 'You are an expert sustainable engineering project advisor. Generate exactly 4 creative, practical, eco-friendly project ideas for a ' + selLevel + ' student in ' + f.label + ' ' + tc + '.' + notesContext + '\n\nEach idea must be:\n- Genuinely innovative and specific (not generic)\n- Realistic for a ' + selLevel + ' student to build\n- Focused on sustainability and green impact\n- Clearly explained so a student immediately understands it\n\nReturn ONLY a valid JSON array with exactly 4 objects. Each object must have exactly these keys:\n{\n  "title": "Specific, catchy project title (max 8 words)",\n  "description": "2 clear sentences: sentence 1 = what it is and does, sentence 2 = how it works technically",\n  "technologies": ["tech1", "tech2", "tech3", "tech4"],\n  "impact": "1 specific sentence about the measurable green/sustainable impact",\n  "difficulty": 3,\n  "steps": ["Step 1: ...", "Step 2: ...", "Step 3: ..."]\n}\n\nDifficulty scale: 1=very easy, 2=easy, 3=moderate, 4=hard, 5=very advanced.\nCRITICAL: Return ONLY the raw JSON array. No markdown. No code fences. No explanation. No extra text before or after.';
   const sys = 'You are a world-class sustainable engineering project advisor with deep expertise across Electrical, Civil, and Mechanical Engineering. Your job is to generate genuinely innovative, specific, and buildable project ideas — not generic textbook examples.\n\nRules:\n- Each idea must be SPECIFIC and ORIGINAL\n- Each idea must be REALISTIC for the stated student level\n- Each idea must have a CLEAR, MEASURABLE green/sustainability impact\n- Technologies must be REAL and SPECIFIC\n- Steps must be CONCRETE and ACTIONABLE\n\nReturn ONLY a valid JSON array. No markdown. No code fences. No explanation. Nothing else.';
   try {
     const raw = await callAI(prompt, sys);
@@ -1288,55 +1252,30 @@ function initChat() {
   renderChat();
 }
 
-// ===== UPGRADED MARKDOWN RENDERER =====
-// Converts markdown text to safe HTML using named CSS classes
-// for full control over font sizes, colours, and bold weight.
+// ===== MARKDOWN RENDERER =====
 function md(rawText) {
-  // 1. Escape HTML entities to prevent XSS
   let s = rawText
     .replace(/&/g, '&amp;')
     .replace(/</g, '&lt;')
     .replace(/>/g, '&gt;');
-
-  // 2. Fenced code blocks  ```...```
   s = s.replace(/```([^`]*?)```/gs, function(_, code) {
     return '<pre class="chat-pre">' + code.trim() + '</pre>';
   });
-
-  // 3. Inline code  `...`
   s = s.replace(/`([^`]+)`/g, '<code class="chat-code-inline">$1</code>');
-
-  // 4. Headings  ## H2  ### H3  (must be on own line)
   s = s.replace(/^### (.+)$/gm, '<div class="chat-h3">$1</div>');
   s = s.replace(/^## (.+)$/gm,  '<div class="chat-h2">$1</div>');
   s = s.replace(/^# (.+)$/gm,   '<div class="chat-h1">$1</div>');
-
-  // 5. Bold + italic  ***...***
   s = s.replace(/\*\*\*(.+?)\*\*\*/g, '<strong><em>$1</em></strong>');
-
-  // 6. Bold  **...**
   s = s.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
-
-  // 7. Italic  *...*
   s = s.replace(/\*(.+?)\*/g, '<em>$1</em>');
-
-  // 8. Ordered list items  (1. 2. etc.) — render as styled list item
   s = s.replace(/^\d+\.\s+(.+)$/gm,
     '<div class="chat-li"><span class="chat-li-bullet">›</span><span>$1</span></div>');
-
-  // 9. Unordered list items  - or *
   s = s.replace(/^[-*]\s+(.+)$/gm,
     '<div class="chat-li"><span class="chat-li-bullet">›</span><span>$1</span></div>');
-
-  // 10. Horizontal rule  ---
   s = s.replace(/^---+$/gm, '<hr class="chat-hr"/>');
-
-  // 11. Line breaks → <br/>, but don't add them after block elements
   s = s.replace(/\n/g, '<br/>');
   s = s.replace(/(<\/pre>|<\/div>|<hr[^>]*\/>)<br\/>/g, '$1');
-  // Collapse triple <br/> → double
   s = s.replace(/(<br\/>){3,}/g, '<br/><br/>');
-
   return s;
 }
 
