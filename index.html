@@ -559,7 +559,7 @@ footer{border-top:1px solid var(--border);padding:48px 40px 40px;text-align:cent
     <div class="chat-msgs" id="chat-msgs"></div>
     <div class="chat-input-bar">
       <textarea class="chat-ta" id="chat-in" rows="1"
-        placeholder="Ask anything... (Enter to send)"
+        placeholder="Ask anything... (Shift+Enter to send)"
         onkeydown="chatKey(event)" oninput="resizeTA(this)"></textarea>
       <button class="send-btn off" id="send-btn" onclick="sendChat()">↑</button>
     </div>
@@ -1165,7 +1165,7 @@ function updateSendBtn() {
   const v = document.getElementById('chat-in').value.trim();
   document.getElementById('send-btn').className = 'send-btn ' + (v && !chatBusy ? 'ready' : 'off');
 }
-function chatKey(e) { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendChat(); } updateSendBtn(); }
+function chatKey(e) { if (e.key === 'Enter' && e.shiftKey) { e.preventDefault(); sendChat(); } updateSendBtn(); }
 function resizeTA(el) { el.style.height = 'auto'; el.style.height = Math.min(el.scrollHeight, 110) + 'px'; updateSendBtn(); }
 
 async function sendChat() {
