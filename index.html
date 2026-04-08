@@ -741,7 +741,7 @@ async function streamAI(messages, sys, onToken) {
     let fullText = '';
     let buffer = '';
     let wordBuffer = '';        // accumulates partial word
-    const WORD_DELAY_MS = 18;  // delay between words (ms) — tweak for speed
+    const WORD_DELAY_MS = 42;  // ~24 words/sec — comfortable reading speed
 
     // Helper: flush the word buffer through onToken with delay
     async function flushWordBuffer() {
@@ -888,7 +888,7 @@ function showPage(name) {
   document.getElementById(pMap[name]).classList.add('active');
   const nb = document.getElementById(nMap[name]); if (nb) nb.classList.add('active');
   if (name === 'saved') renderSaved();
-  if (name === 'chat') { if (!chatHist.length) initChat(); setTimeout(scrollDown, 60); }
+  if (name === 'chat') { if (!chatHist.length) initChat(); setTimeout(forceScrollDown, 60); }
   window.scrollTo(0, 0);
 }
 
@@ -1112,11 +1112,21 @@ function renderChat(loading) {
     row.innerHTML = '<div class="msg-ava">' + AI_SVG + '</div><div class="bubble-wrap"><div class="bubble-label">ECO GREEN AI</div><div class="typing-bub"><span class="typing-label">Thinking</span><div class="typing-dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div></div></div>';
     c.appendChild(row);
   }
-  scrollDown();
+  forceScrollDown();
   document.getElementById('qprompts').style.display = chatHist.length <= 1 ? 'flex' : 'none';
 }
 
-function scrollDown() { const c = document.getElementById('chat-msgs'); if (c) c.scrollTop = c.scrollHeight; }
+function scrollDown() {
+  const c = document.getElementById('chat-msgs');
+  if (!c) return;
+  // Only auto-scroll if user is within 80px of the bottom — never hijack upward scrolling
+  const distFromBottom = c.scrollHeight - c.scrollTop - c.clientHeight;
+  if (distFromBottom < 80) c.scrollTop = c.scrollHeight;
+}
+function forceScrollDown() {
+  const c = document.getElementById('chat-msgs');
+  if (c) c.scrollTop = c.scrollHeight;
+}
 function updateSendBtn() { const v = document.getElementById('chat-in').value.trim(); document.getElementById('send-btn').className = 'send-btn ' + (v && !chatBusy ? 'ready' : 'off'); }
 function chatKey(e) { if (e.key === 'Enter' && e.shiftKey) { e.preventDefault(); sendChat(); } updateSendBtn(); }
 function resizeTA(el) { el.style.height = 'auto'; el.style.height = Math.min(el.scrollHeight, 120) + 'px'; updateSendBtn(); }
@@ -1172,6 +1182,19 @@ async function doStreamChat() {
   let accumulated = ''; // full raw markdown text so far
   let tokenCount = 0;
 
+  // Throttled render: only re-render markdown at most every 80ms to avoid thrashing
+  let renderPending = false;
+  function scheduleRender() {
+    if (renderPending) return;
+    renderPending = true;
+    setTimeout(function() {
+      renderPending = false;
+      bubble.innerHTML = md(accumulated, false) + '<span class="stream-cursor"></span>';
+      statusText.textContent = 'Streaming… ' + tokenCount + ' tokens';
+      scrollDown();
+    }, 80);
+  }
+
   try {
     const compressed = compressMessages(chatHist.filter(m => m.role === 'user' || m.role === 'assistant'));
 
@@ -1179,13 +1202,8 @@ async function doStreamChat() {
       accumulated += token;
       tokenCount++;
 
-      // Re-render markdown of the whole accumulated text into the bubble
-      // (simpler & more correct than trying to patch in-place)
-      bubble.innerHTML = md(accumulated, false) + '<span class="stream-cursor"></span>';
-
-      // Update status bar with token count
-      statusText.textContent = 'Streaming… ' + tokenCount + ' tokens';
-      scrollDown();
+      // Use throttled render — avoids re-rendering markdown on every character
+      scheduleRender();
     });
 
     // Streaming done — commit to chatHist, remove cursor
