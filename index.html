@@ -234,369 +234,80 @@ footer{border-top:1px solid var(--border);padding:48px 40px 40px;text-align:cent
 .regen-btn:hover{border-color:var(--green);color:var(--green);background:var(--green4);}
 
 /* ============================================================
-   CHAT — ChatGPT-style redesign with beautiful green theme
+   CHAT
    ============================================================ */
-
-/* ── Page & layout ── */
-#chat-section{
-  display:none;
-  padding-top:64px;
-  height:100vh;
-  flex-direction:column;
-  background:var(--chat-bg);
-}
+#chat-section{display:none;padding-top:64px;height:100vh;flex-direction:column;background:var(--chat-bg);}
 #chat-section.active{display:flex;}
-
 :root{
-  --chat-bg:#f0faf5;
-  --chat-surface:#ffffff;
-  --chat-border:#d4ece2;
-  --chat-ai-bg:#ffffff;
-  --chat-ai-border:#d4ece2;
+  --chat-bg:#f0faf5;--chat-surface:#ffffff;--chat-border:#d4ece2;
+  --chat-ai-bg:#ffffff;--chat-ai-border:#d4ece2;
   --chat-user-bg:linear-gradient(135deg,#16a05a,#1db86a);
   --chat-input-bg:#ffffff;
   --chat-shadow-ai:0 2px 12px rgba(22,160,90,0.10),0 1px 4px rgba(0,0,0,0.04);
   --chat-shadow-user:0 2px 12px rgba(22,160,90,0.28),0 1px 4px rgba(22,160,90,0.12);
-  --chat-text-ai:#1a2e22;
-  --chat-text-user:#ffffff;
-  --chat-text-subtle:#5a8a6e;
+  --chat-text-ai:#1a2e22;--chat-text-user:#ffffff;--chat-text-subtle:#5a8a6e;
 }
 [data-theme="dark"]{
-  --chat-bg:#0d1a12;
-  --chat-surface:#111e16;
-  --chat-border:#1e3828;
-  --chat-ai-bg:#152019;
-  --chat-ai-border:#1e3828;
-  --chat-input-bg:#152019;
+  --chat-bg:#0d1a12;--chat-surface:#111e16;--chat-border:#1e3828;
+  --chat-ai-bg:#152019;--chat-ai-border:#1e3828;--chat-input-bg:#152019;
   --chat-shadow-ai:0 2px 12px rgba(0,0,0,0.35),0 1px 4px rgba(0,0,0,0.2);
   --chat-shadow-user:0 2px 12px rgba(22,160,90,0.30);
-  --chat-text-ai:#c8ecd8;
-  --chat-text-subtle:#4d7a5e;
+  --chat-text-ai:#c8ecd8;--chat-text-subtle:#4d7a5e;
 }
-
-/* ── Wrapper ── */
-.chat-wrap{
-  flex:1;
-  display:flex;
-  flex-direction:column;
-  max-width:780px;
-  width:100%;
-  margin:0 auto;
-  padding:0 16px;
-  overflow:hidden;
-}
-
-/* ── Header ── */
-.chat-head{
-  display:flex;
-  align-items:center;
-  gap:14px;
-  padding:16px 0 14px;
-  border-bottom:1px solid var(--chat-border);
-  flex-shrink:0;
-  background:var(--chat-bg);
-}
-.eco-ava{
-  width:44px;height:44px;
-  border-radius:50%;
-  background:linear-gradient(135deg,var(--green),var(--green2));
-  display:flex;align-items:center;justify-content:center;
-  font-size:22px;flex-shrink:0;
-  box-shadow:0 4px 16px #1a9e5c44;
-  animation:ecoPulse 3s infinite;
-}
+.chat-wrap{flex:1;display:flex;flex-direction:column;max-width:100%;width:100%;margin:0 auto;padding:0 24px;overflow:hidden;}
+.chat-head{display:flex;align-items:center;gap:14px;padding:16px 0 14px;border-bottom:1px solid var(--chat-border);flex-shrink:0;background:var(--chat-bg);}
+.eco-ava{width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,var(--green),var(--green2));display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;box-shadow:0 4px 16px #1a9e5c44;animation:ecoPulse 3s infinite;}
 .eco-name{font-family:'DM Serif Display',serif;font-size:17px;font-weight:700;color:var(--green);}
 .eco-status{font-size:12px;color:var(--chat-text-subtle);display:flex;align-items:center;gap:6px;font-weight:600;}
 .sdot{width:7px;height:7px;border-radius:50%;background:var(--green2);animation:pulse 2s infinite;}
 .build-chip{background:var(--green4);border:1.5px solid var(--green3);border-radius:10px;padding:6px 10px;font-size:11px;color:var(--green);max-width:150px;text-align:right;flex-shrink:0;margin-left:auto;line-height:1.5;font-weight:700;}
-
-/* ── Quick prompts ── */
-.qprompts{
-  padding:12px 0 6px;
-  display:flex;flex-wrap:wrap;gap:8px;
-  flex-shrink:0;
-}
-.qp{
-  padding:9px 16px;
-  border-radius:22px;
-  border:1.5px solid var(--chat-border);
-  background:var(--chat-surface);
-  color:var(--chat-text-subtle);
-  font-size:13px;font-weight:600;
-  cursor:pointer;font-family:'Inter',sans-serif;
-  transition:all .18s;
-  box-shadow:0 1px 4px rgba(22,160,90,0.07);
-}
-.qp:hover{
-  border-color:var(--green);
-  color:var(--green);
-  background:var(--green4);
-  box-shadow:0 2px 10px rgba(22,160,90,0.15);
-  transform:translateY(-1px);
-}
-
-/* ── Message list ── */
-.chat-msgs{
-  flex:1;
-  overflow-y:auto;
-  padding:20px 0 10px;
-  display:flex;
-  flex-direction:column;
-  gap:6px;
-  scroll-behavior:smooth;
-}
+.qprompts{padding:12px 0 6px;display:flex;flex-wrap:wrap;gap:8px;flex-shrink:0;}
+.qp{padding:9px 16px;border-radius:22px;border:1.5px solid var(--chat-border);background:var(--chat-surface);color:var(--chat-text-subtle);font-size:13px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;transition:all .18s;box-shadow:0 1px 4px rgba(22,160,90,0.07);}
+.qp:hover{border-color:var(--green);color:var(--green);background:var(--green4);box-shadow:0 2px 10px rgba(22,160,90,0.15);transform:translateY(-1px);}
+.chat-msgs{flex:1;overflow-y:auto;padding:20px 0 10px;display:flex;flex-direction:column;gap:6px;scroll-behavior:smooth;}
 .chat-msgs::-webkit-scrollbar{width:4px;}
 .chat-msgs::-webkit-scrollbar-thumb{background:var(--chat-border);border-radius:4px;}
-
-/* ── Message rows ── */
-.msg-row{
-  display:flex;
-  gap:12px;
-  animation:fadeUp .22s ease;
-  padding:2px 0;
-}
-.msg-row.user{
-  flex-direction:row-reverse;
-  padding-left:60px;
-}
-.msg-row.assistant{
-  padding-right:60px;
-}
-
-/* ── Avatars ── */
-.msg-ava{
-  width:34px;height:34px;
-  border-radius:50%;
-  background:linear-gradient(135deg,var(--green),var(--green2));
-  display:flex;align-items:center;justify-content:center;
-  font-size:15px;flex-shrink:0;
-  margin-top:4px;
-  box-shadow:0 2px 8px rgba(22,160,90,0.25);
-}
-.msg-ava-user{
-  width:34px;height:34px;
-  border-radius:50%;
-  background:linear-gradient(135deg,#0d7a44,#16a05a);
-  display:flex;align-items:center;justify-content:center;
-  font-size:15px;flex-shrink:0;
-  margin-top:4px;
-  color:#fff;font-weight:800;font-size:13px;
-  box-shadow:0 2px 8px rgba(22,160,90,0.20);
-  flex-shrink:0;
-}
-
-/* ── Bubble wrapper (label + bubble) ── */
-.bubble-wrap{
-  display:flex;
-  flex-direction:column;
-  gap:4px;
-  max-width:82%;
-}
-.bubble-label{
-  font-size:11px;
-  font-weight:700;
-  letter-spacing:.3px;
-  color:var(--chat-text-subtle);
-  padding:0 4px;
-}
+.msg-row{display:flex;gap:12px;animation:fadeUp .22s ease;padding:2px 0;}
+.msg-row.user{flex-direction:row-reverse;padding-left:60px;}
+.msg-row.assistant{padding-right:0;align-items:flex-start;}
+.msg-ava{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,var(--green),var(--green2));display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0;margin-top:4px;box-shadow:0 2px 8px rgba(22,160,90,0.25);}
+.msg-ava-user{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,#0d7a44,#16a05a);display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;margin-top:4px;color:#fff;font-weight:800;box-shadow:0 2px 8px rgba(22,160,90,0.20);}
+.bubble-wrap{display:flex;flex-direction:column;gap:4px;flex:1;min-width:0;}
+.msg-row.user .bubble-wrap{flex:0 1 auto;max-width:78%;}
+.bubble-label{font-size:11px;font-weight:700;letter-spacing:.3px;color:var(--chat-text-subtle);padding:0 4px;}
 .msg-row.user .bubble-label{text-align:right;}
+.bubble.eco{background:var(--chat-ai-bg);border:1px solid var(--chat-ai-border);border-radius:4px 18px 18px 18px;color:var(--chat-text-ai);padding:18px 22px;font-family:'Inter',sans-serif;font-size:16px;line-height:1.9;font-weight:400;box-shadow:var(--chat-shadow-ai);word-break:break-word;width:100%;}
+.bubble.user{background:var(--chat-user-bg);border:none;border-radius:18px 4px 18px 18px;color:var(--chat-text-user);padding:14px 20px;font-family:'Inter',sans-serif;font-size:16px;line-height:1.75;font-weight:500;box-shadow:var(--chat-shadow-user);word-break:break-word;align-self:flex-end;}
 
-/* ── AI bubble — ChatGPT-style flat white card ── */
-.bubble.eco{
-  background:var(--chat-ai-bg);
-  border:1px solid var(--chat-ai-border);
-  border-radius:4px 18px 18px 18px;
-  color:var(--chat-text-ai);
-  padding:18px 22px;
-  font-family:'Inter',sans-serif;
-  font-size:16px;
-  line-height:1.9;
-  font-weight:400;
-  box-shadow:var(--chat-shadow-ai);
-  word-break:break-word;
-}
+/* Streaming cursor */
+.stream-cursor{display:inline-block;width:2px;height:1.1em;background:var(--green);vertical-align:middle;margin-left:2px;animation:blinkCursor .7s step-end infinite;border-radius:1px;}
+@keyframes blinkCursor{0%,100%{opacity:1}50%{opacity:0}}
 
-/* ── User bubble — green gradient pill ── */
-.bubble.user{
-  background:var(--chat-user-bg);
-  border:none;
-  border-radius:18px 4px 18px 18px;
-  color:var(--chat-text-user);
-  padding:14px 20px;
-  font-family:'Inter',sans-serif;
-  font-size:16px;
-  line-height:1.75;
-  font-weight:500;
-  box-shadow:var(--chat-shadow-user);
-  word-break:break-word;
-  align-self:flex-end;
-}
-
-/* ── Rich content inside AI bubbles ── */
-
-/* Paragraph spacing */
-.bubble.eco .chat-p{
-  margin:0 0 12px;
-}
+/* Rich content inside AI bubbles */
+.bubble.eco .chat-p{margin:0 0 12px;}
 .bubble.eco .chat-p:last-child{margin-bottom:0;}
-
-/* H1 */
-.bubble.eco .chat-h1{
-  font-family:'DM Serif Display',serif;
-  font-size:22px;
-  font-weight:700;
-  color:var(--green);
-  margin:20px 0 10px;
-  line-height:1.2;
-  padding-bottom:8px;
-  border-bottom:2px solid var(--green3);
-}
-
-/* H2 — section title like ChatGPT's bold headers */
-.bubble.eco .chat-h2{
-  font-size:17px;
-  font-weight:800;
-  color:var(--chat-text-ai);
-  margin:18px 0 6px;
-  line-height:1.3;
-  letter-spacing:-.2px;
-}
-
-/* H3 */
-.bubble.eco .chat-h3{
-  font-size:15px;
-  font-weight:700;
-  color:var(--green);
-  margin:14px 0 5px;
-  line-height:1.3;
-  text-transform:uppercase;
-  letter-spacing:.4px;
-}
-
-/* Bold */
-.bubble.eco strong,
-.bubble.eco b{
-  font-weight:700;
-  color:var(--chat-text-ai);
-}
-
-/* Italic */
-.bubble.eco em,
-.bubble.eco i{
-  font-style:italic;
-  color:var(--chat-text-subtle);
-}
-
-/* ── List items — ChatGPT style ── */
-.bubble.eco .chat-li{
-  display:flex;
-  gap:10px;
-  margin:5px 0;
-  align-items:flex-start;
-  font-size:16px;
-  line-height:1.75;
-}
-.bubble.eco .chat-li-bullet{
-  width:20px;
-  height:20px;
-  border-radius:50%;
-  background:linear-gradient(135deg,var(--green),var(--green2));
-  color:#fff;
-  font-size:11px;
-  font-weight:800;
-  display:flex;align-items:center;justify-content:center;
-  flex-shrink:0;
-  margin-top:3px;
-}
-.bubble.eco .chat-li-num{
-  width:20px;height:20px;
-  border-radius:6px;
-  background:var(--green4);
-  border:1.5px solid var(--green3);
-  color:var(--green);
-  font-size:11px;font-weight:800;
-  display:flex;align-items:center;justify-content:center;
-  flex-shrink:0;margin-top:3px;
-}
-
-/* ── Inline code ── */
-.bubble.eco .chat-code-inline{
-  background:var(--green4);
-  border:1px solid var(--green3);
-  border-radius:6px;
-  padding:2px 7px;
-  font-size:14px;
-  font-family:'Courier New',monospace;
-  color:var(--green);
-  font-weight:600;
-}
-
-/* ── Code block ── */
-.bubble.eco .chat-pre{
-  background:#0f1e14;
-  border-radius:12px;
-  padding:16px 18px;
-  font-size:13.5px;
-  overflow-x:auto;
-  margin:12px 0;
-  font-family:'Courier New',monospace;
-  line-height:1.65;
-  color:#a8ffc8;
-  border:1px solid #1e3828;
-  box-shadow:inset 0 1px 8px rgba(0,0,0,0.4);
-}
-.bubble.eco .chat-pre-header{
-  display:flex;align-items:center;gap:8px;
-  background:#0a1610;
-  border-radius:10px 10px 0 0;
-  padding:8px 14px;
-  margin:12px 0 -2px;
-  border:1px solid #1e3828;
-  border-bottom:none;
-}
-.bubble.eco .chat-pre-lang{
-  font-size:11px;font-weight:700;color:#4d8a6a;letter-spacing:.5px;text-transform:uppercase;
-}
-
-/* ── Horizontal rule ── */
-.bubble.eco .chat-hr{
-  border:none;
-  border-top:2px solid var(--green3);
-  margin:16px 0;
-}
-
-/* ── Callout / tip box (> blockquote style) ── */
-.bubble.eco .chat-callout{
-  background:var(--green4);
-  border-left:4px solid var(--green);
-  border-radius:0 10px 10px 0;
-  padding:12px 16px;
-  margin:12px 0;
-  font-size:15px;
-  color:var(--chat-text-subtle);
-  font-style:italic;
-}
-
-/* First/last child spacing reset */
+.bubble.eco .chat-h1{font-family:'DM Serif Display',serif;font-size:22px;font-weight:700;color:var(--green);margin:20px 0 10px;line-height:1.2;padding-bottom:8px;border-bottom:2px solid var(--green3);}
+.bubble.eco .chat-h2{font-size:17px;font-weight:800;color:var(--chat-text-ai);margin:18px 0 6px;line-height:1.3;letter-spacing:-.2px;}
+.bubble.eco .chat-h3{font-size:15px;font-weight:700;color:var(--green);margin:14px 0 5px;line-height:1.3;text-transform:uppercase;letter-spacing:.4px;}
+.bubble.eco strong,.bubble.eco b{font-weight:700;color:var(--chat-text-ai);}
+.bubble.eco em,.bubble.eco i{font-style:italic;color:var(--chat-text-subtle);}
+.bubble.eco .chat-li{display:flex;gap:10px;margin:5px 0;align-items:flex-start;font-size:16px;line-height:1.75;}
+.bubble.eco .chat-li-bullet{width:20px;height:20px;border-radius:50%;background:linear-gradient(135deg,var(--green),var(--green2));color:#fff;font-size:11px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:3px;}
+.bubble.eco .chat-li-num{width:20px;height:20px;border-radius:6px;background:var(--green4);border:1.5px solid var(--green3);color:var(--green);font-size:11px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:3px;}
+.bubble.eco .chat-code-inline{background:var(--green4);border:1px solid var(--green3);border-radius:6px;padding:2px 7px;font-size:14px;font-family:'Courier New',monospace;color:var(--green);font-weight:600;}
+.bubble.eco .chat-pre{background:#0f1e14;border-radius:12px;padding:16px 18px;font-size:13.5px;overflow-x:auto;margin:12px 0;font-family:'Courier New',monospace;line-height:1.65;color:#a8ffc8;border:1px solid #1e3828;box-shadow:inset 0 1px 8px rgba(0,0,0,0.4);}
+.bubble.eco .chat-pre-header{display:flex;align-items:center;gap:8px;background:#0a1610;border-radius:10px 10px 0 0;padding:8px 14px;margin:12px 0 -2px;border:1px solid #1e3828;border-bottom:none;}
+.bubble.eco .chat-pre-lang{font-size:11px;font-weight:700;color:#4d8a6a;letter-spacing:.5px;text-transform:uppercase;}
+.bubble.eco .chat-hr{border:none;border-top:2px solid var(--green3);margin:16px 0;}
+.bubble.eco .chat-callout{background:var(--green4);border-left:4px solid var(--green);border-radius:0 10px 10px 0;padding:12px 16px;margin:12px 0;font-size:15px;color:var(--chat-text-subtle);font-style:italic;}
 .bubble.eco > *:first-child{margin-top:0!important;}
 .bubble.eco > *:last-child{margin-bottom:0!important;}
-
-/* ── User bubble content (simple, no rich text needed) ── */
 .bubble.user strong,.bubble.user b{font-weight:700;color:#fff;}
 .bubble.user em,.bubble.user i{font-style:italic;color:rgba(255,255,255,0.85);}
-.bubble.user .chat-code-inline{
-  background:rgba(255,255,255,0.18);border-color:rgba(255,255,255,0.25);color:#fff;
-}
+.bubble.user .chat-code-inline{background:rgba(255,255,255,0.18);border-color:rgba(255,255,255,0.25);color:#fff;}
 
-/* ── Typing indicator ── */
-.typing-bub{
-  background:var(--chat-ai-bg);
-  border:1px solid var(--chat-ai-border);
-  border-radius:4px 18px 18px 18px;
-  padding:16px 22px;
-  box-shadow:var(--chat-shadow-ai);
-  display:inline-flex;align-items:center;gap:6px;
-}
+/* Typing indicator */
+.typing-bub{background:var(--chat-ai-bg);border:1px solid var(--chat-ai-border);border-radius:4px 18px 18px 18px;padding:16px 22px;box-shadow:var(--chat-shadow-ai);display:inline-flex;align-items:center;gap:6px;}
 .typing-label{font-size:13px;color:var(--chat-text-subtle);font-weight:600;margin-right:4px;}
 .typing-dots{display:inline-flex;gap:5px;align-items:center;}
 .dot{width:8px;height:8px;border-radius:50%;background:var(--green2);}
@@ -604,78 +315,27 @@ footer{border-top:1px solid var(--border);padding:48px 40px 40px;text-align:cent
 .dot:nth-child(2){animation:dotBounce 1.2s .2s infinite ease-in-out;}
 .dot:nth-child(3){animation:dotBounce 1.2s .4s infinite ease-in-out;}
 
-/* ── Date separator ── */
-.chat-date-sep{
-  text-align:center;
-  font-size:11px;font-weight:700;
-  color:var(--chat-text-subtle);
-  letter-spacing:.5px;
-  padding:8px 0 4px;
-  text-transform:uppercase;
-}
-
-/* ── Input bar ── */
-.chat-input-bar{
-  padding:12px 0 20px;
-  flex-shrink:0;
-  background:var(--chat-bg);
-}
-.chat-input-inner{
-  display:flex;
-  gap:10px;
-  align-items:flex-end;
-  background:var(--chat-input-bg);
-  border:1.5px solid var(--chat-border);
-  border-radius:18px;
-  padding:10px 10px 10px 16px;
-  box-shadow:0 2px 16px rgba(22,160,90,0.10),0 1px 6px rgba(0,0,0,0.05);
-  transition:border-color .2s,box-shadow .2s;
-}
-.chat-input-inner:focus-within{
-  border-color:var(--green);
-  box-shadow:0 0 0 3px rgba(22,160,90,0.12),0 2px 16px rgba(22,160,90,0.14);
-}
-.chat-ta{
-  flex:1;
-  background:transparent;
-  border:none;
-  color:var(--chat-text-ai);
-  font-family:'Inter',sans-serif;
-  font-size:15px;
-  resize:none;
-  outline:none;
-  line-height:1.6;
-  max-height:130px;
-  overflow-y:auto;
-  font-weight:400;
-  padding:4px 0;
-}
+/* Input bar */
+.chat-input-bar{padding:12px 0 20px;flex-shrink:0;background:var(--chat-bg);}
+.chat-input-inner{display:flex;gap:10px;align-items:flex-end;background:var(--chat-input-bg);border:1.5px solid var(--chat-border);border-radius:18px;padding:10px 10px 10px 16px;box-shadow:0 2px 16px rgba(22,160,90,0.10),0 1px 6px rgba(0,0,0,0.05);transition:border-color .2s,box-shadow .2s;}
+.chat-input-inner:focus-within{border-color:var(--green);box-shadow:0 0 0 3px rgba(22,160,90,0.12),0 2px 16px rgba(22,160,90,0.14);}
+.chat-ta{flex:1;background:transparent;border:none;color:var(--chat-text-ai);font-family:'Inter',sans-serif;font-size:15px;resize:none;outline:none;line-height:1.6;max-height:130px;overflow-y:auto;font-weight:400;padding:4px 0;}
 .chat-ta::placeholder{color:var(--chat-text-subtle);opacity:.7;}
-.send-btn{
-  width:42px;height:42px;
-  border-radius:12px;
-  border:none;
-  font-size:18px;
-  display:flex;align-items:center;justify-content:center;
-  cursor:pointer;flex-shrink:0;
-  transition:all .2s;
-}
-.send-btn.ready{
-  background:linear-gradient(135deg,var(--green),var(--green2));
-  color:#fff;
-  box-shadow:0 3px 12px rgba(22,160,90,0.40);
-}
+.send-btn{width:42px;height:42px;border-radius:12px;border:none;font-size:18px;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;transition:all .2s;}
+.send-btn.ready{background:linear-gradient(135deg,var(--green),var(--green2));color:#fff;box-shadow:0 3px 12px rgba(22,160,90,0.40);}
 .send-btn.ready:hover{transform:translateY(-1px);box-shadow:0 5px 18px rgba(22,160,90,0.50);}
 .send-btn.off{background:var(--chat-border);color:var(--chat-text-subtle);cursor:not-allowed;}
-.chat-hint{
-  font-size:11px;color:var(--chat-text-subtle);text-align:center;
-  margin-top:7px;font-weight:500;
-}
+.chat-hint{font-size:11px;color:var(--chat-text-subtle);text-align:center;margin-top:7px;font-weight:500;}
+
+/* Streaming status bar */
+.stream-status{display:none;align-items:center;gap:8px;padding:6px 14px;border-radius:10px;background:var(--green4);border:1px solid var(--green3);margin-bottom:8px;font-size:12px;color:var(--green);font-weight:700;}
+.stream-status.visible{display:flex;}
+.stream-pulse{width:7px;height:7px;border-radius:50%;background:var(--green2);animation:pulse 1s infinite;}
 
 @media(max-width:640px){
-  .msg-row.user{padding-left:30px;}
-  .msg-row.assistant{padding-right:30px;}
-  .bubble.eco,.bubble.user{font-size:15px;padding:14px 16px;}
+  .msg-row.user{padding-left:20px;}
+  .bubble.eco{font-size:15px;padding:14px 16px;}
+  .bubble.user{font-size:15px;padding:12px 16px;}
   .chat-input-inner{border-radius:14px;}
 }
 
@@ -718,11 +378,6 @@ footer{border-top:1px solid var(--border);padding:48px 40px 40px;text-align:cent
   .app-wrap,.saved-wrap{padding:28px 16px;}
   .founder-card{grid-template-columns:1fr;text-align:center;}
   .founder-left{margin:0 auto;}
-  .bubble{font-size:17px;padding:14px 16px;}
-  .bubble .chat-h1{font-size:22px;}
-  .bubble .chat-h2{font-size:19px;}
-  .bubble .chat-h3{font-size:17px;}
-  .bubble .chat-li{font-size:17px;}
 }
 </style>
 </head>
@@ -737,9 +392,7 @@ footer{border-top:1px solid var(--border);padding:48px 40px 40px;text-align:cent
     <h2 class="modal-title">Enter Your Password</h2>
     <p class="modal-desc">Enter your ECO GREEN password to unlock AI features.</p>
     <div class="modal-input-wrap">
-      <input type="password" class="modal-input" id="api-key-input"
-        placeholder="Enter your password..."
-        autocomplete="off" spellcheck="false" />
+      <input type="password" class="modal-input" id="api-key-input" placeholder="Enter your password..." autocomplete="off" spellcheck="false" />
       <button class="modal-eye" id="eye-btn" onclick="toggleEye()">👁️</button>
     </div>
     <p class="modal-hint">🔒 Your password is stored securely in your browser only.</p>
@@ -802,19 +455,6 @@ footer{border-top:1px solid var(--border);padding:48px 40px 40px;text-align:cent
   </div>
 </nav>
 
-<!-- PWA INSTALL BANNER -->
-<div id="install-banner" style="display:none;position:fixed;bottom:24px;left:50%;transform:translateX(-50%);z-index:2000;width:calc(100% - 32px);max-width:420px;">
-  <div style="background:var(--surface);border:1.5px solid var(--green3);border-radius:20px;padding:16px 18px;display:flex;align-items:center;gap:14px;box-shadow:0 8px 40px rgba(22,160,90,0.22),0 2px 12px rgba(0,0,0,0.12);animation:slideUp .35s ease;">
-    <div style="width:46px;height:46px;border-radius:12px;background:linear-gradient(135deg,var(--green),var(--green2));display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;box-shadow:0 4px 14px #1a9e5c44;">🌍</div>
-    <div style="flex:1;min-width:0;">
-      <div style="font-size:14px;font-weight:800;color:var(--text);margin-bottom:2px;">Install ECO GREEN</div>
-      <div style="font-size:12px;color:var(--text3);font-weight:600;">Add to home screen for quick access</div>
-    </div>
-    <button id="install-btn" onclick="triggerInstall()" style="padding:9px 16px;border-radius:10px;border:none;background:linear-gradient(135deg,var(--green),var(--green2));color:#fff;font-family:'Inter',sans-serif;font-size:13px;font-weight:800;cursor:pointer;white-space:nowrap;box-shadow:0 4px 14px #1a9e5c44;transition:all .2s;">Install</button>
-    <button onclick="dismissInstall()" style="width:28px;height:28px;border-radius:8px;border:1.5px solid var(--border2);background:transparent;color:var(--text3);font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .2s;" onmouseover="this.style.borderColor='var(--green)'" onmouseout="this.style.borderColor='var(--border2)'">✕</button>
-  </div>
-</div>
-
 <!-- HERO -->
 <section id="hero-page" class="page active">
   <div class="hero-shapes"><div class="dots"></div><div class="shape s1"></div><div class="shape s2"></div></div>
@@ -824,13 +464,8 @@ footer{border-top:1px solid var(--border);padding:48px 40px 40px;text-align:cent
     </span>
     <h1 class="hero-headline"><span class="eco-word">ECO GREEN</span><br/>Build Greener.<br/><em style="font-style:italic;color:var(--text)">Engineer Smarter.</em></h1>
     <div style="display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:22px;flex-wrap:wrap;">
-      <span style="display:inline-flex;align-items:center;gap:7px;padding:7px 16px;border-radius:20px;background:var(--green4);border:1.5px solid var(--green3);font-size:13px;font-weight:700;color:var(--green);">
-        🧠 AI-Powered Brain
-      </span>
-      <span style="display:inline-flex;align-items:center;gap:6px;padding:7px 16px;border-radius:20px;background:var(--surface);border:1.5px solid var(--border2);font-size:13px;font-weight:600;color:var(--text2);">
-        <span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#22c55e;box-shadow:0 0 0 2px #dcfce7;animation:pulse 2s infinite;"></span>
-        Live · Serekunda, The Gambia
-      </span>
+      <span style="display:inline-flex;align-items:center;gap:7px;padding:7px 16px;border-radius:20px;background:var(--green4);border:1.5px solid var(--green3);font-size:13px;font-weight:700;color:var(--green);">🧠 AI-Powered Brain</span>
+      <span style="display:inline-flex;align-items:center;gap:6px;padding:7px 16px;border-radius:20px;background:var(--surface);border:1.5px solid var(--border2);font-size:13px;font-weight:600;color:var(--text2);"><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#22c55e;box-shadow:0 0 0 2px #dcfce7;animation:pulse 2s infinite;"></span>Live · Serekunda, The Gambia</span>
     </div>
     <p class="hero-tagline">Generate sustainable project ideas, get expert guidance, and build solutions that matter — powered by AI.</p>
     <div class="hero-btns">
@@ -849,24 +484,9 @@ footer{border-top:1px solid var(--border);padding:48px 40px 40px;text-align:cent
     <div class="sec-tag">How it works</div>
     <h2 class="sec-heading">Three steps to your<br/><em>sustainable project</em></h2>
     <div class="how-grid">
-      <div class="how-card" onclick="showPage('app')">
-        <div class="how-num">01</div>
-        <span class="how-emoji">💡</span>
-        <div class="how-title">Pick your field</div>
-        <div class="how-desc">Choose Electrical, Civil, or Mechanical Engineering, select your level, and get AI-generated ideas instantly.</div>
-      </div>
-      <div class="how-card" onclick="showPage('chat')">
-        <div class="how-num">02</div>
-        <span class="how-emoji">🌿</span>
-        <div class="how-title">Chat with ECO GREEN AI</div>
-        <div class="how-desc">Your AI mentor helps you plan, build, and understand your project step by step — however you need it.</div>
-      </div>
-      <div class="how-card" onclick="showPage('saved')">
-        <div class="how-num">03</div>
-        <span class="how-emoji">📌</span>
-        <div class="how-title">Save and build</div>
-        <div class="how-desc">Bookmark your favourite ideas and return to them anytime. Your progress and conversations are always saved.</div>
-      </div>
+      <div class="how-card" onclick="showPage('app')"><div class="how-num">01</div><span class="how-emoji">💡</span><div class="how-title">Pick your field</div><div class="how-desc">Choose Electrical, Civil, or Mechanical Engineering, select your level, and get AI-generated ideas instantly.</div></div>
+      <div class="how-card" onclick="showPage('chat')"><div class="how-num">02</div><span class="how-emoji">🌿</span><div class="how-title">Chat with ECO GREEN AI</div><div class="how-desc">Your AI mentor helps you plan, build, and understand your project step by step — however you need it.</div></div>
+      <div class="how-card" onclick="showPage('saved')"><div class="how-num">03</div><span class="how-emoji">📌</span><div class="how-title">Save and build</div><div class="how-desc">Bookmark your favourite ideas and return to them anytime. Your progress and conversations are always saved.</div></div>
     </div>
   </div>
 
@@ -875,11 +495,7 @@ footer{border-top:1px solid var(--border);padding:48px 40px 40px;text-align:cent
     <h2 class="man-title">"The energy that moves with you — <em>let's save the world</em> by saving energy, one project at a time."</h2>
     <p class="man-body">Every engineering student has the power to make a real difference. ECO GREEN turns great ideas into solutions that matter for our planet.</p>
     <div class="pills">
-      <span class="pill">Green Energy</span>
-      <span class="pill">Sustainability</span>
-      <span class="pill">Climate Action</span>
-      <span class="pill">Clean Tech</span>
-      <span class="pill">Smart Engineering</span>
+      <span class="pill">Green Energy</span><span class="pill">Sustainability</span><span class="pill">Climate Action</span><span class="pill">Clean Tech</span><span class="pill">Smart Engineering</span>
     </div>
   </div>
 
@@ -894,15 +510,8 @@ footer{border-top:1px solid var(--border);padding:48px 40px 40px;text-align:cent
       <div class="founder-right">
         <h3>Modou Jaw</h3>
         <div class="founder-uni">Electrical &amp; Electronics Engineering · USET · Year 3</div>
-        <p class="founder-bio">
-          Modou built ECO GREEN with one belief: that every engineering student deserves access to intelligent tools that help them build a greener world. This platform is his contribution to that future.
-        </p>
-        <div class="founder-badges">
-          <span class="fbadge">Electrical Engineering</span>
-          <span class="fbadge">USET</span>
-          <span class="fbadge">Year 3</span>
-          <span class="fbadge">AI Builder</span>
-        </div>
+        <p class="founder-bio">Modou built ECO GREEN with one belief: that every engineering student deserves access to intelligent tools that help them build a greener world. This platform is his contribution to that future.</p>
+        <div class="founder-badges"><span class="fbadge">Electrical Engineering</span><span class="fbadge">USET</span><span class="fbadge">Year 3</span><span class="fbadge">AI Builder</span></div>
       </div>
     </div>
     <div class="team-btns">
@@ -914,11 +523,7 @@ footer{border-top:1px solid var(--border);padding:48px 40px 40px;text-align:cent
   <footer>
     <div class="foot-logo"><svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg" style="display:inline-block;vertical-align:middle;margin-right:5px" aria-hidden="true"><circle cx="9" cy="9" r="8" fill="var(--green)" opacity="0.15"/><circle cx="9" cy="9" r="8" stroke="var(--green)" stroke-width="1.4"/><path d="M9 1C9 1 6.5 4.5 6.5 9s2.5 8 2.5 8" stroke="var(--green)" stroke-width="1.1" stroke-linecap="round"/><path d="M9 1C9 1 11.5 4.5 11.5 9s-2.5 8-2.5 8" stroke="var(--green)" stroke-width="1.1" stroke-linecap="round"/><path d="M1.2 6.5h15.6M1.2 11.5h15.6" stroke="var(--green)" stroke-width="1.1" stroke-linecap="round"/></svg>ECO <span>GREEN</span></div>
     <div class="foot-tag">"The energy that moves with you."</div>
-    <div class="foot-nav">
-      <a onclick="showPage('app')">Ideas</a>
-      <a onclick="showPage('chat')">AI Mentor</a>
-      <a onclick="showPage('saved')">Saved</a>
-    </div>
+    <div class="foot-nav"><a onclick="showPage('app')">Ideas</a><a onclick="showPage('chat')">AI Mentor</a><a onclick="showPage('saved')">Saved</a></div>
     <div class="foot-credit">Created by <span>Modou Jaw</span> · Electrical &amp; Electronics Engineering · <span>USET</span></div>
     <div class="foot-copy">© 2025 ECO GREEN</div>
   </footer>
@@ -929,38 +534,28 @@ footer{border-top:1px solid var(--border);padding:48px 40px 40px;text-align:cent
   <div class="app-wrap">
     <h2 class="app-title">AI Project Idea Generator</h2>
     <p class="app-sub">Answer 3 questions and get 4 tailored, sustainable project ideas generated by AI.</p>
-
     <div class="api-banner" id="api-banner" onclick="openModal()">
       <span class="api-b-icon">🔑</span>
-      <div style="flex:1">
-        <div class="api-b-title" id="banner-title">🔒 Password Required</div>
-        <div class="api-b-sub" id="banner-sub">Click to enter your password and unlock AI features</div>
-      </div>
+      <div style="flex:1"><div class="api-b-title" id="banner-title">🔒 Password Required</div><div class="api-b-sub" id="banner-sub">Click to enter your password and unlock AI features</div></div>
       <span class="api-b-action" id="banner-action">Set Key →</span>
     </div>
-
     <div class="step-row"><div class="step-bub">1</div><span class="step-lbl">Pick your engineering field</span></div>
     <div class="field-grid" id="field-grid"></div>
-
     <div id="step2" style="display:none">
       <div class="step-row"><div class="step-bub">2</div><span class="step-lbl">Any specific topic? <span style="color:var(--text3);text-transform:none;font-weight:600">(optional 😊)</span></span></div>
       <div class="topics-wrap" id="topics-wrap"></div>
     </div>
-
     <div id="step3" style="display:none">
       <div class="step-row"><div class="step-bub">3</div><span class="step-lbl">Where are you in your studies?</span></div>
       <div class="level-grid" id="level-grid"></div>
     </div>
-
     <div id="gen-wrap" style="display:none">
-      <button class="gen-btn" id="gen-btn" onclick="generateIdeas()">Generate Ideas with AI</button>
+      <button class="gen-btn" id="gen-btn" onclick="generateIdeas()">🌿 Generate Green Ideas with AI</button>
     </div>
-
     <div id="empty-prompt" style="text-align:center;padding:60px 0">
       <div style="font-size:52px;margin-bottom:14px">👆</div>
       <div style="color:var(--text3);font-size:15px;font-weight:600">Pick your engineering field above to get started!</div>
     </div>
-
     <div id="ideas-box" style="display:none">
       <div class="div-lbl"><div class="div-line"></div><span class="div-txt">IDEAS READY</span><div class="div-line"></div></div>
       <div class="ideas-grid" id="ideas-grid"></div>
@@ -976,7 +571,7 @@ footer{border-top:1px solid var(--border);padding:48px 40px 40px;text-align:cent
       <div class="eco-ava"><svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><circle cx="14" cy="14" r="12.5" fill="rgba(255,255,255,0.18)"/><circle cx="14" cy="14" r="12.5" stroke="white" stroke-width="1.6"/><path d="M14 1.5C14 1.5 10 7 10 14s4 12.5 4 12.5" stroke="white" stroke-width="1.3" stroke-linecap="round"/><path d="M14 1.5C14 1.5 18 7 18 14s-4 12.5-4 12.5" stroke="white" stroke-width="1.3" stroke-linecap="round"/><path d="M1.5 10.5h25M1.5 17.5h25" stroke="white" stroke-width="1.3" stroke-linecap="round"/></svg></div>
       <div style="flex:1">
         <div class="eco-name">ECO GREEN AI</div>
-        <div class="eco-status"><span class="sdot"></span>Always available · Remembers you</div>
+        <div class="eco-status"><span class="sdot"></span><span id="status-text">Always available · Remembers you</span></div>
       </div>
       <div style="display:flex;align-items:center;gap:8px;margin-left:auto;flex-shrink:0">
         <button onclick="clearChatHistory()" title="Clear conversation" style="background:none;border:1.5px solid var(--border2);border-radius:10px;padding:6px 10px;font-size:11px;color:var(--text3);cursor:pointer;font-family:'Inter',sans-serif;font-weight:700;transition:all .2s;" onmouseover="this.style.borderColor='var(--green)';this.style.color='var(--green)'" onmouseout="this.style.borderColor='var(--border2)';this.style.color='var(--text3)'">Clear</button>
@@ -984,15 +579,18 @@ footer{border-top:1px solid var(--border);padding:48px 40px 40px;text-align:cent
       </div>
     </div>
     <div class="qprompts" id="qprompts"></div>
+    <!-- Streaming status bar -->
+    <div class="stream-status" id="stream-status">
+      <span class="stream-pulse"></span>
+      <span id="stream-status-text">Streaming response…</span>
+    </div>
     <div class="chat-msgs" id="chat-msgs"></div>
     <div class="chat-input-bar">
       <div class="chat-input-inner">
-        <textarea class="chat-ta" id="chat-in" rows="1"
-          placeholder="Message ECO GREEN AI…"
-          onkeydown="chatKey(event)" oninput="resizeTA(this)"></textarea>
+        <textarea class="chat-ta" id="chat-in" rows="1" placeholder="Message ECO GREEN AI…" onkeydown="chatKey(event)" oninput="resizeTA(this)"></textarea>
         <button class="send-btn off" id="send-btn" onclick="sendChat()">↑</button>
       </div>
-      <div class="chat-hint">Shift + Enter to send &nbsp;·&nbsp; ECO GREEN AI may make mistakes — always verify</div>
+      <div class="chat-hint">Shift + Enter to send &nbsp;·&nbsp; Streaming mode enabled ✨</div>
     </div>
   </div>
 </section>
@@ -1010,9 +608,9 @@ footer{border-top:1px solid var(--border);padding:48px 40px 40px;text-align:cent
 // ============================================================
 // ECO GREEN — AI Engineering Hub
 // Created by Modou Jaw · USET · Electrical Engineering Year 3
+// Streaming mode: tokens arrive live, assembled word-by-word
 // ============================================================
 
-// ===== QUICK PROMPTS =====
 const QUICK_PROMPTS = [
   "I feel overwhelmed with my final year project. Can you help me figure out where to start? 😅",
   "I have a project idea but I am not sure if it is good or realistic. Can I tell you about it?",
@@ -1027,15 +625,10 @@ const QUICK_LABELS = [
 ];
 
 function renderQuickPrompts() {
-  var qp = document.getElementById('qprompts');
-  if (!qp) return;
-  qp.innerHTML = '';
+  var qp = document.getElementById('qprompts'); if (!qp) return; qp.innerHTML = '';
   QUICK_PROMPTS.forEach(function(prompt, i) {
-    var btn = document.createElement('button');
-    btn.className = 'qp';
-    btn.textContent = QUICK_LABELS[i];
-    btn.onclick = function() { sendQuick(prompt); };
-    qp.appendChild(btn);
+    var btn = document.createElement('button'); btn.className = 'qp'; btn.textContent = QUICK_LABELS[i];
+    btn.onclick = function() { sendQuick(prompt); }; qp.appendChild(btn);
   });
 }
 
@@ -1057,7 +650,7 @@ const WELCOME = "Hey! I'm really glad you're here. 💚\n\nI'm **ECO GREEN AI** 
 let apiKey = '', selField = null, selTopic = '', selLevel = 'Intermediate';
 let ideas = [], saved = [], chatHist = [], chatBusy = false;
 
-// ===== AI ENGINE =====
+// ===== AI CONFIG =====
 const OR_URL = 'https://openrouter.ai/api/v1/chat/completions';
 const OR_MODELS = [
   'meta-llama/llama-3.3-70b-instruct:free',
@@ -1070,20 +663,32 @@ const OR_MODELS = [
 ];
 let currentModel = OR_MODELS[0];
 
-async function aiRequest(messages, systemText) {
+// ================================================================
+// STREAMING ENGINE
+// Reads SSE chunks, assembles tokens, yields words with small delay
+// ================================================================
+
+/**
+ * Stream a chat completion from OpenRouter.
+ * @param {Array} messages  - Already-formatted messages array
+ * @param {string} sys      - System prompt
+ * @param {function} onToken - Called with each raw token string as it arrives
+ * @returns {Promise<string>} - Full assembled text
+ */
+async function streamAI(messages, sys, onToken) {
   if (!apiKey) { openModal(); throw new Error('no_key'); }
+
   const msgs = [];
-  if (systemText) msgs.push({ role: 'system', content: systemText });
-  const filtered = messages
-    .filter(m => m.role === 'user' || m.role === 'assistant')
+  if (sys) msgs.push({ role: 'system', content: sys });
+
+  // Merge & clean messages (same logic as original)
+  const filtered = messages.filter(m => m.role === 'user' || m.role === 'assistant')
     .map(m => ({ role: m.role, content: m.content || '' }));
   const merged = [];
   for (const m of filtered) {
-    if (merged.length && merged[merged.length - 1].role === m.role) {
+    if (merged.length && merged[merged.length - 1].role === m.role)
       merged[merged.length - 1].content += '\n' + m.content;
-    } else {
-      merged.push({ ...m });
-    }
+    else merged.push({ ...m });
   }
   while (merged.length && merged[0].role === 'assistant') merged.shift();
   if (!merged.length) throw new Error('Nothing to send.');
@@ -1092,7 +697,7 @@ async function aiRequest(messages, systemText) {
   let lastErr = '';
   for (let mi = 0; mi < OR_MODELS.length; mi++) {
     const model = OR_MODELS[mi];
-    let res, data;
+    let res;
     try {
       res = await fetch(OR_URL, {
         method: 'POST',
@@ -1102,54 +707,148 @@ async function aiRequest(messages, systemText) {
           'HTTP-Referer': window.location.href,
           'X-Title': 'ECO GREEN AI'
         },
-        body: JSON.stringify({ model, messages: msgs, max_tokens: 3000, temperature: 0.72, top_p: 0.9 })
+        body: JSON.stringify({
+          model,
+          messages: msgs,
+          max_tokens: 3000,
+          temperature: 0.72,
+          top_p: 0.9,
+          stream: true   // ← STREAMING ENABLED
+        })
       });
-      data = await res.json();
     } catch (netErr) {
       throw new Error('Network error — check your internet connection and try again.');
     }
+
     if (res.status === 401 || res.status === 403) {
-      apiKey = '';
-      localStorage.removeItem('eco_or_key');
-      updateStatus();
-      openModal();
+      apiKey = ''; localStorage.removeItem('eco_or_key'); updateStatus(); openModal();
       throw new Error('bad_key');
     }
-    if (!res.ok || data && data.error) {
-      const errMsg = String(
-        (data && data.error && (data.error.message || data.error.code || data.error)) || res.statusText || ''
-      ).toLowerCase();
+    if (!res.ok) {
+      const errText = await res.text().catch(() => '');
+      lastErr = errText.toLowerCase();
+      if (res.status === 404 || res.status === 429 || res.status === 500 || res.status === 502 || res.status === 503
+          || lastErr.includes('endpoint') || lastErr.includes('not found') || lastErr.includes('overload')
+          || lastErr.includes('unavailable') || lastErr.includes('provider')) {
+        continue;
+      }
+      throw new Error(lastErr || 'API error');
+    }
+
+    // ── Read SSE stream ──
+    const reader = res.body.getReader();
+    const decoder = new TextDecoder('utf-8');
+    let fullText = '';
+    let buffer = '';
+    let wordBuffer = '';        // accumulates partial word
+    const WORD_DELAY_MS = 18;  // delay between words (ms) — tweak for speed
+
+    // Helper: flush the word buffer through onToken with delay
+    async function flushWordBuffer() {
+      if (!wordBuffer) return;
+      const word = wordBuffer;
+      wordBuffer = '';
+      onToken(word);
+      await new Promise(r => setTimeout(r, WORD_DELAY_MS));
+    }
+
+    try {
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+
+        buffer += decoder.decode(value, { stream: true });
+        const lines = buffer.split('\n');
+        buffer = lines.pop(); // keep incomplete line
+
+        for (const line of lines) {
+          const trimmed = line.trim();
+          if (!trimmed || trimmed === ':' || !trimmed.startsWith('data:')) continue;
+          const data = trimmed.slice(5).trim();
+          if (data === '[DONE]') break;
+
+          let parsed;
+          try { parsed = JSON.parse(data); } catch { continue; }
+
+          // Extract token from delta
+          const token = parsed?.choices?.[0]?.delta?.content;
+          if (!token) continue;
+
+          fullText += token;
+
+          // ── Word-by-word assembly ──
+          // We want to emit whole "words" (plus their trailing space/punctuation).
+          // Strategy: accumulate into wordBuffer; flush on space or newline.
+          for (const char of token) {
+            if (char === ' ' || char === '\n' || char === '\t') {
+              wordBuffer += char;
+              await flushWordBuffer();
+            } else {
+              wordBuffer += char;
+            }
+          }
+        }
+      }
+
+      // Flush any remaining partial word
+      await flushWordBuffer();
+
+    } catch (streamErr) {
+      // If stream read fails mid-way, still return what we have
+      if (fullText) return fullText;
+      throw streamErr;
+    }
+
+    currentModel = model;
+    return fullText;
+  }
+
+  throw new Error('Service temporarily unavailable — please try again in a moment.');
+}
+
+// Non-streaming fallback (used for idea generation JSON)
+async function aiRequest(messages, sys) {
+  if (!apiKey) { openModal(); throw new Error('no_key'); }
+  const msgs = [];
+  if (sys) msgs.push({ role: 'system', content: sys });
+  const filtered = messages.filter(m => m.role === 'user' || m.role === 'assistant').map(m => ({ role: m.role, content: m.content || '' }));
+  const merged = [];
+  for (const m of filtered) {
+    if (merged.length && merged[merged.length - 1].role === m.role) merged[merged.length - 1].content += '\n' + m.content;
+    else merged.push({ ...m });
+  }
+  while (merged.length && merged[0].role === 'assistant') merged.shift();
+  if (!merged.length) throw new Error('Nothing to send.');
+  msgs.push(...merged);
+  let lastErr = '';
+  for (let mi = 0; mi < OR_MODELS.length; mi++) {
+    const model = OR_MODELS[mi]; let res, data;
+    try {
+      res = await fetch(OR_URL, { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + apiKey, 'HTTP-Referer': window.location.href, 'X-Title': 'ECO GREEN AI' }, body: JSON.stringify({ model, messages: msgs, max_tokens: 3000, temperature: 0.72, top_p: 0.9 }) });
+      data = await res.json();
+    } catch (netErr) { throw new Error('Network error — check your internet connection and try again.'); }
+    if (res.status === 401 || res.status === 403) { apiKey = ''; localStorage.removeItem('eco_or_key'); updateStatus(); openModal(); throw new Error('bad_key'); }
+    if (!res.ok || (data && data.error)) {
+      const errMsg = String((data && data.error && (data.error.message || data.error.code || data.error)) || res.statusText || '').toLowerCase();
       lastErr = errMsg;
-      if (
-        errMsg.includes('endpoint') || errMsg.includes('no model') ||
-        errMsg.includes('not found') || errMsg.includes('provider') ||
-        errMsg.includes('overload') || errMsg.includes('capacity') ||
-        errMsg.includes('unavailable') || errMsg.includes('error') ||
-        res.status === 404 || res.status === 429 ||
-        res.status === 500 || res.status === 502 || res.status === 503
-      ) { continue; }
+      if (errMsg.includes('endpoint') || errMsg.includes('no model') || errMsg.includes('not found') || errMsg.includes('provider') || errMsg.includes('overload') || errMsg.includes('capacity') || errMsg.includes('unavailable') || errMsg.includes('error') || res.status === 404 || res.status === 429 || res.status === 500 || res.status === 502 || res.status === 503) { continue; }
       throw new Error(errMsg || 'API error');
     }
     const text = (data && data.choices && data.choices[0] && data.choices[0].message && data.choices[0].message.content || '').trim();
     if (text) { currentModel = model; return text; }
-    lastErr = 'empty response';
-    continue;
+    lastErr = 'empty response'; continue;
   }
   throw new Error('Service temporarily unavailable — please try again in a moment.');
 }
 
-function callAI(prompt, sys) {
-  return aiRequest([{ role: 'user', content: prompt }], sys);
-}
+function callAI(prompt, sys) { return aiRequest([{ role: 'user', content: prompt }], sys); }
 
 function compressMessages(messages) {
   const filtered = messages.filter(m => m.role === 'user' || m.role === 'assistant');
   if (filtered.length <= 24) return filtered;
   const older = filtered.slice(0, filtered.length - 16);
   const recent = filtered.slice(-16);
-  const summary = older.map(m =>
-    '[' + (m.role === 'user' ? 'Student' : 'ECO GREEN AI') + ']: ' + String(m.content).slice(0, 100).trim() + (m.content.length > 100 ? '...' : '')
-  ).join('\n');
+  const summary = older.map(m => '[' + (m.role === 'user' ? 'Student' : 'ECO GREEN AI') + ']: ' + String(m.content).slice(0, 100).trim() + (m.content.length > 100 ? '...' : '')).join('\n');
   return [
     { role: 'user', content: '[Conversation history summary — ' + older.length + ' earlier messages]:\n' + summary + '\n\n[Continue from here with full awareness of everything above]' },
     { role: 'assistant', content: 'I have full awareness of our entire conversation history and will continue naturally from where we left off.' },
@@ -1157,79 +856,33 @@ function compressMessages(messages) {
   ];
 }
 
-function callAIChat(messages, sys) {
-  const compressed = compressMessages(messages.filter(m => m.role === 'user' || m.role === 'assistant'));
-  return aiRequest(compressed, sys);
-}
-
 // ===== THEME =====
 function applyTheme(dark, animate) {
   if (!animate) document.body.style.transition = 'none';
   document.documentElement.setAttribute('data-theme', dark ? 'dark' : 'light');
-  const btn = document.getElementById('theme-btn');
-  if (btn) btn.textContent = dark ? '☀️' : '🌙';
-  if (!animate) setTimeout(function() { document.body.style.transition = ''; }, 50);
+  const btn = document.getElementById('theme-btn'); if (btn) btn.textContent = dark ? '☀️' : '🌙';
+  if (!animate) setTimeout(() => { document.body.style.transition = ''; }, 50);
 }
-function toggleTheme() {
-  const dark = document.documentElement.getAttribute('data-theme') === 'dark';
-  localStorage.setItem('eco-theme', dark ? 'light' : 'dark');
-  applyTheme(!dark, true);
-}
-(function () {
-  const t = localStorage.getItem('eco-theme');
-  const dark = t ? t === 'dark' : window.matchMedia('(prefers-color-scheme: dark)').matches;
-  applyTheme(dark, false);
-})();
+function toggleTheme() { const dark = document.documentElement.getAttribute('data-theme') === 'dark'; localStorage.setItem('eco-theme', dark ? 'light' : 'dark'); applyTheme(!dark, true); }
+(function() { const t = localStorage.getItem('eco-theme'); const dark = t ? t === 'dark' : window.matchMedia('(prefers-color-scheme: dark)').matches; applyTheme(dark, false); })();
 
 // ===== API KEY =====
-function loadKey() {
-  apiKey = localStorage.getItem('eco_or_key') || '';
-  updateStatus();
-  if (!apiKey) openModal();
-}
-function saveApiKey() {
-  const k = document.getElementById('api-key-input').value.trim();
-  if (!k) { alert('Please enter your password! 😊'); return; }
-  apiKey = k;
-  localStorage.setItem('eco_or_key', k);
-  document.getElementById('api-modal').classList.add('hidden');
-  updateStatus();
-  confetti();
-}
+function loadKey() { apiKey = localStorage.getItem('eco_or_key') || ''; updateStatus(); if (!apiKey) openModal(); }
+function saveApiKey() { const k = document.getElementById('api-key-input').value.trim(); if (!k) { alert('Please enter your password! 😊'); return; } apiKey = k; localStorage.setItem('eco_or_key', k); document.getElementById('api-modal').classList.add('hidden'); updateStatus(); confetti(); }
 function skipModal() { document.getElementById('api-modal').classList.add('hidden'); updateStatus(); }
-function openModal() {
-  const inp = document.getElementById('api-key-input');
-  inp.value = apiKey || ''; inp.type = 'password';
-  document.getElementById('eye-btn').textContent = '👁️';
-  document.getElementById('api-modal').classList.remove('hidden');
-}
-function toggleEye() {
-  const inp = document.getElementById('api-key-input');
-  const eye = document.getElementById('eye-btn');
-  inp.type = inp.type === 'password' ? 'text' : 'password';
-  eye.textContent = inp.type === 'password' ? '👁️' : '🙈';
-}
+function openModal() { const inp = document.getElementById('api-key-input'); inp.value = apiKey || ''; inp.type = 'password'; document.getElementById('eye-btn').textContent = '👁️'; document.getElementById('api-modal').classList.remove('hidden'); }
+function toggleEye() { const inp = document.getElementById('api-key-input'); const eye = document.getElementById('eye-btn'); inp.type = inp.type === 'password' ? 'text' : 'password'; eye.textContent = inp.type === 'password' ? '👁️' : '🙈'; }
 function updateStatus() {
-  const title  = document.getElementById('banner-title');
-  const sub    = document.getElementById('banner-sub');
-  const action = document.getElementById('banner-action');
-  const banner = document.getElementById('api-banner');
-  if (apiKey) {
-    title.textContent = '✅ ECO GREEN AI Ready';
-    sub.textContent = 'AI features unlocked · Click to change password';
-    action.textContent = 'Change →'; banner.classList.add('connected');
-  } else {
-    title.textContent = '🔒 Password Required';
-    sub.textContent = 'Click to enter your password and unlock AI features';
-    action.textContent = 'Enter →'; banner.classList.remove('connected');
-  }
+  const title = document.getElementById('banner-title'), sub = document.getElementById('banner-sub'), action = document.getElementById('banner-action'), banner = document.getElementById('api-banner');
+  if (apiKey) { title.textContent = '✅ ECO GREEN AI Ready'; sub.textContent = 'AI features unlocked · Click to change password'; action.textContent = 'Change →'; banner.classList.add('connected'); }
+  else { title.textContent = '🔒 Password Required'; sub.textContent = 'Click to enter your password and unlock AI features'; action.textContent = 'Enter →'; banner.classList.remove('connected'); }
 }
 document.getElementById('api-key-input').addEventListener('keydown', function(e) { if (e.key === 'Enter') saveApiKey(); });
 
 // ===== NAVIGATION =====
 function showPage(name) {
-  document.querySelectorAll('.page').forEach(function(p) { p.classList.remove('active'); });
-  document.querySelectorAll('.nav-btn').forEach(function(b) { b.classList.remove('active'); });
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
   const pMap = {hero:'hero-page',app:'app-section',chat:'chat-section',saved:'saved-section'};
   const nMap = {hero:'nb-hero',app:'nb-app',chat:'nb-chat',saved:'nb-saved'};
   document.getElementById(pMap[name]).classList.add('active');
@@ -1242,9 +895,8 @@ function showPage(name) {
 // ===== APP =====
 function renderFields() {
   const g = document.getElementById('field-grid'); g.innerHTML = '';
-  Object.entries(FIELDS).forEach(function([k, f]) {
-    const sel = selField === k;
-    const d = document.createElement('div'); d.className = 'field-card';
+  Object.entries(FIELDS).forEach(([k, f]) => {
+    const sel = selField === k; const d = document.createElement('div'); d.className = 'field-card';
     if (sel) d.style.cssText = 'border-color:' + f.color + ';background:' + f.color + '14;box-shadow:0 4px 20px ' + f.color + '33';
     d.innerHTML = '<span class="fi">' + f.icon + '</span><div class="fn" style="color:' + (sel ? f.color : 'var(--text)') + '">' + f.label + '</div>' + (sel ? '<div class="ff">' + f.fact + '</div>' : '');
     d.onclick = function() { selField = k; selTopic = ''; ideas = []; document.getElementById('ideas-box').style.display = 'none'; renderFields(); renderSteps(); };
@@ -1261,34 +913,28 @@ function renderSteps() {
   if (!has) return;
   const f = FIELDS[selField];
   const tw = document.getElementById('topics-wrap'); tw.innerHTML = '';
-  ['Any Topic'].concat(f.topics).forEach(function(t) {
-    const val = t === 'Any Topic' ? '' : t;
-    const b = document.createElement('button'); b.className = 'topic-btn';
+  ['Any Topic'].concat(f.topics).forEach(t => {
+    const val = t === 'Any Topic' ? '' : t; const b = document.createElement('button'); b.className = 'topic-btn';
     if (selTopic === val) b.style.cssText = 'border-color:' + f.color + ';color:' + f.color + ';background:' + f.color + '14';
-    b.textContent = (selTopic === val ? '✓ ' : '') + t;
-    b.onclick = function() { selTopic = val; renderSteps(); };
-    tw.appendChild(b);
+    b.textContent = (selTopic === val ? '✓ ' : '') + t; b.onclick = function() { selTopic = val; renderSteps(); }; tw.appendChild(b);
   });
   const lg = document.getElementById('level-grid'); lg.innerHTML = '';
-  LEVELS.forEach(function(l) {
-    const sel = selLevel === l.id;
-    const c = document.createElement('div'); c.className = 'level-card';
+  LEVELS.forEach(l => {
+    const sel = selLevel === l.id; const c = document.createElement('div'); c.className = 'level-card';
     if (sel) c.style.cssText = 'border-color:' + f.color + ';background:' + f.color + '14';
     c.innerHTML = '<div><div class="lname" style="color:' + (sel ? f.color : 'var(--text)') + '">' + l.label + '</div><div class="ldesc">' + l.desc + '</div></div>';
-    c.onclick = function() { selLevel = l.id; renderSteps(); };
-    lg.appendChild(c);
+    c.onclick = function() { selLevel = l.id; renderSteps(); }; lg.appendChild(c);
   });
 }
 
 async function generateIdeas() {
   if (!selField) return;
   if (!apiKey) { openModal(); return; }
-  const f = FIELDS[selField];
-  const btn = document.getElementById('gen-btn');
+  const f = FIELDS[selField]; const btn = document.getElementById('gen-btn');
   btn.disabled = true; btn.innerHTML = '<span class="spinner"></span> Generating with AI...';
   const tc = selTopic ? 'specifically in the topic area of "' + selTopic + '"' : 'across any relevant green topic';
   const prompt = 'You are an expert sustainable engineering project advisor. Generate exactly 4 creative, practical, eco-friendly project ideas for a ' + selLevel + ' student in ' + f.label + ' ' + tc + '.\n\nEach idea must be:\n- Genuinely innovative and specific (not generic)\n- Realistic for a ' + selLevel + ' student to build\n- Focused on sustainability and green impact\n- Clearly explained so a student immediately understands it\n\nReturn ONLY a valid JSON array with exactly 4 objects. Each object must have exactly these keys:\n{\n  "title": "Specific, catchy project title (max 8 words)",\n  "description": "2 clear sentences: sentence 1 = what it is and does, sentence 2 = how it works technically",\n  "technologies": ["tech1", "tech2", "tech3", "tech4"],\n  "impact": "1 specific sentence about the measurable green/sustainable impact",\n  "difficulty": 3,\n  "steps": ["Step 1: ...", "Step 2: ...", "Step 3: ..."]\n}\n\nDifficulty scale: 1=very easy, 2=easy, 3=moderate, 4=hard, 5=very advanced.\nCRITICAL: Return ONLY the raw JSON array. No markdown. No code fences. No explanation. No extra text before or after.';
-  const sys = 'You are a world-class sustainable engineering project advisor with deep expertise across Electrical, Civil, and Mechanical Engineering. Your job is to generate genuinely innovative, specific, and buildable project ideas — not generic textbook examples.\n\nRules:\n- Each idea must be SPECIFIC and ORIGINAL\n- Each idea must be REALISTIC for the stated student level\n- Each idea must have a CLEAR, MEASURABLE green/sustainability impact\n- Technologies must be REAL and SPECIFIC\n- Steps must be CONCRETE and ACTIONABLE\n\nReturn ONLY a valid JSON array. No markdown. No code fences. No explanation. Nothing else.';
+  const sys = 'You are a world-class sustainable engineering project advisor. Return ONLY a valid JSON array. No markdown. No code fences. No explanation. Nothing else.';
   try {
     const raw = await callAI(prompt, sys);
     let clean = raw.replace(/```json/gi, '').replace(/```/g, '').trim();
@@ -1297,8 +943,7 @@ async function generateIdeas() {
     ideas = JSON.parse(match[0]).slice(0, 4);
     renderIdeas(); confetti();
   } catch (e) {
-    if (e.message !== 'no_key' && e.message !== 'bad_key')
-      alert('Could not generate ideas 😕\n\n' + e.message);
+    if (e.message !== 'no_key' && e.message !== 'bad_key') alert('Could not generate ideas 😕\n\n' + e.message);
   } finally {
     btn.disabled = false; btn.innerHTML = '🌿 Generate Green Ideas with AI';
   }
@@ -1308,124 +953,38 @@ function renderIdeas() {
   const box = document.getElementById('ideas-box'); const g = document.getElementById('ideas-grid');
   box.style.display = 'block'; g.innerHTML = '';
   const f = FIELDS[selField];
-  ideas.forEach(function(idea, i) {
-    const isSaved = !!saved.find(function(s) { return s.title === idea.title; });
+  ideas.forEach((idea, i) => {
+    const isSaved = !!saved.find(s => s.title === idea.title);
     const diff = Math.max(1, Math.min(5, idea.difficulty || 3));
     const diffLabel = ['','Beginner','Easy','Moderate','Advanced','Expert'][diff];
     const diffColor = ['','#22c55e','#84cc16','#f59e0b','#ef4444','#7c3aed'][diff];
     const steps = (idea.steps || []).slice(0, 3);
     const d = document.createElement('div'); d.className = 'idea-card';
-    d.innerHTML =
-      '<div class="idea-bar" style="background:linear-gradient(90deg,' + f.color + ',' + f.color + '66)"></div>' +
-      '<div class="idea-body">' +
-        '<div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;flex-wrap:wrap">' +
-          '<span class="idea-meta" style="color:' + f.color + ';margin:0">' + f.icon + ' ' + f.label + '</span>' +
-          '<span style="padding:3px 10px;border-radius:20px;background:' + diffColor + '18;border:1px solid ' + diffColor + '44;color:' + diffColor + ';font-size:11px;font-weight:800">' + '●'.repeat(diff) + '○'.repeat(5-diff) + ' ' + diffLabel + '</span>' +
-        '</div>' +
-        '<div class="idea-title">' + idea.title + '</div>' +
-        '<div class="idea-desc">' + idea.description + '</div>' +
-        (steps.length ? '<div style="margin-bottom:14px"><div style="font-size:11px;font-weight:800;color:var(--text3);letter-spacing:.5px;margin-bottom:8px">QUICK START</div>' + steps.map(function(s, si) { return '<div style="display:flex;gap:8px;margin:5px 0;font-size:13px;color:var(--text2);font-weight:600;align-items:flex-start"><span style="background:' + f.color + ';color:#fff;border-radius:50%;width:18px;height:18px;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;flex-shrink:0;margin-top:1px">' + (si+1) + '</span><span>' + s.replace(/^Step \d+:\s*/, '') + '</span></div>'; }).join('') + '</div>' : '') +
-        '<div class="tech-tags">' + (idea.technologies || []).map(function(t) { return '<span class="tech-tag" style="background:' + f.color + '15;border:1.5px solid ' + f.color + '44;color:' + f.color + '">' + t + '</span>'; }).join('') + '</div>' +
-        '<div class="idea-impact">🌍 <strong>Green Impact:</strong> ' + idea.impact + '</div>' +
-        '<div class="idea-actions">' +
-          '<button class="btn-eco" onclick="ideaToChat(' + i + ')">🌿 Build this with AI</button>' +
-          '<button class="btn-save ' + (isSaved ? 'saved-active' : '') + '" id="sv' + i + '" onclick="toggleSave(' + i + ')">' + (isSaved ? '✓ Saved' : '📌 Save') + '</button>' +
-        '</div>' +
-      '</div>';
+    d.innerHTML = '<div class="idea-bar" style="background:linear-gradient(90deg,' + f.color + ',' + f.color + '66)"></div><div class="idea-body"><div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;flex-wrap:wrap"><span class="idea-meta" style="color:' + f.color + ';margin:0">' + f.icon + ' ' + f.label + '</span><span style="padding:3px 10px;border-radius:20px;background:' + diffColor + '18;border:1px solid ' + diffColor + '44;color:' + diffColor + ';font-size:11px;font-weight:800">' + '●'.repeat(diff) + '○'.repeat(5-diff) + ' ' + diffLabel + '</span></div><div class="idea-title">' + idea.title + '</div><div class="idea-desc">' + idea.description + '</div>' + (steps.length ? '<div style="margin-bottom:14px"><div style="font-size:11px;font-weight:800;color:var(--text3);letter-spacing:.5px;margin-bottom:8px">QUICK START</div>' + steps.map((s, si) => '<div style="display:flex;gap:8px;margin:5px 0;font-size:13px;color:var(--text2);font-weight:600;align-items:flex-start"><span style="background:' + f.color + ';color:#fff;border-radius:50%;width:18px;height:18px;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;flex-shrink:0;margin-top:1px">' + (si+1) + '</span><span>' + s.replace(/^Step \d+:\s*/, '') + '</span></div>').join('') + '</div>' : '') + '<div class="tech-tags">' + (idea.technologies || []).map(t => '<span class="tech-tag" style="background:' + f.color + '15;border:1.5px solid ' + f.color + '44;color:' + f.color + '">' + t + '</span>').join('') + '</div><div class="idea-impact">🌍 <strong>Green Impact:</strong> ' + idea.impact + '</div><div class="idea-actions"><button class="btn-eco" onclick="ideaToChat(' + i + ')">🌿 Build this with AI</button><button class="btn-save ' + (isSaved ? 'saved-active' : '') + '" id="sv' + i + '" onclick="toggleSave(' + i + ')">' + (isSaved ? '✓ Saved' : '📌 Save') + '</button></div></div>';
     g.appendChild(d);
   });
 }
 
-function toggleSave(i) {
-  const idea = ideas[i];
-  const idx = saved.findIndex(function(s) { return s.title === idea.title; });
-  if (idx >= 0) saved.splice(idx, 1); else saved.push(Object.assign({}, idea, { field: selField }));
-  updateSavedNav(); renderIdeas();
-}
-function updateSavedNav() {
-  const nb = document.getElementById('nb-saved');
-  if (nb) nb.textContent = saved.length ? '📌 Saved (' + saved.length + ')' : '📌 Saved';
-}
+function toggleSave(i) { const idea = ideas[i]; const idx = saved.findIndex(s => s.title === idea.title); if (idx >= 0) saved.splice(idx, 1); else saved.push(Object.assign({}, idea, { field: selField })); updateSavedNav(); renderIdeas(); }
+function updateSavedNav() { const nb = document.getElementById('nb-saved'); if (nb) nb.textContent = saved.length ? '📌 Saved (' + saved.length + ')' : '📌 Saved'; }
 
-// ===== MEMORY & PROFILE SYSTEM =====
-let userProfile = {};
-let savedConvs = [];
-
-function loadMemory() {
-  try { const p = localStorage.getItem('eco_profile'); if (p) userProfile = JSON.parse(p); } catch(e) { userProfile = {}; }
-  try { const c = localStorage.getItem('eco_saved_convs'); if (c) savedConvs = JSON.parse(c); } catch(e) { savedConvs = []; }
-  updateProfileDot();
-}
-function saveProfile() {
-  try { localStorage.setItem('eco_profile', JSON.stringify(userProfile)); } catch(e) {}
-  updateProfileDot();
-}
-function saveConvs() {
-  try { localStorage.setItem('eco_saved_convs', JSON.stringify(savedConvs.slice(0, 20))); } catch(e) {}
-}
-function updateProfileDot() {
-  const dot = document.getElementById('profile-dot');
-  if (dot) dot.style.display = (userProfile.notes && userProfile.notes.length) || savedConvs.length ? 'block' : 'none';
-}
-
+// ===== MEMORY =====
+let userProfile = {}, savedConvs = [];
+function loadMemory() { try { const p = localStorage.getItem('eco_profile'); if (p) userProfile = JSON.parse(p); } catch(e) { userProfile = {}; } try { const c = localStorage.getItem('eco_saved_convs'); if (c) savedConvs = JSON.parse(c); } catch(e) { savedConvs = []; } updateProfileDot(); }
+function saveProfile() { try { localStorage.setItem('eco_profile', JSON.stringify(userProfile)); } catch(e) {} updateProfileDot(); }
+function saveConvs() { try { localStorage.setItem('eco_saved_convs', JSON.stringify(savedConvs.slice(0, 20))); } catch(e) {} }
+function updateProfileDot() { const dot = document.getElementById('profile-dot'); if (dot) dot.style.display = (userProfile.notes && userProfile.notes.length) || savedConvs.length ? 'block' : 'none'; }
 function extractProfileFromMessage(text) {
   let changed = false;
-  if (!userProfile.name) {
-    const namePatterns = [
-      /(?:my name is|i'm called|call me|i am)\s+([A-Za-z]{2,20})/i,
-      /^(?:hi|hello|hey)[,\s]+(?:i'?m|my name is)\s+([A-Za-z]{2,20})/i,
-      /^([A-Za-z]{2,20})\s+here[,\s]/i,
-    ];
-    for (const p of namePatterns) {
-      const m = text.match(p);
-      if (m && m[1] && m[1].length > 1) {
-        const n = m[1].charAt(0).toUpperCase() + m[1].slice(1).toLowerCase();
-        if (!['the','and','but','for','are','you','this','that','with','have','from'].includes(n.toLowerCase())) {
-          userProfile.name = n; changed = true; break;
-        }
-      }
-    }
-  }
-  if (!userProfile.field) {
-    if (/electrical|electronics|circuit|pcb|arduino|esp32|iot|embedded|power system|signal/i.test(text)) {
-      userProfile.field = 'Electrical & Electronics Engineering'; changed = true;
-    } else if (/civil|structural|concrete|bridge|road|foundation|soil|construction|hydraulic/i.test(text)) {
-      userProfile.field = 'Civil Engineering'; changed = true;
-    } else if (/mechanical|thermodynamic|fluid|hvac|engine|solidworks|manufacturing|robotic|machine/i.test(text)) {
-      userProfile.field = 'Mechanical Engineering'; changed = true;
-    }
-  }
-  if (!userProfile.level) {
-    if (/\byear[- ]?1\b|first[- ]year|1st[- ]year|100[- ]level|beginner/i.test(text)) {
-      userProfile.level = 'Beginner (Year 1)'; changed = true;
-    } else if (/\byear[- ]?2\b|second[- ]year|2nd[- ]year|200[- ]level/i.test(text)) {
-      userProfile.level = 'Intermediate (Year 2)'; changed = true;
-    } else if (/\byear[- ]?3\b|third[- ]year|3rd[- ]year|300[- ]level/i.test(text)) {
-      userProfile.level = 'Advanced (Year 3)'; changed = true;
-    } else if (/final[- ]year|year[- ]?4|4th[- ]year|400[- ]level|graduating/i.test(text)) {
-      userProfile.level = 'Final Year'; changed = true;
-    } else if (/postgrad|masters|phd|doctorate|research student|msc|meng/i.test(text)) {
-      userProfile.level = 'Postgraduate / Research'; changed = true;
-    }
-  }
-  const projPatterns = [
-    /(?:working on|building|designing|developing|my project (?:is|on|about)|project (?:is called|titled))\s+["']?([^.!?\n"']{8,70})["']?/i,
-    /(?:i want to build|i'm making|i need to design)\s+(?:a|an)?\s*([^.!?\n]{8,70})/i,
-  ];
-  for (const p of projPatterns) {
-    const m = text.match(p);
-    if (m && m[1]) { userProfile.project = m[1].trim().replace(/\s+/g,' '); changed = true; break; }
-  }
-  if (!userProfile.university) {
-    const uniMatch = text.match(/(?:at|from|studying at|attend(?:ing)?)\s+([A-Z][^.!?\n]{4,50}(?:university|college|institute|polytechnic|USET|UCL|MIT|ETH))/i);
-    if (uniMatch) { userProfile.university = uniMatch[1].trim(); changed = true; }
-  }
+  if (!userProfile.name) { const patterns = [/(?:my name is|i'm called|call me|i am)\s+([A-Za-z]{2,20})/i,/^(?:hi|hello|hey)[,\s]+(?:i'?m|my name is)\s+([A-Za-z]{2,20})/i]; for (const p of patterns) { const m = text.match(p); if (m && m[1] && m[1].length > 1) { const n = m[1].charAt(0).toUpperCase() + m[1].slice(1).toLowerCase(); if (!['the','and','but','for','are','you','this','that','with','have','from'].includes(n.toLowerCase())) { userProfile.name = n; changed = true; break; } } } }
+  if (!userProfile.field) { if (/electrical|electronics|circuit|pcb|arduino|esp32|iot|embedded|power system|signal/i.test(text)) { userProfile.field = 'Electrical & Electronics Engineering'; changed = true; } else if (/civil|structural|concrete|bridge|road|foundation|soil|construction|hydraulic/i.test(text)) { userProfile.field = 'Civil Engineering'; changed = true; } else if (/mechanical|thermodynamic|fluid|hvac|engine|solidworks|manufacturing|robotic|machine/i.test(text)) { userProfile.field = 'Mechanical Engineering'; changed = true; } }
+  if (!userProfile.level) { if (/\byear[- ]?1\b|first[- ]year|1st[- ]year|100[- ]level|beginner/i.test(text)) { userProfile.level = 'Beginner (Year 1)'; changed = true; } else if (/\byear[- ]?2\b|second[- ]year|2nd[- ]year|200[- ]level/i.test(text)) { userProfile.level = 'Intermediate (Year 2)'; changed = true; } else if (/\byear[- ]?3\b|third[- ]year|3rd[- ]year|300[- ]level/i.test(text)) { userProfile.level = 'Advanced (Year 3)'; changed = true; } else if (/final[- ]year|year[- ]?4|4th[- ]year|400[- ]level|graduating/i.test(text)) { userProfile.level = 'Final Year'; changed = true; } else if (/postgrad|masters|phd|doctorate|research student|msc|meng/i.test(text)) { userProfile.level = 'Postgraduate / Research'; changed = true; } }
+  const projPatterns = [/(?:working on|building|designing|developing|my project (?:is|on|about)|project (?:is called|titled))\s+["']?([^.!?\n"']{8,70})["']?/i,/(?:i want to build|i'm making|i need to design)\s+(?:a|an)?\s*([^.!?\n]{8,70})/i];
+  for (const p of projPatterns) { const m = text.match(p); if (m && m[1]) { userProfile.project = m[1].trim().replace(/\s+/g,' '); changed = true; break; } }
   if (changed) { saveProfile(); renderProfileTags(); }
 }
-
 function buildSystemWithMemory() {
-  const p = userProfile;
-  const hasProfile = p.name || p.field || p.level || p.project || p.university || (p.notes && p.notes.length);
+  const p = userProfile; const hasProfile = p.name || p.field || p.level || p.project || p.university || (p.notes && p.notes.length);
   if (!hasProfile) return SYS;
   let mem = '\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\nSTUDENT PROFILE — PERSONALISE TO THIS PERSON\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n';
   if (p.name) mem += 'Name: ' + p.name + '\n→ Use their name naturally\n\n';
@@ -1433,255 +992,132 @@ function buildSystemWithMemory() {
   if (p.level) mem += 'Study Level: ' + p.level + '\n→ Calibrate technical depth accordingly\n\n';
   if (p.university) mem += 'University: ' + p.university + '\n\n';
   if (p.project) mem += 'Current Project: "' + p.project + '"\n→ Reference it when relevant\n\n';
-  if (p.notes && p.notes.length) mem += 'Additional Context:\n' + p.notes.map(function(n) { return '• ' + n; }).join('\n') + '\n\n';
+  if (p.notes && p.notes.length) mem += 'Additional Context:\n' + p.notes.map(n => '• ' + n).join('\n') + '\n\n';
   mem += 'CRITICAL: Never say "according to your profile" — just BE naturally aware.';
   return SYS + mem;
 }
-
-function openMemPanel() {
-  document.getElementById('mem-panel').classList.add('open');
-  document.getElementById('mem-overlay').classList.add('open');
-  renderProfileTags(); renderConvList();
-}
-function closeMemPanel() {
-  document.getElementById('mem-panel').classList.remove('open');
-  document.getElementById('mem-overlay').classList.remove('open');
-}
+function openMemPanel() { document.getElementById('mem-panel').classList.add('open'); document.getElementById('mem-overlay').classList.add('open'); renderProfileTags(); renderConvList(); }
+function closeMemPanel() { document.getElementById('mem-panel').classList.remove('open'); document.getElementById('mem-overlay').classList.remove('open'); }
 function renderProfileTags() {
   const c = document.getElementById('profile-tags'); if (!c) return;
-  const notes = userProfile.notes || [];
-  const autoTags = [];
+  const notes = userProfile.notes || []; const autoTags = [];
   if (userProfile.name) autoTags.push({ label: '👤 ' + userProfile.name, key: 'name' });
   if (userProfile.field) autoTags.push({ label: '⚡ ' + userProfile.field, key: 'field' });
   if (userProfile.level) autoTags.push({ label: '🎓 ' + userProfile.level, key: 'level' });
   if (userProfile.university) autoTags.push({ label: '🏛️ ' + userProfile.university, key: 'university' });
   if (userProfile.project) autoTags.push({ label: '🔨 ' + userProfile.project, key: 'project' });
   let html = '';
-  autoTags.forEach(function(t) {
-    html += '<span class="mem-tag">' + t.label + '<button class="del-tag" onclick="deleteProfileKey(\'' + t.key + '\')">✕</button></span>';
-  });
-  notes.forEach(function(n, i) {
-    html += '<span class="mem-tag">📝 ' + n + '<button class="del-tag" onclick="deleteNote(' + i + ')">✕</button></span>';
-  });
+  autoTags.forEach(t => { html += '<span class="mem-tag">' + t.label + '<button class="del-tag" onclick="deleteProfileKey(\'' + t.key + '\')">✕</button></span>'; });
+  notes.forEach((n, i) => { html += '<span class="mem-tag">📝 ' + n + '<button class="del-tag" onclick="deleteNote(' + i + ')">✕</button></span>'; });
   if (!html) html = '<div class="mem-empty">No profile info yet. Chat with ECO GREEN AI and it will learn about you automatically! ✨</div>';
   c.innerHTML = html;
 }
 function deleteProfileKey(key) { delete userProfile[key]; saveProfile(); renderProfileTags(); }
-function deleteNote(i) {
-  if (!userProfile.notes) return;
-  userProfile.notes.splice(i, 1);
-  saveProfile(); renderProfileTags();
-}
-function addProfileNote() {
-  const inp = document.getElementById('profile-inp');
-  const val = inp.value.trim(); if (!val) return;
-  if (!userProfile.notes) userProfile.notes = [];
-  extractProfileFromMessage(val);
-  if (!userProfile.notes) userProfile.notes = [];
-  userProfile.notes.push(val);
-  saveProfile(); renderProfileTags(); inp.value = '';
-}
+function deleteNote(i) { if (!userProfile.notes) return; userProfile.notes.splice(i, 1); saveProfile(); renderProfileTags(); }
+function addProfileNote() { const inp = document.getElementById('profile-inp'); const val = inp.value.trim(); if (!val) return; if (!userProfile.notes) userProfile.notes = []; extractProfileFromMessage(val); if (!userProfile.notes) userProfile.notes = []; userProfile.notes.push(val); saveProfile(); renderProfileTags(); inp.value = ''; }
 function saveCurrentConv() {
   if (chatHist.length <= 1) { alert('Start a conversation first! 😊'); return; }
-  const firstUserMsg = chatHist.find(function(m) { return m.role === 'user'; });
+  const firstUserMsg = chatHist.find(m => m.role === 'user');
   const title = firstUserMsg ? firstUserMsg.content.slice(0, 50) : 'Conversation';
-  const conv = { id: Date.now(), title: title, date: new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }), messages: chatHist.slice() };
-  const idx = savedConvs.findIndex(function(c) { return c.id === conv.id; });
-  if (idx >= 0) savedConvs[idx] = conv; else savedConvs.unshift(conv);
+  const conv = { id: Date.now(), title, date: new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }), messages: chatHist.slice() };
+  const idx = savedConvs.findIndex(c => c.id === conv.id); if (idx >= 0) savedConvs[idx] = conv; else savedConvs.unshift(conv);
   saveConvs(); renderConvList(); updateProfileDot();
   const btn = document.querySelector('[onclick="saveCurrentConv()"]');
-  if (btn) { btn.textContent = '✓ Saved!'; setTimeout(function() { btn.textContent = 'Save Current'; }, 1500); }
+  if (btn) { btn.textContent = '✓ Saved!'; setTimeout(() => { btn.textContent = 'Save Current'; }, 1500); }
 }
 function renderConvList() {
   const c = document.getElementById('conv-list'); if (!c) return;
   if (!savedConvs.length) { c.innerHTML = '<div class="mem-empty">No saved conversations yet. Press "Save Current" after a chat! 💬</div>'; return; }
-  c.innerHTML = savedConvs.map(function(conv, i) {
-    return '<div class="conv-item"><div class="conv-item-title">' + conv.title + '</div><div class="conv-item-meta">📅 ' + conv.date + ' · ' + conv.messages.length + ' messages</div><div class="conv-item-actions"><button class="conv-load-btn" onclick="loadConv(' + i + ')">📂 Load</button><button class="conv-del-btn" onclick="deleteConv(' + i + ')">✕</button></div></div>';
-  }).join('');
+  c.innerHTML = savedConvs.map((conv, i) => '<div class="conv-item"><div class="conv-item-title">' + conv.title + '</div><div class="conv-item-meta">📅 ' + conv.date + ' · ' + conv.messages.length + ' messages</div><div class="conv-item-actions"><button class="conv-load-btn" onclick="loadConv(' + i + ')">📂 Load</button><button class="conv-del-btn" onclick="deleteConv(' + i + ')">✕</button></div></div>').join('');
 }
 function loadConv(i) { chatHist = savedConvs[i].messages.slice(); closeMemPanel(); showPage('chat'); renderChat(); }
 function deleteConv(i) { savedConvs.splice(i, 1); saveConvs(); renderConvList(); updateProfileDot(); }
 function clearAllMemory() {
   if (!confirm('Clear all memory, profile, and saved conversations?')) return;
-  userProfile = {}; savedConvs = [];
-  localStorage.removeItem('eco_profile');
-  localStorage.removeItem('eco_saved_convs');
-  localStorage.removeItem('eco_chat_history');
-  localStorage.removeItem('eco_chat_last_time');
-  chatHist = [{ role: 'assistant', content: WELCOME }];
-  renderProfileTags(); renderConvList(); updateProfileDot(); renderChat();
+  userProfile = {}; savedConvs = []; localStorage.removeItem('eco_profile'); localStorage.removeItem('eco_saved_convs'); localStorage.removeItem('eco_chat_history'); localStorage.removeItem('eco_chat_last_time');
+  chatHist = [{ role: 'assistant', content: WELCOME }]; renderProfileTags(); renderConvList(); updateProfileDot(); renderChat();
 }
 
 // ===== CHAT =====
 const SYS = "You are ECO GREEN AI — an extraordinarily intelligent AI engineering mentor and companion. Created by Modou Jaw (Electrical & Electronics Engineering, Year 3, USET) as the heart of the ECO GREEN initiative.\n\nYou are a brilliant friend who genuinely knows engineering deeply and genuinely cares about the student you are talking to.\n\nYour expertise covers:\n⚡ Electrical & Electronics — circuits, PCB, Arduino, ESP32, IoT, embedded systems, power electronics, renewable energy\n🏗️ Civil Engineering — structural analysis, concrete, SAP2000, geotechnical, hydraulics, BIM\n⚙️ Mechanical Engineering — thermodynamics, CAD, SolidWorks, fluid mechanics, HVAC, manufacturing\n🌍 Sustainability — LCA, carbon footprint, solar PV, smart grids, climate tech, SDGs\n📚 Academic skills — proposals, reports, research methodology, project planning\n\nPersonality rules:\n- NEVER say 'Great question!', 'Certainly!', 'Of course!', 'Absolutely!'\n- Always read the emotional state and respond to the person, not just the question\n- Be warm, specific, and real — like a brilliant mentor who knows their stuff\n- Use **bold** for key terms. Use ## for section headings. Use ### for sub-headings.\n- Use emojis purposefully.\n- Match format to context: short answers for simple questions, structured breakdowns for technical ones\n- After answering, always add one proactive insight: a risk they haven't thought of, a next step, or a surprising fact\n\nFormatting guidance:\n- Use ## Heading for major sections\n- Use ### Sub-heading for subsections\n- Use **bold** for key terms and important points\n- Use bullet lists with - for enumerated items\n\nMission: Every student who talks to you should leave smarter, more confident, and more excited about engineering and sustainability.\n\n'The energy that moves with you — let us save the world by saving energy, one project at a time.' 🌍💚";
 
-function saveChatHistory() {
-  try { localStorage.setItem('eco_chat_history', JSON.stringify(chatHist.slice(-60))); } catch(e) {}
-}
-function loadChatHistory() {
-  try {
-    const stored = localStorage.getItem('eco_chat_history');
-    if (stored) { const parsed = JSON.parse(stored); if (Array.isArray(parsed) && parsed.length > 0) return parsed; }
-  } catch(e) {}
-  return null;
-}
-function clearChatHistory() {
-  localStorage.removeItem('eco_chat_history');
-  chatHist = [{ role: 'assistant', content: WELCOME }];
-  renderChat();
-}
+function saveChatHistory() { try { localStorage.setItem('eco_chat_history', JSON.stringify(chatHist.slice(-60))); } catch(e) {} }
+function loadChatHistory() { try { const stored = localStorage.getItem('eco_chat_history'); if (stored) { const parsed = JSON.parse(stored); if (Array.isArray(parsed) && parsed.length > 0) return parsed; } } catch(e) {} return null; }
+function clearChatHistory() { localStorage.removeItem('eco_chat_history'); chatHist = [{ role: 'assistant', content: WELCOME }]; renderChat(); }
 function initChat() {
   const stored = loadChatHistory();
   if (stored) {
     chatHist = stored;
     const lastTime = localStorage.getItem('eco_chat_last_time');
-    const now = Date.now();
-    if (lastTime && (now - Number(lastTime)) > 3600000) {
+    if (lastTime && (Date.now() - Number(lastTime)) > 3600000) {
       const name = userProfile.name ? ', ' + userProfile.name : '';
       const proj = userProfile.project ? ' Still working on **' + userProfile.project + '**?' : '';
       chatHist.push({ role: 'assistant', content: '👋 Welcome back' + name + '!' + proj + ' I remember everything — pick up right where we left off. 💚' });
     }
   } else {
     const name = userProfile.name ? ', ' + userProfile.name : '';
-    const greeting = userProfile.name
-      ? 'Hey' + name + '! 💚 Great to see you again.\n\nI\'m **ECO GREEN AI** — your personal engineering mentor. I remember you' + (userProfile.field ? ' from ' + userProfile.field : '') + '. What are we working on today? 😊'
-      : WELCOME;
+    const greeting = userProfile.name ? 'Hey' + name + '! 💚 Great to see you again.\n\nI\'m **ECO GREEN AI** — your personal engineering mentor. I remember you' + (userProfile.field ? ' from ' + userProfile.field : '') + '. What are we working on today? 😊' : WELCOME;
     chatHist = [{ role: 'assistant', content: greeting }];
   }
   localStorage.setItem('eco_chat_last_time', Date.now());
   renderChat();
 }
 
-// ===== CHATGPT-STYLE MARKDOWN RENDERER =====
-// Produces clean, structured HTML that mirrors ChatGPT's output quality.
+// ===== MARKDOWN RENDERER =====
 function md(rawText, isUser) {
-  // 1. Escape HTML
-  let s = rawText
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;');
-
+  let s = rawText.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
   if (isUser) {
-    // User bubbles: simple bold/italic/code only — no heavy markup
-    s = s.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
-    s = s.replace(/\*(.+?)\*/g, '<em>$1</em>');
-    s = s.replace(/`([^`]+)`/g, '<code class="chat-code-inline">$1</code>');
-    s = s.replace(/\n/g, '<br/>');
+    s = s.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>').replace(/\*(.+?)\*/g, '<em>$1</em>').replace(/`([^`]+)`/g, '<code class="chat-code-inline">$1</code>').replace(/\n/g, '<br/>');
     return s;
   }
-
-  // ── AI bubble: full rich rendering ──
-
-  // 2. Fenced code blocks (capture optional language tag)
-  s = s.replace(/```(\w*)\n?([\s\S]*?)```/g, function(_, lang, code) {
-    const langLabel = lang ? '<div class="chat-pre-header"><span class="chat-pre-lang">' + lang + '</span></div>' : '';
-    return langLabel + '<pre class="chat-pre">' + code.trim() + '</pre>';
-  });
-
-  // 3. Inline code
+  s = s.replace(/```(\w*)\n?([\s\S]*?)```/g, (_, lang, code) => (lang ? '<div class="chat-pre-header"><span class="chat-pre-lang">' + lang + '</span></div>' : '') + '<pre class="chat-pre">' + code.trim() + '</pre>');
   s = s.replace(/`([^`\n]+)`/g, '<code class="chat-code-inline">$1</code>');
-
-  // 4. Blockquote → callout
   s = s.replace(/^&gt;\s+(.+)$/gm, '<div class="chat-callout">$1</div>');
-
-  // 5. Headings
   s = s.replace(/^### (.+)$/gm, '<div class="chat-h3">$1</div>');
-  s = s.replace(/^## (.+)$/gm,  '<div class="chat-h2">$1</div>');
-  s = s.replace(/^# (.+)$/gm,   '<div class="chat-h1">$1</div>');
-
-  // 6. Bold+italic
+  s = s.replace(/^## (.+)$/gm, '<div class="chat-h2">$1</div>');
+  s = s.replace(/^# (.+)$/gm, '<div class="chat-h1">$1</div>');
   s = s.replace(/\*\*\*(.+?)\*\*\*/g, '<strong><em>$1</em></strong>');
-
-  // 7. Bold
   s = s.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
-
-  // 8. Italic
   s = s.replace(/\*([^*\n]+)\*/g, '<em>$1</em>');
-
-  // 9. Ordered lists — numbered badge (track number per-list)
-  let listNum = 0;
-  s = s.replace(/^(\d+)\.\s+(.+)$/gm, function(_, num, content) {
-    return '<div class="chat-li"><span class="chat-li-num">' + num + '</span><span>' + content + '</span></div>';
-  });
-
-  // 10. Unordered lists — green dot badge
-  s = s.replace(/^[-•*]\s+(.+)$/gm,
-    '<div class="chat-li"><span class="chat-li-bullet">✓</span><span>$1</span></div>');
-
-  // 11. Horizontal rule
+  s = s.replace(/^(\d+)\.\s+(.+)$/gm, (_, num, content) => '<div class="chat-li"><span class="chat-li-num">' + num + '</span><span>' + content + '</span></div>');
+  s = s.replace(/^[-•*]\s+(.+)$/gm, '<div class="chat-li"><span class="chat-li-bullet">✓</span><span>$1</span></div>');
   s = s.replace(/^---+$/gm, '<hr class="chat-hr"/>');
-
-  // 12. Newlines → <br/> but clean up after block elements
   s = s.replace(/\n/g, '<br/>');
   s = s.replace(/(<\/pre>|<\/div>|<hr[^>]*\/>|<div class="chat-pre-header"[^>]*>.*?<\/div>)<br\/>/g, '$1');
-  // Trim leading/trailing <br/>
   s = s.replace(/^(<br\/>)+/, '').replace(/(<br\/>)+$/, '');
-  // Collapse 3+ <br/> into 2
   s = s.replace(/(<br\/>){3,}/g, '<br/><br/>');
-
   return s;
 }
 
 // ===== RENDER CHAT =====
-// ChatGPT-style: avatar + name label + bubble, grouped cleanly
+const AI_SVG = '<svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="9" cy="9" r="8" fill="rgba(255,255,255,0.25)"/><circle cx="9" cy="9" r="8" stroke="white" stroke-width="1.5"/><path d="M9 1C9 1 6.5 4.5 6.5 9s2.5 8 2.5 8" stroke="white" stroke-width="1.2" stroke-linecap="round"/><path d="M9 1C9 1 11.5 4.5 11.5 9s-2.5 8-2.5 8" stroke="white" stroke-width="1.2" stroke-linecap="round"/><path d="M1.2 6.5h15.6M1.2 11.5h15.6" stroke="white" stroke-width="1.2" stroke-linecap="round"/></svg>';
+
+function buildMsgRow(msg) {
+  const isUser = msg.role === 'user';
+  const row = document.createElement('div');
+  row.className = 'msg-row ' + (isUser ? 'user' : 'assistant');
+  if (isUser) {
+    row.innerHTML = '<div class="bubble-wrap" style="align-items:flex-end"><div class="bubble-label">You</div><div class="bubble user">' + md(msg.content, true) + '</div></div><div class="msg-ava-user">M</div>';
+  } else {
+    row.innerHTML = '<div class="msg-ava">' + AI_SVG + '</div><div class="bubble-wrap"><div class="bubble-label">ECO GREEN AI</div><div class="bubble eco">' + md(msg.content, false) + '</div></div>';
+  }
+  return row;
+}
+
 function renderChat(loading) {
-  const c = document.getElementById('chat-msgs');
-  c.innerHTML = '';
-
-  // AI avatar SVG inline
-  const aiSvg = '<svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="9" cy="9" r="8" fill="rgba(255,255,255,0.25)"/><circle cx="9" cy="9" r="8" stroke="white" stroke-width="1.5"/><path d="M9 1C9 1 6.5 4.5 6.5 9s2.5 8 2.5 8" stroke="white" stroke-width="1.2" stroke-linecap="round"/><path d="M9 1C9 1 11.5 4.5 11.5 9s-2.5 8-2.5 8" stroke="white" stroke-width="1.2" stroke-linecap="round"/><path d="M1.2 6.5h15.6M1.2 11.5h15.6" stroke="white" stroke-width="1.2" stroke-linecap="round"/></svg>';
-
-  chatHist.forEach(function(msg) {
-    const isUser = msg.role === 'user';
-    const row = document.createElement('div');
-    row.className = 'msg-row ' + (isUser ? 'user' : 'assistant');
-
-    if (isUser) {
-      // User: avatar on right, green bubble
-      row.innerHTML =
-        '<div class="bubble-wrap" style="align-items:flex-end">' +
-          '<div class="bubble-label">You</div>' +
-          '<div class="bubble user">' + md(msg.content, true) + '</div>' +
-        '</div>' +
-        '<div class="msg-ava-user">M</div>';
-    } else {
-      // AI: avatar on left, white card bubble
-      row.innerHTML =
-        '<div class="msg-ava">' + aiSvg + '</div>' +
-        '<div class="bubble-wrap">' +
-          '<div class="bubble-label">ECO GREEN AI</div>' +
-          '<div class="bubble eco">' + md(msg.content, false) + '</div>' +
-        '</div>';
-    }
-    c.appendChild(row);
-  });
-
-  // Loading indicator
+  const c = document.getElementById('chat-msgs'); c.innerHTML = '';
+  chatHist.forEach(msg => c.appendChild(buildMsgRow(msg)));
   if (loading) {
-    const row = document.createElement('div');
-    row.className = 'msg-row assistant';
-    row.innerHTML =
-      '<div class="msg-ava">' + aiSvg + '</div>' +
-      '<div class="bubble-wrap">' +
-        '<div class="bubble-label">ECO GREEN AI</div>' +
-        '<div class="typing-bub">' +
-          '<span class="typing-label">Thinking</span>' +
-          '<div class="typing-dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>' +
-        '</div>' +
-      '</div>';
+    const row = document.createElement('div'); row.className = 'msg-row assistant';
+    row.innerHTML = '<div class="msg-ava">' + AI_SVG + '</div><div class="bubble-wrap"><div class="bubble-label">ECO GREEN AI</div><div class="typing-bub"><span class="typing-label">Thinking</span><div class="typing-dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div></div></div>';
     c.appendChild(row);
   }
-
   scrollDown();
-  // Show quick prompts only on the very first empty state
   document.getElementById('qprompts').style.display = chatHist.length <= 1 ? 'flex' : 'none';
 }
 
 function scrollDown() { const c = document.getElementById('chat-msgs'); if (c) c.scrollTop = c.scrollHeight; }
-function updateSendBtn() {
-  const v = document.getElementById('chat-in').value.trim();
-  document.getElementById('send-btn').className = 'send-btn ' + (v && !chatBusy ? 'ready' : 'off');
-}
+function updateSendBtn() { const v = document.getElementById('chat-in').value.trim(); document.getElementById('send-btn').className = 'send-btn ' + (v && !chatBusy ? 'ready' : 'off'); }
 function chatKey(e) { if (e.key === 'Enter' && e.shiftKey) { e.preventDefault(); sendChat(); } updateSendBtn(); }
 function resizeTA(el) { el.style.height = 'auto'; el.style.height = Math.min(el.scrollHeight, 120) + 'px'; updateSendBtn(); }
 
@@ -1691,64 +1127,109 @@ async function sendChat() {
   if (!apiKey) { openModal(); return; }
   inp.value = ''; inp.style.height = 'auto'; updateSendBtn();
   chatHist.push({ role: 'user', content: msg });
-  chatBusy = true; renderChat(true); await doChat();
+  chatBusy = true; await doStreamChat();
 }
+
 async function sendQuick(msg) {
   if (chatBusy) return;
   if (!apiKey) { openModal(); return; }
   if (!chatHist.length) initChat();
   chatHist.push({ role: 'user', content: msg });
-  chatBusy = true; renderChat(true); await doChat();
+  chatBusy = true; await doStreamChat();
 }
-async function doChat() {
+
+// ================================================================
+// STREAMING CHAT — the core of the new experience
+// ================================================================
+async function doStreamChat() {
+  // Show the user's message immediately + typing indicator
+  renderChat(true);
+
+  // Set up status bar
+  const statusBar = document.getElementById('stream-status');
+  const statusText = document.getElementById('stream-status-text');
+  const statusEl = document.getElementById('status-text');
+  statusBar.classList.add('visible');
+  if (statusEl) statusEl.textContent = 'Streaming…';
+
+  // Create a streaming AI bubble row in the DOM
+  const chatMsgs = document.getElementById('chat-msgs');
+  // Remove the typing indicator row (last child)
+  if (chatMsgs.lastChild) chatMsgs.removeChild(chatMsgs.lastChild);
+
+  // Build an empty AI bubble we'll fill live
+  const streamRow = document.createElement('div');
+  streamRow.className = 'msg-row assistant';
+  streamRow.innerHTML = '<div class="msg-ava">' + AI_SVG + '</div><div class="bubble-wrap"><div class="bubble-label">ECO GREEN AI</div><div class="bubble eco" id="stream-bubble"></div></div>';
+  chatMsgs.appendChild(streamRow);
+
+  const bubble = document.getElementById('stream-bubble');
+  // Add blinking cursor
+  const cursor = document.createElement('span');
+  cursor.className = 'stream-cursor';
+  bubble.appendChild(cursor);
+
+  let accumulated = ''; // full raw markdown text so far
+  let tokenCount = 0;
+
   try {
-    const reply = await callAIChat(chatHist, buildSystemWithMemory());
-    chatHist.push({ role: 'assistant', content: reply || 'I got an empty response — please try again! 😊' });
-    const lastUser = chatHist.slice().reverse().find(function(m) { return m.role === 'user'; });
+    const compressed = compressMessages(chatHist.filter(m => m.role === 'user' || m.role === 'assistant'));
+
+    await streamAI(compressed, buildSystemWithMemory(), function onToken(token) {
+      accumulated += token;
+      tokenCount++;
+
+      // Re-render markdown of the whole accumulated text into the bubble
+      // (simpler & more correct than trying to patch in-place)
+      bubble.innerHTML = md(accumulated, false) + '<span class="stream-cursor"></span>';
+
+      // Update status bar with token count
+      statusText.textContent = 'Streaming… ' + tokenCount + ' tokens';
+      scrollDown();
+    });
+
+    // Streaming done — commit to chatHist, remove cursor
+    chatHist.push({ role: 'assistant', content: accumulated || 'I got an empty response — please try again! 😊' });
+
+    const lastUser = chatHist.slice().reverse().find(m => m.role === 'user');
     if (lastUser) extractProfileFromMessage(lastUser.content);
+
   } catch (e) {
-    if (e.message !== 'no_key' && e.message !== 'bad_key')
-      chatHist.push({ role: 'assistant', content: '⚠️ ' + (e.message || 'Something went wrong') + ' — please try again!' });
+    const errMsg = '⚠️ ' + (e.message || 'Something went wrong') + ' — please try again!';
+    if (e.message !== 'no_key' && e.message !== 'bad_key') {
+      chatHist.push({ role: 'assistant', content: errMsg });
+    }
   } finally {
-    chatBusy = false; renderChat(false);
+    chatBusy = false;
+    statusBar.classList.remove('visible');
+    if (statusEl) statusEl.textContent = 'Always available · Remembers you';
+    updateSendBtn();
+    // Final clean render (removes cursor, formats properly)
+    renderChat(false);
     saveChatHistory();
     localStorage.setItem('eco_chat_last_time', Date.now());
   }
 }
+
 async function ideaToChat(i) {
-  const idea = ideas[i];
-  if (!apiKey) { openModal(); return; }
+  const idea = ideas[i]; if (!apiKey) { openModal(); return; }
   const msg = 'Hi ECO GREEN AI! I want to build this project: **' + idea.title + '**. ' + idea.description + ' Can you help me plan it step by step with a focus on sustainability and eco-friendliness?';
   chatHist = [{ role: 'assistant', content: WELCOME }, { role: 'user', content: msg }];
   chatBusy = true; showPage('chat');
   const chip = document.getElementById('build-chip');
   chip.style.display = 'block'; chip.innerHTML = 'Building:<br/><strong>' + idea.title + '</strong>';
-  renderChat(true); await doChat();
+  await doStreamChat();
 }
 
 // ===== SAVED =====
 function renderSaved() {
   const c = document.getElementById('saved-content');
-  if (!saved.length) {
-    c.innerHTML = '<div class="empty-box"><span class="empty-icon">📭</span><div class="empty-txt">No saved ideas yet — go generate some green ideas! 😊</div><button class="btn-big" onclick="showPage(\'app\')">Generate Ideas ✨</button></div>';
-    return;
-  }
+  if (!saved.length) { c.innerHTML = '<div class="empty-box"><span class="empty-icon">📭</span><div class="empty-txt">No saved ideas yet — go generate some green ideas! 😊</div><button class="btn-big" onclick="showPage(\'app\')">Generate Ideas ✨</button></div>'; return; }
   c.innerHTML = '<div class="saved-grid" id="sg"></div>';
   const g = document.getElementById('sg');
-  saved.forEach(function(idea, i) {
+  saved.forEach((idea, i) => {
     const f = FIELDS[idea.field]; const d = document.createElement('div'); d.className = 'saved-card';
-    d.innerHTML =
-      '<div style="height:4px;background:linear-gradient(90deg,' + f.color + ',' + f.color + '55)"></div>' +
-      '<div style="padding:20px 22px">' +
-        '<div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:12px">' +
-          '<div><div style="font-size:11px;color:' + f.color + ';font-weight:800">' + f.icon + ' ' + f.label + '</div><div style="font-family:\'DM Serif Display\',serif;font-size:18px;font-weight:700;color:var(--text);margin-top:4px;line-height:1.3">' + idea.title + '</div></div>' +
-          '<button onclick="removeSaved(' + i + ')" style="padding:6px 12px;border-radius:10px;border:1.5px solid #fca5a5;background:#fef2f2;color:#ef4444;cursor:pointer;font-size:12px;font-weight:700;font-family:\'Inter\',sans-serif;flex-shrink:0">✕ Remove</button>' +
-        '</div>' +
-        '<p style="color:var(--text2);font-size:13px;line-height:1.8;margin:0 0 14px;font-weight:600">' + idea.description + '</p>' +
-        '<div style="display:flex;flex-wrap:wrap;gap:7px;margin-bottom:14px">' + (idea.technologies || []).map(function(t) { return '<span style="background:' + f.color + '15;border:1.5px solid ' + f.color + '44;color:' + f.color + ';padding:4px 12px;border-radius:20px;font-size:12px;font-weight:700">' + t + '</span>'; }).join('') + '</div>' +
-        '<div style="background:var(--green4);border-radius:10px;padding:10px 14px;font-size:13px;color:var(--text2);margin-bottom:14px;font-weight:600;border:1px solid var(--green3)">🌍 ' + idea.impact + '</div>' +
-        '<button class="btn-eco" onclick="savedToChat(' + i + ')" style="width:auto;padding:11px 22px">🌿 Build with Eco Green AI</button>' +
-      '</div>';
+    d.innerHTML = '<div style="height:4px;background:linear-gradient(90deg,' + f.color + ',' + f.color + '55)"></div><div style="padding:20px 22px"><div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:12px"><div><div style="font-size:11px;color:' + f.color + ';font-weight:800">' + f.icon + ' ' + f.label + '</div><div style="font-family:\'DM Serif Display\',serif;font-size:18px;font-weight:700;color:var(--text);margin-top:4px;line-height:1.3">' + idea.title + '</div></div><button onclick="removeSaved(' + i + ')" style="padding:6px 12px;border-radius:10px;border:1.5px solid #fca5a5;background:#fef2f2;color:#ef4444;cursor:pointer;font-size:12px;font-weight:700;font-family:\'Inter\',sans-serif;flex-shrink:0">✕ Remove</button></div><p style="color:var(--text2);font-size:13px;line-height:1.8;margin:0 0 14px;font-weight:600">' + idea.description + '</p><div style="display:flex;flex-wrap:wrap;gap:7px;margin-bottom:14px">' + (idea.technologies || []).map(t => '<span style="background:' + f.color + '15;border:1.5px solid ' + f.color + '44;color:' + f.color + ';padding:4px 12px;border-radius:20px;font-size:12px;font-weight:700">' + t + '</span>').join('') + '</div><div style="background:var(--green4);border-radius:10px;padding:10px 14px;font-size:13px;color:var(--text2);margin-bottom:14px;font-weight:600;border:1px solid var(--green3)">🌍 ' + idea.impact + '</div><button class="btn-eco" onclick="savedToChat(' + i + ')" style="width:auto;padding:11px 22px">🌿 Build with Eco Green AI</button></div>';
     g.appendChild(d);
   });
 }
@@ -1761,76 +1242,27 @@ function confetti() {
   const colors = ['#1a9e5c','#f4a429','#7c6ff7','#f0637a','#25c270','#60a5fa'];
   for (let i = 0; i < 36; i++) {
     const p = document.createElement('div'); p.className = 'cp';
-    const sz = 7 + Math.random() * 8; const circle = Math.random() > 0.5;
-    p.style.cssText = 'left:' + (10 + Math.random() * 80) + '%;top:10%;width:' + sz + 'px;height:' + sz + 'px;background:' + colors[Math.floor(Math.random() * colors.length)] + ';border-radius:' + (circle ? '50%' : '4px') + ';animation-delay:' + (Math.random() * 0.5) + 's;animation-duration:' + (1.5 + Math.random() * 0.8) + 's';
+    const sz = 7 + Math.random() * 8;
+    p.style.cssText = 'left:' + (10 + Math.random() * 80) + '%;top:10%;width:' + sz + 'px;height:' + sz + 'px;background:' + colors[Math.floor(Math.random() * colors.length)] + ';border-radius:' + (Math.random() > 0.5 ? '50%' : '4px') + ';animation-delay:' + (Math.random() * 0.5) + 's;animation-duration:' + (1.5 + Math.random() * 0.8) + 's';
     layer.appendChild(p);
   }
-  setTimeout(function() { layer.innerHTML = ''; }, 2600);
+  setTimeout(() => { layer.innerHTML = ''; }, 2600);
 }
 
-// ===== PWA SETUP =====
-(function setupPWA() {
-  const svgIcon = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192"><defs><linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#1a9e5c"/><stop offset="100%" stop-color="#25c270"/></linearGradient></defs><rect width="192" height="192" rx="42" fill="url(#bg)"/><circle cx="96" cy="96" r="62" fill="none" stroke="white" stroke-width="5" opacity="0.9"/><circle cx="96" cy="96" r="62" fill="rgba(255,255,255,0.08)"/><path d="M96 34C96 34 74 60 74 96s22 62 22 62" stroke="white" stroke-width="4.5" stroke-linecap="round" fill="none" opacity="0.85"/><path d="M96 34C96 34 118 60 118 96s-22 62-22 62" stroke="white" stroke-width="4.5" stroke-linecap="round" fill="none" opacity="0.85"/><line x1="34" y1="76" x2="158" y2="76" stroke="white" stroke-width="4.5" stroke-linecap="round" opacity="0.85"/><line x1="34" y1="116" x2="158" y2="116" stroke="white" stroke-width="4.5" stroke-linecap="round" opacity="0.85"/></svg>';
-  const svgBlob = new Blob([svgIcon], { type: 'image/svg+xml' });
-  const svgUrl = URL.createObjectURL(svgBlob);
-  setTimeout(function() {
-    try {
-      const img = new Image();
-      img.onload = function() {
-        try {
-          const c = document.createElement('canvas'); c.width = c.height = 180;
-          c.getContext('2d').drawImage(img, 0, 0, 180, 180);
-          document.getElementById('apple-icon').href = c.toDataURL('image/png');
-          URL.revokeObjectURL(img.src);
-        } catch(e) {}
-      };
-      img.src = svgUrl;
-    } catch(e) {}
-  }, 800);
-  const manifest = { name:'ECO GREEN — AI Engineering Hub', short_name:'ECO GREEN', description:'Your personal AI sustainable engineering mentor by Modou Jaw', start_url:'./', display:'standalone', background_color:'#f5fbf7', theme_color:'#1a9e5c', orientation:'portrait-primary', icons:[{ src:svgUrl, sizes:'any', type:'image/svg+xml', purpose:'any maskable' }] };
-  try {
-    const mBlob = new Blob([JSON.stringify(manifest)], { type: 'application/manifest+json' });
-    document.getElementById('pwa-manifest').href = URL.createObjectURL(mBlob);
-  } catch(e) {}
-  window.addEventListener('load', function() {
-    if (!('serviceWorker' in navigator)) return;
-    const swCode = "const CACHE='ecogreen-v1';self.addEventListener('install',e=>{e.waitUntil(caches.open(CACHE).then(c=>c.addAll([self.location.pathname])).then(()=>self.skipWaiting()));});self.addEventListener('activate',e=>{e.waitUntil(clients.claim());});self.addEventListener('fetch',e=>{if(e.request.method!=='GET')return;e.respondWith(caches.match(e.request).then(cached=>{const net=fetch(e.request).then(r=>{if(r&&r.status===200){const cl=r.clone();caches.open(CACHE).then(c=>c.put(e.request,cl));}return r;}).catch(()=>cached);return cached||net;}));});";
-    try {
-      const swBlob = new Blob([swCode], { type: 'application/javascript' });
-      navigator.serviceWorker.register(URL.createObjectURL(swBlob)).catch(function() {});
-    } catch(e) {}
-  });
+// ===== PWA =====
+(function() {
+  const iconSvg = '<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512"><rect width="512" height="512" rx="96" fill="#16a05a"/><circle cx="256" cy="256" r="160" fill="none" stroke="white" stroke-width="18"/><path d="M256 96C256 96 200 160 200 256s56 160 56 160" stroke="white" stroke-width="14" stroke-linecap="round" fill="none"/><path d="M256 96C256 96 312 160 312 256s-56 160-56 160" stroke="white" stroke-width="14" stroke-linecap="round" fill="none"/><path d="M98 210h316M98 302h316" stroke="white" stroke-width="14" stroke-linecap="round"/></svg>';
+  const iconBlob = new Blob([iconSvg], { type: 'image/svg+xml' });
+  const iconUrl = URL.createObjectURL(iconBlob);
+  const manifest = { name:'ECO GREEN AI', short_name:'ECO GREEN', description:'AI-powered sustainable engineering mentor by Modou Jaw', start_url:window.location.href, display:'standalone', orientation:'portrait', background_color:'#fafcfb', theme_color:'#1a9e5c', icons:[{ src:iconUrl, sizes:'192x192', type:'image/svg+xml', purpose:'any maskable' },{ src:iconUrl, sizes:'512x512', type:'image/svg+xml', purpose:'any maskable' }] };
+  const mBlob = new Blob([JSON.stringify(manifest)], { type: 'application/json' });
+  document.getElementById('pwa-manifest').setAttribute('href', URL.createObjectURL(mBlob));
+  document.getElementById('apple-icon').setAttribute('href', iconUrl);
   let deferredPrompt = null;
-  window.addEventListener('beforeinstallprompt', function(e) {
-    e.preventDefault(); deferredPrompt = e;
-    setTimeout(showInstallBanner, 1500);
-  });
-  function showInstallBanner() {
-    if (document.getElementById('install-banner')) return;
-    const banner = document.createElement('div');
-    banner.id = 'install-banner';
-    banner.style.cssText = 'position:fixed;bottom:20px;left:50%;transform:translateX(-50%);z-index:8000;display:flex;align-items:center;gap:12px;padding:14px 16px;border-radius:20px;background:#fff;border:1.5px solid #a8d8bc;box-shadow:0 8px 32px rgba(26,158,92,0.2);max-width:400px;width:calc(100vw - 32px);font-family:Inter,sans-serif;animation:slideUp .3s ease;';
-    banner.innerHTML = '<div style="width:40px;height:40px;border-radius:12px;background:linear-gradient(135deg,#1a9e5c,#25c270);display:flex;align-items:center;justify-content:center;flex-shrink:0"><svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="11" cy="11" r="10" fill="rgba(255,255,255,0.18)"/><circle cx="11" cy="11" r="10" stroke="white" stroke-width="1.5"/><path d="M11 1C11 1 8 5.5 8 11s3 10 3 10" stroke="white" stroke-width="1.2" stroke-linecap="round"/><path d="M11 1C11 1 14 5.5 14 11s-3 10-3 10" stroke="white" stroke-width="1.2" stroke-linecap="round"/><path d="M1.5 8.5h19M1.5 13.5h19" stroke="white" stroke-width="1.2" stroke-linecap="round"/></svg></div><div style="flex:1;min-width:0"><div style="font-weight:800;font-size:13px;color:#1a3328">Add ECO GREEN to Home Screen</div><div style="font-size:11px;color:#3a6b52;font-weight:600">Works offline · Own app icon 📱</div></div><button id="install-yes" style="padding:8px 16px;border-radius:16px;border:none;background:linear-gradient(135deg,#1a9e5c,#25c270);color:#fff;font-family:Inter,sans-serif;font-size:12px;font-weight:800;cursor:pointer;flex-shrink:0">Install</button><button id="install-no" style="padding:8px 10px;border-radius:16px;border:1.5px solid #d0ead9;background:transparent;color:#7aaa90;font-family:Inter,sans-serif;font-size:12px;font-weight:700;cursor:pointer;flex-shrink:0">✕</button>';
-    document.body.appendChild(banner);
-    document.getElementById('install-yes').onclick = async function() {
-      banner.remove();
-      if (deferredPrompt) { deferredPrompt.prompt(); await deferredPrompt.userChoice; deferredPrompt = null; }
-    };
-    document.getElementById('install-no').onclick = function() { banner.remove(); };
-  }
-  const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
-  if (isIOS && !window.navigator.standalone && !localStorage.getItem('eco_ios_hint')) {
-    setTimeout(function() {
-      localStorage.setItem('eco_ios_hint', '1');
-      if (document.getElementById('install-banner')) return;
-      const hint = document.createElement('div');
-      hint.id = 'install-banner';
-      hint.style.cssText = 'position:fixed;bottom:20px;left:50%;transform:translateX(-50%);z-index:8000;display:flex;align-items:center;gap:12px;padding:14px 16px;border-radius:20px;background:#fff;border:1.5px solid #a8d8bc;box-shadow:0 8px 32px rgba(26,158,92,0.2);max-width:400px;width:calc(100vw - 32px);font-family:Inter,sans-serif;animation:slideUp .3s ease;';
-      hint.innerHTML = '<div style="width:40px;height:40px;border-radius:12px;background:linear-gradient(135deg,#1a9e5c,#25c270);display:flex;align-items:center;justify-content:center;flex-shrink:0"><svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="11" cy="11" r="10" fill="rgba(255,255,255,0.18)"/><circle cx="11" cy="11" r="10" stroke="white" stroke-width="1.5"/><path d="M11 1C11 1 8 5.5 8 11s3 10 3 10" stroke="white" stroke-width="1.2" stroke-linecap="round"/><path d="M11 1C11 1 14 5.5 14 11s-3 10-3 10" stroke="white" stroke-width="1.2" stroke-linecap="round"/><path d="M1.5 8.5h19M1.5 13.5h19" stroke="white" stroke-width="1.2" stroke-linecap="round"/></svg></div><div style="flex:1;min-width:0"><div style="font-weight:800;font-size:13px;color:#1a3328">Add ECO GREEN to Home Screen</div><div style="font-size:11px;color:#3a6b52;font-weight:600">Tap <strong>Share ↑</strong> → <strong>Add to Home Screen</strong></div></div><button id="install-no" style="padding:8px 10px;border-radius:16px;border:1.5px solid #d0ead9;background:transparent;color:#7aaa90;font-family:Inter,sans-serif;font-size:12px;font-weight:700;cursor:pointer;flex-shrink:0">✕</button>';
-      document.body.appendChild(hint);
-      document.getElementById('install-no').onclick = function() { hint.remove(); };
-      setTimeout(function() { if (hint.parentNode) hint.remove(); }, 9000);
-    }, 3000);
+  window.addEventListener('beforeinstallprompt', e => { e.preventDefault(); deferredPrompt = e; });
+  if ('serviceWorker' in navigator) {
+    const swCode = "self.addEventListener('install',e=>{self.skipWaiting();});self.addEventListener('activate',e=>{e.waitUntil(clients.claim());});self.addEventListener('fetch',e=>{if(e.request.method!=='GET')return;e.respondWith(fetch(e.request).catch(()=>caches.match(e.request)));});";
+    navigator.serviceWorker.register(URL.createObjectURL(new Blob([swCode], { type: 'application/javascript' })), { scope: '/' }).catch(() => {});
   }
 })();
 
@@ -1846,172 +1278,52 @@ function confetti() {
     [[-46,60],[-36,60],[-24,62],[-18,68],[-20,74],[-26,78],[-38,82],[-50,82],[-58,78],[-58,72],[-52,68],[-46,60]],
     [[-180,-70],[-120,-68],[-60,-66],[0,-70],[60,-66],[120,-68],[180,-70],[180,-90],[-180,-90],[-180,-70]]
   ];
-  const canvas = document.getElementById('earth-canvas');
-  if (!canvas) return;
+  const canvas = document.getElementById('earth-canvas'); if (!canvas) return;
   const ctx = canvas.getContext('2d');
-  const W = canvas.width, H = canvas.height;
-  const cx = W / 2, cy = H / 2, R = W / 2 - 2;
+  const W = canvas.width, H = canvas.height, cx = W/2, cy = H/2, R = W/2-2;
   let angle = 0;
   const TILT = 23.5 * Math.PI / 180;
   function project(lon, lat, rot) {
-    const lonR = (lon * Math.PI / 180) + rot;
-    const latR = lat * Math.PI / 180;
-    const x3 = Math.cos(latR) * Math.sin(lonR);
-    const y3 = Math.sin(latR);
-    const z3 = Math.cos(latR) * Math.cos(lonR);
-    const y4 = y3 * Math.cos(TILT) - z3 * Math.sin(TILT);
-    const z4 = y3 * Math.sin(TILT) + z3 * Math.cos(TILT);
+    const lonR = (lon * Math.PI / 180) + rot, latR = lat * Math.PI / 180;
+    const x3 = Math.cos(latR) * Math.sin(lonR), y3 = Math.sin(latR), z3 = Math.cos(latR) * Math.cos(lonR);
+    const y4 = y3 * Math.cos(TILT) - z3 * Math.sin(TILT), z4 = y3 * Math.sin(TILT) + z3 * Math.cos(TILT);
     if (z4 < 0) return null;
     return { x: cx + x3 * R, y: cy - y4 * R, z: z4 };
   }
   function drawFrame() {
-    ctx.clearRect(0, 0, W, H);
-    ctx.save();
-    ctx.beginPath();
-    ctx.arc(cx, cy, R, 0, Math.PI * 2);
-    ctx.clip();
-    const oceanGrad = ctx.createRadialGradient(cx - R*0.35, cy - R*0.35, R*0.02, cx + R*0.1, cy + R*0.1, R * 1.1);
-    oceanGrad.addColorStop(0, '#7ed6f7');
-    oceanGrad.addColorStop(0.3, '#1a8fc1');
-    oceanGrad.addColorStop(0.65,'#0a5a8c');
-    oceanGrad.addColorStop(1, '#012a4f');
-    ctx.beginPath();
-    ctx.arc(cx, cy, R, 0, Math.PI * 2);
-    ctx.fillStyle = oceanGrad;
-    ctx.fill();
-    CONTINENTS.forEach(function(poly) {
-      ctx.beginPath();
-      let started = false;
-      let hasVisible = false;
-      const pts = poly.map(function(p) { return project(p[0], p[1], angle); });
-      pts.forEach(function(p) { if (p) hasVisible = true; });
+    ctx.clearRect(0, 0, W, H); ctx.save(); ctx.beginPath(); ctx.arc(cx, cy, R, 0, Math.PI * 2); ctx.clip();
+    const og = ctx.createRadialGradient(cx - R*.35, cy - R*.35, R*.02, cx + R*.1, cy + R*.1, R*1.1);
+    og.addColorStop(0,'#7ed6f7'); og.addColorStop(0.3,'#1a8fc1'); og.addColorStop(0.65,'#0a5a8c'); og.addColorStop(1,'#012a4f');
+    ctx.beginPath(); ctx.arc(cx, cy, R, 0, Math.PI * 2); ctx.fillStyle = og; ctx.fill();
+    CONTINENTS.forEach(poly => {
+      ctx.beginPath(); let started = false, hasVisible = false;
+      const pts = poly.map(p => project(p[0], p[1], angle));
+      pts.forEach(p => { if (p) hasVisible = true; });
       if (!hasVisible) return;
       let avgZ = 0, cnt = 0;
-      pts.forEach(function(p) {
-        if (!p) { started = false; return; }
-        if (!started) { ctx.moveTo(p.x, p.y); started = true; }
-        else ctx.lineTo(p.x, p.y);
-        avgZ += p.z; cnt++;
-      });
+      pts.forEach(p => { if (!p) { started = false; return; } if (!started) { ctx.moveTo(p.x, p.y); started = true; } else ctx.lineTo(p.x, p.y); avgZ += p.z; cnt++; });
       ctx.closePath();
-      const lit = cnt > 0 ? Math.pow(avgZ / cnt, 0.6) : 0.5;
-      const r = Math.round(40  + lit * 90);
-      const g = Math.round(110 + lit * 80);
-      const b = Math.round(30  + lit * 40);
-      ctx.fillStyle = `rgb(${r},${g},${b})`;
-      ctx.fill();
-      ctx.strokeStyle = 'rgba(255,255,255,0.08)';
-      ctx.lineWidth = 0.4;
-      ctx.stroke();
+      const lit = cnt > 0 ? Math.pow(avgZ/cnt, 0.6) : 0.5;
+      ctx.fillStyle = `rgb(${Math.round(40+lit*90)},${Math.round(110+lit*80)},${Math.round(30+lit*40)})`;
+      ctx.fill(); ctx.strokeStyle = 'rgba(255,255,255,0.08)'; ctx.lineWidth = 0.4; ctx.stroke();
     });
-    [[0,-87],[0,82]].forEach(function(pole) {
-      const iceColors = ['rgba(220,240,255,0.82)','rgba(200,230,255,0.55)','rgba(180,220,255,0)'];
-      for (let r2 = 0; r2 <= 14; r2 += 7) {
-        ctx.beginPath();
-        let started2 = false;
-        for (let lon = -180; lon <= 180; lon += 6) {
-          const p = project(lon, pole[1] - (r2 * (pole[1] > 0 ? 1 : -1)), angle);
-          if (!p) { started2 = false; continue; }
-          if (!started2) { ctx.moveTo(p.x, p.y); started2 = true; }
-          else ctx.lineTo(p.x, p.y);
-        }
-        ctx.closePath();
-        ctx.fillStyle = iceColors[r2/7] || 'transparent';
-        ctx.fill();
-      }
-    });
-    const termX = cx + R * 0.18, termY = cy - R * 0.05;
-    const shadowGrad = ctx.createRadialGradient(termX, termY, R * 0.42, termX + R*0.28, termY + R*0.2, R * 1.15);
-    shadowGrad.addColorStop(0,'rgba(0,0,0,0)');
-    shadowGrad.addColorStop(0.55,'rgba(0,0,30,0.18)');
-    shadowGrad.addColorStop(0.80,'rgba(0,0,20,0.52)');
-    shadowGrad.addColorStop(1,'rgba(0,0,10,0.75)');
-    ctx.beginPath(); ctx.arc(cx, cy, R, 0, Math.PI * 2);
-    ctx.fillStyle = shadowGrad; ctx.fill();
-    const atmoGrad = ctx.createRadialGradient(cx, cy, R * 0.84, cx, cy, R);
-    atmoGrad.addColorStop(0,'rgba(80,180,255,0)');
-    atmoGrad.addColorStop(0.55,'rgba(80,180,255,0.09)');
-    atmoGrad.addColorStop(0.85,'rgba(60,160,255,0.22)');
-    atmoGrad.addColorStop(1,'rgba(40,130,230,0.38)');
-    ctx.beginPath(); ctx.arc(cx, cy, R, 0, Math.PI * 2);
-    ctx.fillStyle = atmoGrad; ctx.fill();
-    const specGrad = ctx.createRadialGradient(cx - R*0.42, cy - R*0.42, 0, cx - R*0.15, cy - R*0.15, R * 0.72);
-    specGrad.addColorStop(0,'rgba(255,255,255,0.55)');
-    specGrad.addColorStop(0.18,'rgba(255,255,255,0.18)');
-    specGrad.addColorStop(0.45,'rgba(255,255,255,0.04)');
-    specGrad.addColorStop(1,'rgba(255,255,255,0)');
-    ctx.beginPath(); ctx.arc(cx, cy, R, 0, Math.PI * 2);
-    ctx.fillStyle = specGrad; ctx.fill();
+    const shadowGrad = ctx.createRadialGradient(cx+R*.18, cy-R*.05, R*.42, cx+R*.46, cy+R*.15, R*1.15);
+    shadowGrad.addColorStop(0,'rgba(0,0,0,0)'); shadowGrad.addColorStop(0.55,'rgba(0,0,30,0.18)'); shadowGrad.addColorStop(0.80,'rgba(0,0,20,0.52)'); shadowGrad.addColorStop(1,'rgba(0,0,10,0.75)');
+    ctx.beginPath(); ctx.arc(cx, cy, R, 0, Math.PI * 2); ctx.fillStyle = shadowGrad; ctx.fill();
+    const atmoGrad = ctx.createRadialGradient(cx, cy, R*.84, cx, cy, R);
+    atmoGrad.addColorStop(0,'rgba(80,180,255,0)'); atmoGrad.addColorStop(0.55,'rgba(80,180,255,0.09)'); atmoGrad.addColorStop(0.85,'rgba(60,160,255,0.22)'); atmoGrad.addColorStop(1,'rgba(40,130,230,0.38)');
+    ctx.beginPath(); ctx.arc(cx, cy, R, 0, Math.PI * 2); ctx.fillStyle = atmoGrad; ctx.fill();
+    const specGrad = ctx.createRadialGradient(cx-R*.42, cy-R*.42, 0, cx-R*.15, cy-R*.15, R*.72);
+    specGrad.addColorStop(0,'rgba(255,255,255,0.55)'); specGrad.addColorStop(0.18,'rgba(255,255,255,0.18)'); specGrad.addColorStop(0.45,'rgba(255,255,255,0.04)'); specGrad.addColorStop(1,'rgba(255,255,255,0)');
+    ctx.beginPath(); ctx.arc(cx, cy, R, 0, Math.PI * 2); ctx.fillStyle = specGrad; ctx.fill();
     ctx.restore();
-    const haloGrad = ctx.createRadialGradient(cx, cy, R * 0.96, cx, cy, R * 1.12);
-    haloGrad.addColorStop(0,'rgba(70,170,255,0.22)');
-    haloGrad.addColorStop(0.5,'rgba(50,140,230,0.10)');
-    haloGrad.addColorStop(1,'rgba(30,100,200,0)');
-    ctx.beginPath(); ctx.arc(cx, cy, R * 1.12, 0, Math.PI * 2);
-    ctx.fillStyle = haloGrad; ctx.fill();
-    ctx.beginPath(); ctx.arc(cx, cy, R, 0, Math.PI * 2);
-    ctx.strokeStyle = 'rgba(120,200,255,0.25)';
-    ctx.lineWidth = 1.5; ctx.stroke();
-    angle += 0.005;
-    requestAnimationFrame(drawFrame);
+    angle += 0.005; requestAnimationFrame(drawFrame);
   }
   drawFrame();
 })();
 
-renderFields();
-renderQuickPrompts();
-loadMemory();
-loadKey();
-
-// ===== PWA INSTALL PROMPT =====
-let _installPrompt = null;
-window.addEventListener('beforeinstallprompt', function(e) {
-  e.preventDefault();
-  _installPrompt = e;
-  const dismissed = sessionStorage.getItem('eco_install_dismissed');
-  if (!dismissed) {
-    setTimeout(function() {
-      const banner = document.getElementById('install-banner');
-      if (banner) banner.style.display = 'block';
-    }, 2000);
-  }
-});
-function triggerInstall() {
-  if (!_installPrompt) return;
-  _installPrompt.prompt();
-  _installPrompt.userChoice.then(function() {
-    document.getElementById('install-banner').style.display = 'none';
-    _installPrompt = null;
-  });
-}
-function dismissInstall() {
-  document.getElementById('install-banner').style.display = 'none';
-  sessionStorage.setItem('eco_install_dismissed', '1');
-}
-window.addEventListener('appinstalled', function() {
-  document.getElementById('install-banner').style.display = 'none';
-  _installPrompt = null;
-});
-
-// ===== SERVICE WORKER =====
-if ('serviceWorker' in navigator) {
-  const swCode = "self.addEventListener('install',function(e){self.skipWaiting();});self.addEventListener('activate',function(e){e.waitUntil(clients.claim());});self.addEventListener('fetch',function(e){if(e.request.method!=='GET')return;e.respondWith(fetch(e.request).catch(function(){return caches.match(e.request);}));});";
-  const blob = new Blob([swCode], { type: 'application/javascript' });
-  const swUrl = URL.createObjectURL(blob);
-  navigator.serviceWorker.register(swUrl, { scope: '/' }).catch(function() {});
-}
-
-// ===== MANIFEST =====
-(function() {
-  const iconSvg = '<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512"><rect width="512" height="512" rx="96" fill="#16a05a"/><circle cx="256" cy="256" r="160" fill="none" stroke="white" stroke-width="18"/><path d="M256 96C256 96 200 160 200 256s56 160 56 160" stroke="white" stroke-width="14" stroke-linecap="round" fill="none"/><path d="M256 96C256 96 312 160 312 256s-56 160-56 160" stroke="white" stroke-width="14" stroke-linecap="round" fill="none"/><path d="M98 210h316M98 302h316" stroke="white" stroke-width="14" stroke-linecap="round"/></svg>';
-  const iconBlob = new Blob([iconSvg], { type: 'image/svg+xml' });
-  const iconUrl = URL.createObjectURL(iconBlob);
-  const manifest = { name:'ECO GREEN AI', short_name:'ECO GREEN', description:'AI-powered sustainable engineering mentor by Modou Jaw', start_url:window.location.href, display:'standalone', orientation:'portrait', background_color:'#fafcfb', theme_color:'#1a9e5c', icons:[{ src:iconUrl, sizes:'192x192', type:'image/svg+xml', purpose:'any maskable' },{ src:iconUrl, sizes:'512x512', type:'image/svg+xml', purpose:'any maskable' }] };
-  const mBlob = new Blob([JSON.stringify(manifest)], { type: 'application/json' });
-  const mUrl = URL.createObjectURL(mBlob);
-  document.getElementById('pwa-manifest').setAttribute('href', mUrl);
-  document.getElementById('apple-icon').setAttribute('href', iconUrl);
-})();
+// ===== INIT =====
+renderFields(); renderQuickPrompts(); loadMemory(); loadKey();
 </script>
 </body>
 </html>
