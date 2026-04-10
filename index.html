@@ -379,6 +379,53 @@ footer{border-top:1px solid var(--border);padding:48px 40px 40px;text-align:cent
   .founder-card{grid-template-columns:1fr;text-align:center;}
   .founder-left{margin:0 auto;}
 }
+
+/* ── LAB STYLES ── */
+.lab-field-btn{padding:6px 14px;border-radius:8px;border:1.5px solid var(--border);background:var(--surface);color:var(--text3);font-family:'Inter',sans-serif;font-size:12px;font-weight:700;cursor:pointer;transition:all .15s;}
+.lab-field-btn.active-elec{background:#fff3e0;border-color:#f4a429;color:#c47800;}
+.lab-field-btn.active-mech{background:#f3f0ff;border-color:#7c6ff7;color:#5a48c8;}
+.lab-field-btn.active-civil{background:#e8f5ef;border-color:#1a9e5c;color:#147a44;}
+.lab-field-btn:hover{border-color:var(--border2);}
+.lab-action-btn{padding:6px 13px;border-radius:8px;border:1.5px solid var(--border);background:var(--surface);color:var(--text2);font-family:'Inter',sans-serif;font-size:12px;font-weight:700;cursor:pointer;transition:all .15s;display:inline-flex;align-items:center;gap:5px;}
+.lab-action-btn:hover{border-color:var(--green);color:var(--green);}
+.lab-action-btn.danger:hover{border-color:#ef4444;color:#ef4444;}
+.lab-comp-group{margin-bottom:14px;}
+.lab-comp-group-label{font-size:10px;font-weight:700;color:var(--green);letter-spacing:.5px;text-transform:uppercase;padding:0 8px 5px;}
+.lab-comp-item{display:flex;align-items:center;gap:7px;padding:7px 8px;border-radius:8px;border:1px solid var(--border);background:var(--surface);margin-bottom:4px;cursor:grab;transition:all .15s;user-select:none;}
+.lab-comp-item:hover{border-color:var(--border2);background:var(--surface2);transform:translateX(2px);}
+.lab-comp-item:active{cursor:grabbing;}
+.lab-comp-icon{font-size:16px;flex-shrink:0;}
+.lab-comp-name{font-size:11px;font-weight:700;color:var(--text);line-height:1.3;}
+.lab-comp-cat{font-size:9px;color:var(--text3);font-weight:600;}
+.lab-node{position:absolute;background:var(--surface);border:2px solid var(--border);border-radius:12px;padding:10px 12px;cursor:move;user-select:none;min-width:110px;box-shadow:var(--shadow);transition:border-color .15s,box-shadow .15s;z-index:10;}
+.lab-node:hover{border-color:var(--border2);box-shadow:var(--shadow2);}
+.lab-node.selected{border-color:var(--green);box-shadow:0 0 0 3px #1a9e5c22,var(--shadow2);}
+.lab-node.connecting-source{border-color:#f4a429;box-shadow:0 0 0 3px #f4a42922;}
+.lab-node-head{display:flex;align-items:center;gap:6px;margin-bottom:4px;}
+.lab-node-icon{font-size:18px;}
+.lab-node-name{font-size:11px;font-weight:800;color:var(--text);}
+.lab-node-tag{font-size:9px;color:var(--text3);font-weight:600;}
+.lab-node-ports{display:flex;justify-content:space-between;margin-top:6px;}
+.lab-port{width:11px;height:11px;border-radius:50%;background:var(--border2);border:2px solid var(--surface);cursor:crosshair;transition:all .15s;flex-shrink:0;}
+.lab-port:hover,.lab-port.active{background:var(--green);border-color:var(--green);transform:scale(1.3);}
+.lab-port.right{margin-left:auto;}
+.lab-node-delete{position:absolute;top:-7px;right:-7px;width:18px;height:18px;border-radius:50%;background:#ef4444;border:2px solid var(--surface);color:#fff;font-size:10px;display:none;align-items:center;justify-content:center;cursor:pointer;line-height:1;font-weight:700;}
+.lab-node:hover .lab-node-delete{display:flex;}
+.score-block{background:var(--surface2);border-radius:12px;padding:12px;margin-bottom:10px;border:1px solid var(--border);}
+.score-label{font-size:10px;font-weight:800;letter-spacing:.8px;color:var(--text3);text-transform:uppercase;margin-bottom:6px;}
+.score-bar-wrap{background:var(--border);border-radius:20px;height:8px;overflow:hidden;margin-bottom:4px;}
+.score-bar{height:100%;border-radius:20px;transition:width .5s ease;}
+.score-bar.sustain{background:linear-gradient(90deg,#16a05a,#25d077);}
+.score-bar.innov{background:linear-gradient(90deg,#7c6ff7,#a78bfa);}
+.score-val{font-family:'DM Serif Display',serif;font-size:22px;font-weight:400;color:var(--text);line-height:1;}
+.score-max{font-size:11px;color:var(--text3);}
+.lab-feedback-bubble{background:var(--green4);border:1px solid var(--green3);border-radius:10px;padding:10px 12px;font-size:12px;color:var(--text2);line-height:1.65;margin-bottom:8px;}
+.lab-feedback-bubble strong{color:var(--green);}
+.conn-label{font-size:10px;fill:var(--text3);font-family:'Inter',sans-serif;pointer-events:none;}
+.lab-analyse-btn{width:100%;padding:11px;border-radius:10px;border:none;background:linear-gradient(135deg,var(--green),var(--green2));color:#fff;font-family:'Inter',sans-serif;font-weight:800;font-size:13px;cursor:pointer;transition:all .2s;box-shadow:0 4px 16px #1a9e5c33;display:flex;align-items:center;justify-content:center;gap:7px;margin-bottom:10px;}
+.lab-analyse-btn:hover{transform:translateY(-1px);box-shadow:0 8px 24px #25c27044;}
+.lab-analyse-btn:disabled{background:var(--border);color:var(--text3);cursor:not-allowed;box-shadow:none;transform:none;}
+.lab-rtab.active{color:var(--green)!important;border-bottom:2px solid var(--green)!important;}
 </style>
 </head>
 <body>
@@ -551,6 +598,79 @@ footer{border-top:1px solid var(--border);padding:48px 40px 40px;text-align:cent
     </div>
     <div id="gen-wrap" style="display:none">
       <button class="gen-btn" id="gen-btn" onclick="generateIdeas()">🌿 Generate Green Ideas with AI</button>
+
+      <!-- INLINE PROJECT LAB -->
+      <div style="margin-bottom:32px">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;flex-wrap:wrap">
+          <div style="display:flex;align-items:center;gap:8px">
+            <span style="font-size:18px">🔬</span>
+            <span style="font-family:'DM Serif Display',serif;font-size:18px;color:var(--text);font-weight:400">Project Lab</span>
+            <span style="font-size:11px;color:var(--green);background:var(--green4);border:1px solid var(--green3);padding:3px 10px;border-radius:20px;font-weight:700">Beta</span>
+          </div>
+          <div style="flex:1"></div>
+          <button class="lab-action-btn" onclick="labConnect()"><span id="lab-conn-icon">🔗</span> <span id="lab-conn-label">Connect</span></button>
+          <button class="lab-action-btn" onclick="labUndo()">↩ Undo</button>
+          <button class="lab-action-btn danger" onclick="labClear()">🗑️ Clear</button>
+          <div style="display:flex;gap:6px;flex-wrap:wrap">
+            <button class="lab-field-btn active-elec" id="lf-elec" onclick="labSetField('electrical')">⚡ Electrical</button>
+            <button class="lab-field-btn" id="lf-mech" onclick="labSetField('mechanical')">⚙️ Mechanical</button>
+            <button class="lab-field-btn" id="lf-civil" onclick="labSetField('civil')">🏗️ Civil</button>
+          </div>
+        </div>
+        <div style="display:flex;gap:0;border:1.5px solid var(--border);border-radius:16px;overflow:hidden;background:var(--surface);height:460px">
+          <div style="width:180px;flex-shrink:0;border-right:1px solid var(--border);overflow-y:auto;padding:10px 8px;background:var(--surface2)">
+            <div style="font-size:10px;font-weight:800;letter-spacing:1px;color:var(--text3);text-transform:uppercase;padding:4px 8px 10px">Components</div>
+            <div id="lab-palette"></div>
+          </div>
+          <div style="flex:1;position:relative;overflow:hidden;background:radial-gradient(circle at 50% 50%,var(--surface2) 0%,var(--bg) 100%)" id="lab-canvas-wrap">
+            <div id="lab-canvas-dots" style="position:absolute;inset:0;pointer-events:none;opacity:.4;background-image:radial-gradient(circle,var(--border) 1px,transparent 1px);background-size:28px 28px"></div>
+            <svg id="lab-svg" style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none" xmlns="http://www.w3.org/2000/svg"></svg>
+            <div id="lab-canvas" style="position:absolute;inset:0;width:100%;height:100%">
+              <div id="lab-empty-msg" style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;pointer-events:none">
+                <div style="font-size:36px;margin-bottom:10px">🧩</div>
+                <div style="font-size:13px;color:var(--text3);font-weight:600">Drag components onto the canvas</div>
+                <div style="font-size:11px;color:var(--text3);margin-top:4px">Build and connect your project components</div>
+              </div>
+            </div>
+          </div>
+          <div style="width:210px;flex-shrink:0;border-left:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden;background:var(--surface)">
+            <div style="display:flex;border-bottom:1px solid var(--border)">
+              <button class="lab-rtab active" id="rt-scores" onclick="labRtab('scores')" style="flex:1;padding:9px 4px;font-size:11px;font-weight:700;color:var(--text3);background:transparent;border:none;cursor:pointer;font-family:'Inter',sans-serif">Scores</button>
+              <button class="lab-rtab" id="rt-feedback" onclick="labRtab('feedback')" style="flex:1;padding:9px 4px;font-size:11px;font-weight:700;color:var(--text3);background:transparent;border:none;cursor:pointer;font-family:'Inter',sans-serif">AI Feedback</button>
+            </div>
+            <div style="flex:1;overflow-y:auto;padding:12px" id="rp-scores">
+              <div class="score-block">
+                <div class="score-label">🌱 Sustainability</div>
+                <div class="score-bar-wrap"><div class="score-bar sustain" id="score-bar-s" style="width:0%"></div></div>
+                <div><span class="score-val" id="score-s">0</span><span class="score-max"> / 100</span></div>
+              </div>
+              <div class="score-block">
+                <div class="score-label">💡 Innovation</div>
+                <div class="score-bar-wrap"><div class="score-bar innov" id="score-bar-i" style="width:0%"></div></div>
+                <div><span class="score-val" id="score-i">0</span><span class="score-max"> / 100</span></div>
+              </div>
+              <div class="score-block" style="background:var(--surface)">
+                <div class="score-label">🔗 Connections</div>
+                <div style="font-size:13px;font-weight:700;color:var(--text)" id="score-conn">0 connections</div>
+                <div style="font-size:11px;color:var(--text3);margin-top:3px" id="score-comp">0 components</div>
+              </div>
+              <button class="lab-analyse-btn" id="lab-analyse-btn" onclick="labAnalyse()">🤖 Analyse with AI</button>
+              <div style="font-size:11px;color:var(--text3);text-align:center;line-height:1.5">Add components &amp; connections, then let AI analyse your design</div>
+            </div>
+            <div style="flex:1;overflow-y:auto;padding:12px;display:none" id="rp-feedback">
+              <div id="lab-feedback-content">
+                <div style="font-size:12px;color:var(--text3);font-style:italic;text-align:center;padding:24px 8px">Connect components and click<br/><strong>Analyse with AI</strong> to get feedback</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div style="display:flex;align-items:center;gap:16px;padding:7px 14px;background:var(--surface2);border:1px solid var(--border);border-top:none;border-radius:0 0 14px 14px;font-size:11px;color:var(--text3)">
+          <span id="lab-status-field"><b style="color:var(--text2)">Field:</b> Electrical</span>
+          <span id="lab-status-mode"><b style="color:var(--text2)">Mode:</b> Drag to place</span>
+          <span id="lab-status-hint" style="flex:1">Tip: Drag a component from the left, then use Connect mode to link components</span>
+        </div>
+      </div>
+      <!-- END LAB -->
     </div>
     <div id="empty-prompt" style="text-align:center;padding:60px 0">
       <div style="font-size:52px;margin-bottom:14px">👆</div>
@@ -603,6 +723,7 @@ footer{border-top:1px solid var(--border);padding:48px 40px 40px;text-align:cent
     <div id="saved-content"></div>
   </div>
 </section>
+
 
 <script>
 // ============================================================
@@ -885,10 +1006,12 @@ function showPage(name) {
   document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
   const pMap = {hero:'hero-page',app:'app-section',chat:'chat-section',saved:'saved-section'};
   const nMap = {hero:'nb-hero',app:'nb-app',chat:'nb-chat',saved:'nb-saved'};
-  document.getElementById(pMap[name]).classList.add('active');
+  const el = document.getElementById(pMap[name]);
+  if (el) el.classList.add('active');
   const nb = document.getElementById(nMap[name]); if (nb) nb.classList.add('active');
   if (name === 'saved') renderSaved();
   if (name === 'chat') { if (!chatHist.length) initChat(); setTimeout(forceScrollDown, 60); }
+  if (name === 'app') { labInit(); }
   window.scrollTo(0, 0);
 }
 
@@ -899,7 +1022,7 @@ function renderFields() {
     const sel = selField === k; const d = document.createElement('div'); d.className = 'field-card';
     if (sel) d.style.cssText = 'border-color:' + f.color + ';background:' + f.color + '14;box-shadow:0 4px 20px ' + f.color + '33';
     d.innerHTML = '<span class="fi">' + f.icon + '</span><div class="fn" style="color:' + (sel ? f.color : 'var(--text)') + '">' + f.label + '</div>' + (sel ? '<div class="ff">' + f.fact + '</div>' : '');
-    d.onclick = function() { selField = k; selTopic = ''; ideas = []; document.getElementById('ideas-box').style.display = 'none'; renderFields(); renderSteps(); };
+    d.onclick = function() { selField = k; selTopic = ''; ideas = []; document.getElementById('ideas-box').style.display = 'none'; renderFields(); renderSteps(); if (labInitDone) labSetField(k); };
     g.appendChild(d);
   });
 }
@@ -909,6 +1032,7 @@ function renderSteps() {
   document.getElementById('step2').style.display = has ? 'block' : 'none';
   document.getElementById('step3').style.display = has ? 'block' : 'none';
   document.getElementById('gen-wrap').style.display = has ? 'block' : 'none';
+  if (has) labInit();
   document.getElementById('empty-prompt').style.display = has ? 'none' : 'block';
   if (!has) return;
   const f = FIELDS[selField];
@@ -1342,6 +1466,480 @@ function confetti() {
 
 // ===== INIT =====
 renderFields(); renderQuickPrompts(); loadMemory(); loadKey();
+
+// ================================================================
+// LAB ENGINE — Drag & Drop Component Circuit Builder
+// ================================================================
+const LAB_COMPONENTS = {
+  electrical: [
+    { id:'solar',   name:'Solar Panel',    icon:'☀️', cat:'Energy',    sustain:18, innov:8,  ports:2, desc:'Photovoltaic panel, converts sunlight to DC electricity' },
+    { id:'wind',    name:'Wind Turbine',   icon:'🌬️', cat:'Energy',    sustain:20, innov:10, ports:2, desc:'Horizontal-axis turbine generating AC power from wind' },
+    { id:'battery', name:'Battery Bank',   icon:'🔋', cat:'Storage',   sustain:10, innov:5,  ports:2, desc:'Lithium-ion or lead-acid energy storage module' },
+    { id:'inverter',name:'Inverter',       icon:'🔌', cat:'Power',     sustain:6,  innov:7,  ports:3, desc:'DC to AC power converter for grid/load compatibility' },
+    { id:'mppt',    name:'MPPT Controller',icon:'📡', cat:'Control',   sustain:8,  innov:12, ports:3, desc:'Maximum Power Point Tracking for optimal solar harvest' },
+    { id:'motor',   name:'Electric Motor', icon:'⚙️', cat:'Actuator',  sustain:5,  innov:6,  ports:2, desc:'Brushless DC motor for mechanical work' },
+    { id:'arduino', name:'Arduino MCU',    icon:'🤖', cat:'Control',   sustain:4,  innov:14, ports:4, desc:'Microcontroller for sensor reading & automation' },
+    { id:'sensor',  name:'Energy Sensor',  icon:'📊', cat:'Sensor',    sustain:6,  innov:10, ports:2, desc:'Current & voltage monitoring sensor for efficiency tracking' },
+    { id:'led',     name:'LED Array',      icon:'💡', cat:'Output',    sustain:8,  innov:4,  ports:2, desc:'High-efficiency LED lighting system' },
+    { id:'smartgrid',name:'Smart Grid',    icon:'🌐', cat:'Network',   sustain:15, innov:18, ports:3, desc:'Bidirectional power grid with demand-response capability' },
+    { id:'charger', name:'EV Charger',     icon:'🚗', cat:'Output',    sustain:12, innov:14, ports:2, desc:'Level-2 electric vehicle charging station' },
+    { id:'hydro',   name:'Micro-Hydro',    icon:'💧', cat:'Energy',    sustain:18, innov:12, ports:2, desc:'Run-of-river micro-hydro generation unit' },
+    { id:'fuel',    name:'Fuel Cell',      icon:'⚗️', cat:'Energy',    sustain:14, innov:16, ports:2, desc:'Hydrogen PEM fuel cell for clean electricity' },
+    { id:'bms',     name:'BMS Module',     icon:'🛡️', cat:'Control',   sustain:7,  innov:11, ports:3, desc:'Battery Management System for safety & cell balancing' },
+    { id:'transformer',name:'Transformer', icon:'🔁', cat:'Power',     sustain:3,  innov:4,  ports:2, desc:'Step-up/down voltage transformer' },
+    { id:'capacitor',name:'Supercapacitor',icon:'⚡', cat:'Storage',   sustain:9,  innov:13, ports:2, desc:'Ultracapacitor for peak power delivery' },
+    { id:'iot',     name:'IoT Gateway',    icon:'📶', cat:'Network',   sustain:5,  innov:16, ports:3, desc:'MQTT-based IoT hub for remote monitoring' },
+    { id:'display', name:'HMI Display',    icon:'🖥️', cat:'Output',    sustain:2,  innov:8,  ports:2, desc:'Touch-screen human-machine interface panel' },
+  ],
+  mechanical: [
+    { id:'pump',    name:'Water Pump',     icon:'💧', cat:'Fluid',     sustain:8,  innov:5,  ports:2, desc:'Centrifugal pump for fluid circulation' },
+    { id:'heatex',  name:'Heat Exchanger', icon:'♨️', cat:'Thermal',   sustain:12, innov:9,  ports:4, desc:'Shell-and-tube heat recovery exchanger' },
+    { id:'compressor',name:'Compressor',   icon:'🗜️', cat:'Fluid',     sustain:4,  innov:6,  ports:3, desc:'Rotary screw air compressor' },
+    { id:'turbine', name:'Steam Turbine',  icon:'🌀', cat:'Energy',    sustain:10, innov:8,  ports:3, desc:'Multi-stage steam turbine for power generation' },
+    { id:'gearpump',name:'Gear Pump',      icon:'⚙️', cat:'Fluid',     sustain:5,  innov:4,  ports:2, desc:'Positive displacement gear pump' },
+    { id:'thermostat',name:'Smart Thermo', icon:'🌡️', cat:'Control',   sustain:9,  innov:13, ports:2, desc:'Programmable thermostat with occupancy sensing' },
+    { id:'hvac',    name:'HVAC Unit',      icon:'❄️', cat:'Thermal',   sustain:7,  innov:8,  ports:4, desc:'Variable-refrigerant-flow HVAC system' },
+    { id:'boiler',  name:'Solar Boiler',   icon:'🔥', cat:'Thermal',   sustain:14, innov:10, ports:3, desc:'Solar-assisted thermal boiler' },
+    { id:'flywheel',name:'Flywheel Store', icon:'🎡', cat:'Storage',   sustain:11, innov:14, ports:2, desc:'Kinetic energy flywheel storage system' },
+    { id:'piston',  name:'Hydraulic Cyl.', icon:'⬛', cat:'Actuator',  sustain:4,  innov:5,  ports:2, desc:'Double-acting hydraulic cylinder' },
+    { id:'bearing', name:'Maglev Bearing', icon:'🧲', cat:'Mech',      sustain:8,  innov:16, ports:2, desc:'Magnetic levitation frictionless bearing' },
+    { id:'filter',  name:'Air Filter',     icon:'🌿', cat:'Clean',     sustain:14, innov:6,  ports:2, desc:'HEPA air filtration module' },
+    { id:'recycle', name:'Heat Recovery',  icon:'♻️', cat:'Thermal',   sustain:18, innov:12, ports:3, desc:'Waste heat recovery ventilation unit' },
+    { id:'3dprint', name:'3D Printer',     icon:'🖨️', cat:'Mfg',       sustain:6,  innov:18, ports:2, desc:'FDM additive manufacturing unit' },
+    { id:'robot',   name:'Robotic Arm',    icon:'🦾', cat:'Actuator',  sustain:5,  innov:17, ports:3, desc:'6-DOF collaborative robotic arm' },
+    { id:'valve',   name:'Smart Valve',    icon:'🚰', cat:'Control',   sustain:7,  innov:10, ports:2, desc:'Electronically actuated flow control valve' },
+    { id:'insul',   name:'Insulation',     icon:'🧱', cat:'Passive',   sustain:15, innov:4,  ports:0, desc:'Aerogel thermal insulation panel' },
+    { id:'cooler',  name:'Biomass Cooler', icon:'🌱', cat:'Thermal',   sustain:16, innov:11, ports:2, desc:'Evaporative biomass-powered cooling' },
+  ],
+  civil: [
+    { id:'rainharvest',name:'Rainwater Harvest',icon:'🌧️',cat:'Water',  sustain:18, innov:8,  ports:2, desc:'Rooftop collection and storage system' },
+    { id:'greenwalls',name:'Green Wall',    icon:'🌿', cat:'Bio',       sustain:16, innov:12, ports:0, desc:'Vertical living wall for insulation & air quality' },
+    { id:'permpave', name:'Porous Paving',  icon:'⬜', cat:'Infra',     sustain:14, innov:8,  ports:0, desc:'Permeable concrete for stormwater infiltration' },
+    { id:'solarpave',name:'Solar Pavement', icon:'☀️', cat:'Energy',    sustain:17, innov:18, ports:2, desc:'Photovoltaic embedded road surface panel' },
+    { id:'bioswale', name:'Bioswale',       icon:'〰️', cat:'Water',     sustain:19, innov:10, ports:2, desc:'Vegetated channel for stormwater management' },
+    { id:'bridge',   name:'Smart Bridge',   icon:'🌉', cat:'Infra',     sustain:8,  innov:14, ports:2, desc:'Sensor-embedded bridge structure with SHM' },
+    { id:'concrete', name:'Green Concrete', icon:'🏢', cat:'Material',  sustain:12, innov:10, ports:0, desc:'GGBS and fly-ash blended low-carbon concrete' },
+    { id:'retwall',  name:'Retaining Wall', icon:'🧱', cat:'Structural',sustain:5,  innov:4,  ports:0, desc:'Gabion or geogrid reinforced retaining wall' },
+    { id:'cistern',  name:'Underground Tank',icon:'🏺',cat:'Water',     sustain:13, innov:7,  ports:2, desc:'Below-grade stormwater detention cistern' },
+    { id:'solwater', name:'Solar Water Htr',icon:'🚿', cat:'Energy',    sustain:15, innov:9,  ports:2, desc:'Flat-plate solar collector for domestic hot water' },
+    { id:'windbreak',name:'Windbreak Wall', icon:'💨', cat:'Passive',   sustain:10, innov:6,  ports:0, desc:'Structural shelterbelt for wind load reduction' },
+    { id:'trench',   name:'French Drain',   icon:'💧', cat:'Water',     sustain:14, innov:5,  ports:2, desc:'Subsurface perforated pipe drainage system' },
+    { id:'ifc',      name:'BIM/IFC Model',  icon:'📐', cat:'Digital',   sustain:4,  innov:18, ports:0, desc:'Building information model for lifecycle analysis' },
+    { id:'solarroof',name:'Solar Roof',     icon:'🏠', cat:'Energy',    sustain:18, innov:14, ports:2, desc:'Integrated photovoltaic roofing tiles' },
+    { id:'greywater',name:'Greywater Reuse',icon:'♻️',cat:'Water',     sustain:17, innov:10, ports:3, desc:'Greywater treatment and recirculation system' },
+    { id:'earthworks',name:'Earthworks',    icon:'⛏️', cat:'Geo',       sustain:6,  innov:4,  ports:0, desc:'Cut-and-fill earthwork optimization' },
+    { id:'shade',    name:'Shade Structure',icon:'⛱️', cat:'Passive',   sustain:11, innov:7,  ports:0, desc:'Tensile canopy for passive cooling' },
+    { id:'monitor',  name:'Structural Monitor',icon:'📡',cat:'Sensor',  sustain:6,  innov:16, ports:2, desc:'Wireless structural health monitoring sensor node' },
+  ]
+};
+
+// Synergy bonuses when specific pairs are connected
+const LAB_SYNERGIES = {
+  'solar+mppt':     { sustain:+8,  innov:+6,  msg:'Solar + MPPT maximises energy harvest efficiency (+14 pts)' },
+  'solar+battery':  { sustain:+7,  innov:+5,  msg:'Solar + Battery creates off-grid resilience (+12 pts)' },
+  'wind+battery':   { sustain:+8,  innov:+5,  msg:'Wind + Battery smooths intermittent generation (+13 pts)' },
+  'battery+bms':    { sustain:+5,  innov:+8,  msg:'Battery + BMS extends lifespan and prevents hazards (+13 pts)' },
+  'mppt+arduino':   { sustain:+4,  innov:+10, msg:'MPPT + Arduino enables smart adaptive charging (+14 pts)' },
+  'iot+smartgrid':  { sustain:+6,  innov:+14, msg:'IoT + Smart Grid enables demand-response automation (+20 pts)' },
+  'solar+charger':  { sustain:+10, innov:+8,  msg:'Solar + EV Charger creates green transport infrastructure (+18 pts)' },
+  'fuel+motor':     { sustain:+8,  innov:+12, msg:'Fuel Cell + Motor creates zero-emission propulsion (+20 pts)' },
+  'heatex+boiler':  { sustain:+10, innov:+6,  msg:'Heat Exchanger + Solar Boiler recovers waste energy (+16 pts)' },
+  'recycle+hvac':   { sustain:+12, innov:+8,  msg:'Heat Recovery + HVAC dramatically cuts building energy (+20 pts)' },
+  'flywheel+turbine':{ sustain:+9, innov:+12, msg:'Flywheel + Turbine stabilises power output (+21 pts)' },
+  'thermostat+hvac':{ sustain:+8, innov:+9,   msg:'Smart Thermostat + HVAC reduces energy waste (+17 pts)' },
+  'rainharvest+cistern':{ sustain:+10,innov:+6, msg:'Rainwater + Cistern creates resilient water supply (+16 pts)' },
+  'bioswale+permpave':{ sustain:+14,innov:+8,  msg:'Bioswale + Porous Paving manages 100% stormwater on-site (+22 pts)' },
+  'greenwalls+shade':{ sustain:+10,innov:+7,   msg:'Green Wall + Shade creates a passive cooling microclimate (+17 pts)' },
+  'solarroof+solwater':{ sustain:+12,innov:+8, msg:'Solar Roof + Solar Water creates near net-zero buildings (+20 pts)' },
+  'greywater+rainharvest':{ sustain:+14,innov:+10, msg:'Greywater + Rainwater closes the on-site water cycle (+24 pts)' },
+  'ifc+monitor':    { sustain:+4,  innov:+16, msg:'BIM + Structural Monitor enables digital twin lifecycle management (+20 pts)' },
+  'solar+ifc':      { sustain:+6,  innov:+12, msg:'Solar + BIM model enables whole-building energy simulation (+18 pts)' },
+};
+
+let labField = 'electrical';
+let labNodes = {};        // id -> { el, x, y, compId, compData }
+let labConns = [];        // [{from, to, synergy}]
+let labNodeId = 0;
+let labSelected = null;
+let labConnMode = false;
+let labConnFrom = null;
+let labDragNode = null;
+let labDragOff  = { x:0, y:0 };
+let labHistory  = [];    // for undo
+let labInitDone = false;
+let labAnalysing = false;
+
+function labInit() {
+  if (labInitDone) return;
+  labInitDone = true;
+  // Sync lab field to whatever engineering field the user picked
+  const fieldMap = { electrical:'electrical', civil:'civil', mechanical:'mechanical' };
+  const syncField = (selField && fieldMap[selField]) ? selField : 'electrical';
+  labSetField(syncField);
+
+  const wrap = document.getElementById('lab-canvas-wrap');
+  wrap.addEventListener('dragover', e => e.preventDefault());
+  wrap.addEventListener('drop', labOnDrop);
+
+  // Global mouse-move/up for node dragging
+  document.addEventListener('mousemove', labMouseMove);
+  document.addEventListener('mouseup',   labMouseUp);
+}
+
+function labRenderPalette() {
+  const pal = document.getElementById('lab-palette');
+  const comps = LAB_COMPONENTS[labField] || [];
+  const groups = {};
+  comps.forEach(c => { if (!groups[c.cat]) groups[c.cat] = []; groups[c.cat].push(c); });
+  pal.innerHTML = '';
+  Object.entries(groups).forEach(([cat, items]) => {
+    const g = document.createElement('div'); g.className = 'lab-comp-group';
+    g.innerHTML = '<div class="lab-comp-group-label">' + cat + '</div>';
+    items.forEach(comp => {
+      const d = document.createElement('div');
+      d.className = 'lab-comp-item';
+      d.draggable = true;
+      d.dataset.compId = comp.id;
+      d.innerHTML = '<span class="lab-comp-icon">' + comp.icon + '</span><div><div class="lab-comp-name">' + comp.name + '</div><div class="lab-comp-cat">' + comp.cat + '</div></div>';
+      d.addEventListener('dragstart', e => { e.dataTransfer.setData('compId', comp.id); e.dataTransfer.setData('field', labField); });
+      d.title = comp.desc;
+      g.appendChild(d);
+    });
+    pal.appendChild(g);
+  });
+}
+
+function labSetField(f) {
+  labField = f;
+  ['elec','mech','civil'].forEach(k => document.getElementById('lf-'+k).className = 'lab-field-btn');
+  const cls = {electrical:'active-elec',mechanical:'active-mech',civil:'active-civil'};
+  const id  = {electrical:'lf-elec',mechanical:'lf-mech',civil:'lf-civil'};
+  document.getElementById(id[f]).classList.add(cls[f]);
+  document.getElementById('lab-status-field').innerHTML = '<b>Field:</b> ' + {electrical:'Electrical',mechanical:'Mechanical',civil:'Civil'}[f];
+  labRenderPalette();
+}
+
+function labOnDrop(e) {
+  e.preventDefault();
+  const compId = e.dataTransfer.getData('compId');
+  const field  = e.dataTransfer.getData('field') || labField;
+  const comp   = (LAB_COMPONENTS[field] || []).find(c => c.id === compId);
+  if (!comp) return;
+
+  const wrap = document.getElementById('lab-canvas-wrap');
+  const rect = wrap.getBoundingClientRect();
+  const x = e.clientX - rect.left - 60;
+  const y = e.clientY - rect.top  - 30;
+
+  labPushHistory();
+  labAddNode(comp, x, y);
+  labUpdateScores();
+  document.getElementById('lab-empty-msg').style.display = 'none';
+}
+
+function labAddNode(comp, x, y) {
+  const nid = 'n' + (labNodeId++);
+  const canvas = document.getElementById('lab-canvas');
+  const el = document.createElement('div');
+  el.className = 'lab-node';
+  el.id = nid;
+  el.style.left = x + 'px';
+  el.style.top  = y + 'px';
+
+  el.innerHTML =
+    '<div class="lab-node-delete" onclick="labDeleteNode(\'' + nid + '\')">✕</div>' +
+    '<div class="lab-node-head"><span class="lab-node-icon">' + comp.icon + '</span>' +
+    '<div><div class="lab-node-name">' + comp.name + '</div>' +
+    '<div class="lab-node-tag">' + comp.cat + '</div></div></div>' +
+    '<div class="lab-node-ports">' +
+    '<div class="lab-port left" data-nid="' + nid + '" onclick="labPortClick(\'' + nid + '\')"></div>' +
+    '<div class="lab-port right" data-nid="' + nid + '" onclick="labPortClick(\'' + nid + '\')"></div>' +
+    '</div>';
+
+  // Drag to reposition
+  el.addEventListener('mousedown', labNodeMouseDown);
+  el.addEventListener('click', e => { if (!labConnMode) labSelectNode(nid); });
+
+  canvas.appendChild(el);
+  labNodes[nid] = { el, x, y, compId: comp.id, compData: comp, field: labField };
+  return nid;
+}
+
+function labNodeMouseDown(e) {
+  if (e.target.classList.contains('lab-port') || e.target.classList.contains('lab-node-delete')) return;
+  if (labConnMode) return;
+  const nid = e.currentTarget.id;
+  const node = labNodes[nid];
+  if (!node) return;
+  labDragNode = nid;
+  const rect = node.el.getBoundingClientRect();
+  labDragOff = { x: e.clientX - rect.left, y: e.clientY - rect.top };
+  e.preventDefault();
+}
+
+function labMouseMove(e) {
+  if (!labDragNode) return;
+  const node = labNodes[labDragNode];
+  if (!node) return;
+  const wrap = document.getElementById('lab-canvas-wrap');
+  const rect = wrap.getBoundingClientRect();
+  const x = Math.max(0, e.clientX - rect.left - labDragOff.x);
+  const y = Math.max(0, e.clientY - rect.top  - labDragOff.y);
+  node.el.style.left = x + 'px';
+  node.el.style.top  = y + 'px';
+  node.x = x; node.y = y;
+  labRedrawConnections();
+}
+
+function labMouseUp() {
+  labDragNode = null;
+}
+
+function labSelectNode(nid) {
+  if (labSelected) document.getElementById(labSelected) && document.getElementById(labSelected).classList.remove('selected');
+  labSelected = nid;
+  const el = document.getElementById(nid);
+  if (el) el.classList.add('selected');
+}
+
+function labConnect() {
+  labConnMode = !labConnMode;
+  labConnFrom = null;
+  document.getElementById('lab-conn-icon').textContent  = labConnMode ? '✋' : '🔗';
+  document.getElementById('lab-conn-label').textContent = labConnMode ? 'Cancel' : 'Connect';
+  document.getElementById('lab-status-mode').innerHTML  = labConnMode
+    ? '<b>Mode:</b> Click two components to connect'
+    : '<b>Mode:</b> Drag to place';
+  // Remove source highlights
+  Object.keys(labNodes).forEach(id => { const el = document.getElementById(id); if (el) el.classList.remove('connecting-source'); });
+}
+
+function labPortClick(nid) {
+  if (!labConnMode) { labSelectNode(nid); return; }
+  if (!labConnFrom) {
+    labConnFrom = nid;
+    const el = document.getElementById(nid);
+    if (el) el.classList.add('connecting-source');
+  } else if (labConnFrom !== nid) {
+    const already = labConns.find(c => (c.from===labConnFrom&&c.to===nid)||(c.from===nid&&c.to===labConnFrom));
+    if (!already) {
+      labPushHistory();
+      const fromComp = labNodes[labConnFrom].compId;
+      const toComp   = labNodes[nid].compId;
+      const synergyKey = [fromComp,toComp].sort().join('+');
+      const synergy = LAB_SYNERGIES[synergyKey] || null;
+      labConns.push({ from:labConnFrom, to:nid, synergy });
+      labRedrawConnections();
+      labUpdateScores();
+      if (synergy) labShowSynergyToast(synergy.msg);
+    }
+    const el = document.getElementById(labConnFrom);
+    if (el) el.classList.remove('connecting-source');
+    labConnFrom = null;
+  }
+}
+
+function labDeleteNode(nid) {
+  labPushHistory();
+  labConns = labConns.filter(c => c.from !== nid && c.to !== nid);
+  const el = document.getElementById(nid);
+  if (el) el.remove();
+  delete labNodes[nid];
+  if (labSelected === nid) labSelected = null;
+  labRedrawConnections();
+  labUpdateScores();
+  if (Object.keys(labNodes).length === 0) document.getElementById('lab-empty-msg').style.display = '';
+}
+
+function labPushHistory() {
+  labHistory.push({ nodes: JSON.parse(JSON.stringify(Object.entries(labNodes).map(([k,v])=>({k,compId:v.compId,x:v.x,y:v.y,field:v.field})))), conns: JSON.parse(JSON.stringify(labConns)) });
+  if (labHistory.length > 30) labHistory.shift();
+}
+
+function labUndo() {
+  if (!labHistory.length) return;
+  const state = labHistory.pop();
+  // Rebuild
+  document.getElementById('lab-canvas').innerHTML = '<div id="lab-empty-msg" style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;pointer-events:none;display:none"></div>';
+  labNodes = {}; labConns = state.conns; labNodeId = 0;
+  state.nodes.forEach(({k, compId, x, y, field}) => {
+    const comp = (LAB_COMPONENTS[field]||[]).find(c=>c.id===compId);
+    if (!comp) return;
+    labNodeId = Math.max(labNodeId, parseInt(k.slice(1))+1);
+    const canvas = document.getElementById('lab-canvas');
+    const el = document.createElement('div');
+    el.className = 'lab-node'; el.id = k;
+    el.style.left = x+'px'; el.style.top = y+'px';
+    el.innerHTML = '<div class="lab-node-delete" onclick="labDeleteNode(\''+k+'\')">✕</div><div class="lab-node-head"><span class="lab-node-icon">'+comp.icon+'</span><div><div class="lab-node-name">'+comp.name+'</div><div class="lab-node-tag">'+comp.cat+'</div></div></div><div class="lab-node-ports"><div class="lab-port left" data-nid="'+k+'" onclick="labPortClick(\''+k+'\')"></div><div class="lab-port right" data-nid="'+k+'" onclick="labPortClick(\''+k+'\')"></div></div>';
+    el.addEventListener('mousedown', labNodeMouseDown);
+    canvas.appendChild(el);
+    labNodes[k] = { el, x, y, compId, compData:comp, field };
+  });
+  if (Object.keys(labNodes).length === 0) document.getElementById('lab-empty-msg').style.display = '';
+  labRedrawConnections();
+  labUpdateScores();
+}
+
+function labClear() {
+  if (!confirm('Clear the canvas?')) return;
+  labPushHistory();
+  document.getElementById('lab-canvas').innerHTML = '<div id="lab-empty-msg" style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;pointer-events:none"><div style="font-size:36px;margin-bottom:10px">🧩</div><div style="font-size:13px;color:var(--text3);font-weight:600">Drag components onto the canvas</div><div style="font-size:11px;color:var(--text3);margin-top:4px">Build and connect your project components</div></div>';
+  labNodes = {}; labConns = [];
+  labRedrawConnections(); labUpdateScores();
+}
+
+function labRedrawConnections() {
+  const svg = document.getElementById('lab-svg');
+  svg.innerHTML = '';
+  labConns.forEach((conn, i) => {
+    const fn = labNodes[conn.from], tn = labNodes[conn.to];
+    if (!fn || !tn) return;
+    const fw = fn.el.offsetWidth  || 120, fh = fn.el.offsetHeight || 70;
+    const tw2= tn.el.offsetWidth  || 120, th = tn.el.offsetHeight || 70;
+    const x1 = fn.x + fw;
+    const y1 = fn.y + fh / 2;
+    const x2 = tn.x;
+    const y2 = tn.y + th / 2;
+    const mx = (x1 + x2) / 2;
+
+    const path = document.createElementNS('http://www.w3.org/2000/svg','path');
+    const d = `M${x1},${y1} C${mx},${y1} ${mx},${y2} ${x2},${y2}`;
+    path.setAttribute('d', d);
+    path.setAttribute('fill','none');
+    path.setAttribute('stroke', conn.synergy ? '#25d077' : 'var(--border2)');
+    path.setAttribute('stroke-width', conn.synergy ? '2.5' : '1.8');
+    path.setAttribute('stroke-dasharray', conn.synergy ? 'none' : '5,3');
+    path.setAttribute('opacity','0.85');
+    svg.appendChild(path);
+
+    // Dot at midpoint
+    const circle = document.createElementNS('http://www.w3.org/2000/svg','circle');
+    circle.setAttribute('cx', mx); circle.setAttribute('cy', (y1+y2)/2);
+    circle.setAttribute('r','4');
+    circle.setAttribute('fill', conn.synergy ? '#25d077' : 'var(--border2)');
+    svg.appendChild(circle);
+
+    if (conn.synergy) {
+      const label = document.createElementNS('http://www.w3.org/2000/svg','text');
+      label.setAttribute('x', mx); label.setAttribute('y', (y1+y2)/2 - 8);
+      label.setAttribute('text-anchor','middle');
+      label.setAttribute('class','conn-label');
+      label.setAttribute('fill','#1a9e5c');
+      label.textContent = '⚡ Synergy!';
+      svg.appendChild(label);
+    }
+  });
+}
+
+function labUpdateScores() {
+  const nodes = Object.values(labNodes);
+  const nc = nodes.length, cc = labConns.length;
+  let s = 0, inn = 0;
+
+  nodes.forEach(n => { s += n.compData.sustain || 0; inn += n.compData.innov || 0; });
+  labConns.forEach(c => {
+    if (c.synergy) { s += c.synergy.sustain || 0; inn += c.synergy.innov || 0; }
+  });
+
+  // Bonus for variety
+  const cats = [...new Set(nodes.map(n => n.compData.cat))];
+  if (cats.length >= 3) { s += 5; inn += 5; }
+  if (cats.length >= 5) { s += 8; inn += 8; }
+
+  // Cap at 100
+  s   = Math.min(100, Math.round(s));
+  inn = Math.min(100, Math.round(inn));
+
+  document.getElementById('score-s').textContent = s;
+  document.getElementById('score-i').textContent = inn;
+  document.getElementById('score-bar-s').style.width = s + '%';
+  document.getElementById('score-bar-i').style.width = inn + '%';
+  document.getElementById('score-conn').textContent = cc + ' connection' + (cc===1?'':'s');
+  document.getElementById('score-comp').textContent = nc + ' component' + (nc===1?'':'s');
+}
+
+function labShowSynergyToast(msg) {
+  const t = document.createElement('div');
+  t.style.cssText = 'position:fixed;bottom:100px;left:50%;transform:translateX(-50%);background:var(--green);color:#fff;padding:10px 18px;border-radius:12px;font-size:12px;font-weight:700;box-shadow:0 6px 24px rgba(22,160,90,.4);z-index:9000;animation:fadeIn .3s ease;max-width:320px;text-align:center;';
+  t.textContent = '⚡ ' + msg;
+  document.body.appendChild(t);
+  setTimeout(() => t.remove(), 3500);
+}
+
+function labRtab(tab) {
+  ['scores','feedback'].forEach(t => {
+    const tabBtn = document.getElementById('rt-'+t);
+    const panel = document.getElementById('rp-'+t);
+    if (tabBtn) {
+      tabBtn.classList.toggle('active', t===tab);
+      tabBtn.style.color = (t===tab) ? 'var(--green)' : 'var(--text3)';
+      tabBtn.style.borderBottom = (t===tab) ? '2px solid var(--green)' : '';
+    }
+    if (panel) panel.style.display = (t===tab) ? 'block' : 'none';
+  });
+}
+
+async function labAnalyse() {
+  if (labAnalysing) return;
+  const nodes = Object.values(labNodes);
+  if (nodes.length < 2) { alert('Add at least 2 components before analysing! 😊'); return; }
+  if (!apiKey) { openModal(); return; }
+
+  labAnalysing = true;
+  const btn = document.getElementById('lab-analyse-btn');
+  btn.disabled = true;
+  btn.innerHTML = '<span style="display:inline-block;width:14px;height:14px;border:2px solid rgba(255,255,255,.4);border-top-color:#fff;border-radius:50%;animation:spin .8s linear infinite"></span> Analysing…';
+
+  const compList = nodes.map(n => n.compData.name + ' (' + n.compData.cat + ')').join(', ');
+  const connList = labConns.map(c => {
+    const fn = labNodes[c.from], tn = labNodes[c.to];
+    return (fn ? fn.compData.name : '?') + ' → ' + (tn ? tn.compData.name : '?') + (c.synergy ? ' [SYNERGY]' : '');
+  }).join('\n') || 'No connections yet';
+
+  const sScore = parseInt(document.getElementById('score-s').textContent);
+  const iScore = parseInt(document.getElementById('score-i').textContent);
+
+  const prompt = `A student is building a ${labField} engineering project using the ECO GREEN Lab. Here is their design:
+
+FIELD: ${labField.toUpperCase()}
+COMPONENTS PLACED: ${compList}
+CONNECTIONS:
+${connList}
+
+SUSTAINABILITY SCORE: ${sScore}/100
+INNOVATION SCORE: ${iScore}/100
+
+As ECO GREEN AI, give them a brief, practical design review in this format:
+
+## 🌱 Design Review
+
+**What's working well:**
+[2-3 bullet points on strengths]
+
+**Suggested improvements:**
+[2-3 specific component additions or connection changes that would boost scores]
+
+**⚡ Key insight:**
+[One powerful engineering fact or principle relevant to their design]
+
+Keep it warm, specific, and actionable. Max 180 words.`;
+
+  const feedbackDiv = document.getElementById('lab-feedback-content');
+  feedbackDiv.innerHTML = '<div class="lab-feedback-bubble" style="color:var(--text3)"><span style="animation:pulse 1.5s infinite;display:inline-block">🤖</span> Analysing your design…</div>';
+  labRtab('feedback');
+
+  try {
+    const reply = await callAI(prompt, SYS);
+    feedbackDiv.innerHTML = '<div class="lab-feedback-bubble">' + md(reply, false) + '</div>';
+  } catch(e) {
+    feedbackDiv.innerHTML = '<div class="lab-feedback-bubble">⚠️ Could not get feedback. Make sure your password is set! 😊</div>';
+  } finally {
+    labAnalysing = false;
+    btn.disabled = false;
+    btn.innerHTML = '🤖 Analyse with AI';
+  }
+}
+
 </script>
 </body>
 </html>
