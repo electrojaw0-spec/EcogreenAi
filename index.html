@@ -469,7 +469,7 @@ footer{border-top:1px solid var(--border);padding:48px 40px 40px;text-align:cent
       <span style="display:inline-flex;align-items:center;gap:7px;padding:7px 16px;border-radius:20px;background:var(--green4);border:1.5px solid var(--green3);font-size:13px;font-weight:700;color:var(--green);">🧠 AI-Powered Brain</span>
       <span style="display:inline-flex;align-items:center;gap:6px;padding:7px 16px;border-radius:20px;background:var(--surface);border:1.5px solid var(--border2);font-size:13px;font-weight:600;color:var(--text2);"><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#22c55e;box-shadow:0 0 0 2px #dcfce7;animation:pulse 2s infinite;"></span>Live · Serekunda, The Gambia</span>
     </div>
-    <p class="hero-tagline">Generate sustainable project ideas, get expert guidance, and build solutions that matter — powered by AI.</p>
+    <p class="hero-tagline">Generate sustainable project ideas rooted in <strong>Gambian &amp; African challenges</strong>, get expert guidance, and build solutions that matter — powered by AI. 🇬🇲🌍</p>
     <div class="hero-btns">
       <button class="btn-big" onclick="showPage('chat')">Start Building Now</button>
       <button class="btn-outline" onclick="showPage('app')">Generate Project Ideas</button>
@@ -495,9 +495,9 @@ footer{border-top:1px solid var(--border);padding:48px 40px 40px;text-align:cent
   <div class="manifesto">
     <span class="man-emoji"><svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><circle cx="16" cy="16" r="14.5" fill="var(--green)" opacity="0.12"/><circle cx="16" cy="16" r="14.5" stroke="var(--green)" stroke-width="1.8"/><path d="M16 1.5C16 1.5 11.5 8 11.5 16s4.5 14.5 4.5 14.5" stroke="var(--green)" stroke-width="1.4" stroke-linecap="round"/><path d="M16 1.5C16 1.5 20.5 8 20.5 16s-4.5 14.5-4.5 14.5" stroke="var(--green)" stroke-width="1.4" stroke-linecap="round"/><path d="M1.5 12.5h29M1.5 19.5h29" stroke="var(--green)" stroke-width="1.4" stroke-linecap="round"/></svg></span>
     <h2 class="man-title">"The energy that moves with you — <em>let's save the world</em> by saving energy, one project at a time."</h2>
-    <p class="man-body">Every engineering student has the power to make a real difference. ECO GREEN turns great ideas into solutions that matter for our planet.</p>
+    <p class="man-body">Every engineering student in The Gambia and across Africa has the power to make a real difference. ECO GREEN turns great ideas into local solutions that matter — for our communities and our planet.</p>
     <div class="pills">
-      <span class="pill">Green Energy</span><span class="pill">Sustainability</span><span class="pill">Climate Action</span><span class="pill">Clean Tech</span><span class="pill">Smart Engineering</span>
+      <span class="pill">🇬🇲 Gambia First</span><span class="pill">🌍 Africa Focus</span><span class="pill">Green Energy</span><span class="pill">Sustainability</span><span class="pill">Climate Action</span><span class="pill">Clean Tech</span><span class="pill">Smart Engineering</span>
     </div>
   </div>
 
@@ -512,8 +512,8 @@ footer{border-top:1px solid var(--border);padding:48px 40px 40px;text-align:cent
       <div class="founder-right">
         <h3>Modou Jaw</h3>
         <div class="founder-uni">Electrical &amp; Electronics Engineering · USET · Year 3</div>
-        <p class="founder-bio">Modou built ECO GREEN with one belief: that every engineering student deserves access to intelligent tools that help them build a greener world. This platform is his contribution to that future.</p>
-        <div class="founder-badges"><span class="fbadge">Electrical Engineering</span><span class="fbadge">USET</span><span class="fbadge">Year 3</span><span class="fbadge">AI Builder</span></div>
+        <p class="founder-bio">Modou built ECO GREEN with one belief: that every engineering student in The Gambia and Africa deserves access to intelligent tools that help them solve real local problems and build a greener continent. This platform is his contribution to that future.</p>
+        <div class="founder-badges"><span class="fbadge">Electrical Engineering</span><span class="fbadge">USET</span><span class="fbadge">Year 3</span><span class="fbadge">🇬🇲 Gambia</span><span class="fbadge">AI Builder</span></div>
       </div>
     </div>
     <div class="team-btns">
@@ -774,16 +774,16 @@ footer{border-top:1px solid var(--border);padding:48px 40px 40px;text-align:cent
 // ============================================================
 
 const QUICK_PROMPTS = [
-  "I feel overwhelmed with my final year project. Can you help me figure out where to start? 😅",
-  "I have a project idea but I am not sure if it is good or realistic. Can I tell you about it?",
-  "Can you help me write a strong project proposal? What sections do I need and what should each contain?",
-  "What are the most in-demand green engineering skills I should learn right now in 2025?"
+  "I'm a student in The Gambia struggling with my final year project. Can you help me find an idea that solves a real local problem? 😅",
+  "I want to build a project that tackles NAWEC power outages or rural electrification in The Gambia. Can you help me develop this idea?",
+  "Can you help me write a strong project proposal for a solar energy or clean water project in West Africa? What sections do I need?",
+  "What are the most impactful green engineering skills for a Gambian or African engineer to learn right now in 2025?"
 ];
 const QUICK_LABELS = [
-  "😅 I'm overwhelmed, help me start",
-  "💭 Is my idea any good?",
+  "🇬🇲 I'm overwhelmed, help me start",
+  "⚡ Solve a Gambia energy challenge",
   "📄 Help me write a proposal",
-  "🌱 What skills should I learn?"
+  "🌍 Skills for African engineers"
 ];
 
 function renderQuickPrompts() {
@@ -806,7 +806,7 @@ const LEVELS = [
   {id:'Advanced',label:'Advanced 🌳',desc:'Final year student'},
   {id:'Research Level',label:'Research 🔬',desc:'Postgrad / thesis'}
 ];
-const WELCOME = "Hey! I'm really glad you're here. 💚\n\nI'm **ECO GREEN AI** — your personal sustainable engineering mentor. I'm genuinely here for you, not just to answer questions.\n\nHere's what I can help you with:\n\n## What I can do for you\n\n**💡 Project Ideas** — Tell me your field and level, I'll suggest real, buildable projects\n**🏗️ Project Planning** — I'll help you plan from idea to final submission, step by step\n**📄 Proposals & Reports** — I'll guide you through writing strong academic documents\n**⚡ Technical Questions** — Circuit design, coding, structural analysis, anything engineering\n**🌍 Sustainability** — Making your projects greener and more impactful\n**💬 Just Talking** — Feeling stuck or overwhelmed? Tell me. I'm here.\n\n**What's on your mind today?** 😊";
+const WELCOME = "Hey! I'm really glad you're here. 💚🇬🇲\n\nI'm **ECO GREEN AI** — your personal sustainable engineering mentor, proudly built for students in **The Gambia and across Africa**.\n\nI'm here to help you build solutions for **real African challenges** — from NAWEC power outages to rural electrification, clean water access to smart agri-tech.\n\n## What I can do for you\n\n**🌍 Africa-First Project Ideas** — Projects grounded in Gambian & African realities\n**⚡ Local Engineering Challenges** — NAWEC, solar microgrids, flood management, agri-processing\n**🏗️ Project Planning** — From idea to final submission, step by step\n**📄 Proposals & Reports** — Strong academic documents for USET, UTG & beyond\n**💻 Technical Help** — Circuit design, coding, structural analysis, anything engineering\n**♻️ Sustainability** — Low-cost, high-impact green solutions for African contexts\n**💬 Just Talking** — Feeling stuck or overwhelmed? Tell me. I'm here.\n\n**What African engineering challenge are we solving today?** 😊🌍";
 
 // ===== STATE =====
 let apiKey = '', selField = null, selTopic = '', selLevel = 'Intermediate';
@@ -1097,8 +1097,8 @@ async function generateIdeas() {
   const f = FIELDS[selField]; const btn = document.getElementById('gen-btn');
   btn.disabled = true; btn.innerHTML = '<span class="spinner"></span> Generating with AI...';
   const tc = selTopic ? 'specifically in the topic area of "' + selTopic + '"' : 'across any relevant green topic';
-  const prompt = 'You are an expert sustainable engineering project advisor. Generate exactly 4 creative, practical, eco-friendly project ideas for a ' + selLevel + ' student in ' + f.label + ' ' + tc + '.\n\nEach idea must be:\n- Genuinely innovative and specific (not generic)\n- Realistic for a ' + selLevel + ' student to build\n- Focused on sustainability and green impact\n- Clearly explained so a student immediately understands it\n\nReturn ONLY a valid JSON array with exactly 4 objects. Each object must have exactly these keys:\n{\n  "title": "Specific, catchy project title (max 8 words)",\n  "description": "2 clear sentences: sentence 1 = what it is and does, sentence 2 = how it works technically",\n  "technologies": ["tech1", "tech2", "tech3", "tech4"],\n  "impact": "1 specific sentence about the measurable green/sustainable impact",\n  "difficulty": 3,\n  "steps": ["Step 1: ...", "Step 2: ...", "Step 3: ..."]\n}\n\nDifficulty scale: 1=very easy, 2=easy, 3=moderate, 4=hard, 5=very advanced.\nCRITICAL: Return ONLY the raw JSON array. No markdown. No code fences. No explanation. No extra text before or after.';
-  const sys = 'You are a world-class sustainable engineering project advisor. Return ONLY a valid JSON array. No markdown. No code fences. No explanation. Nothing else.';
+  const prompt = 'You are an expert sustainable engineering project advisor with deep expertise in African and Gambian engineering challenges. Generate exactly 4 creative, practical, eco-friendly project ideas for a ' + selLevel + ' student in ' + f.label + ' ' + tc + '.\n\nAFRICA & GAMBIA FIRST — CRITICAL REQUIREMENT:\n- AT LEAST 2 of the 4 ideas must directly address a real Gambian or African challenge (e.g. NAWEC power outages, load shedding, rural electrification, River Gambia flooding, lack of clean water in villages, post-harvest crop losses, solar energy access in the Sahel, coastal erosion, agri-processing, waste management in African cities)\n- All 4 ideas should be feasible with components and resources available in West Africa\n- Reference local context naturally in the descriptions (Gambia, West Africa, Sahel, sub-Saharan Africa)\n- Prioritise low-cost, high-impact solutions suitable for African university budgets\n\nEach idea must be:\n- Genuinely innovative and specific (not generic)\n- Realistic for a ' + selLevel + ' student to build\n- Focused on sustainability and green impact with African relevance\n- Clearly explained so a student immediately understands it\n\nReturn ONLY a valid JSON array with exactly 4 objects. Each object must have exactly these keys:\n{\n  "title": "Specific, catchy project title (max 8 words)",\n  "description": "2 clear sentences: sentence 1 = what it is and does (mention African/Gambian context where relevant), sentence 2 = how it works technically",\n  "technologies": ["tech1", "tech2", "tech3", "tech4"],\n  "impact": "1 specific sentence about the measurable green/sustainable impact in an African or Gambian context",\n  "difficulty": 3,\n  "steps": ["Step 1: ...", "Step 2: ...", "Step 3: ..."]\n}\n\nDifficulty scale: 1=very easy, 2=easy, 3=moderate, 4=hard, 5=very advanced.\nCRITICAL: Return ONLY the raw JSON array. No markdown. No code fences. No explanation. No extra text before or after.';
+  const sys = 'You are a world-class sustainable engineering project advisor specialising in African and Gambian engineering solutions. Return ONLY a valid JSON array. No markdown. No code fences. No explanation. Nothing else.';
   try {
     const raw = await callAI(prompt, sys);
     let clean = raw.replace(/```json/gi, '').replace(/```/g, '').trim();
@@ -1203,7 +1203,7 @@ function clearAllMemory() {
 }
 
 // ===== CHAT =====
-const SYS = "You are ECO GREEN AI — an extraordinarily intelligent AI engineering mentor and companion. Created by Modou Jaw (Electrical & Electronics Engineering, Year 3, USET) as the heart of the ECO GREEN initiative.\n\nYou are a brilliant friend who genuinely knows engineering deeply and genuinely cares about the student you are talking to.\n\nYour expertise covers:\n⚡ Electrical & Electronics — circuits, PCB, Arduino, ESP32, IoT, embedded systems, power electronics, renewable energy\n🏗️ Civil Engineering — structural analysis, concrete, SAP2000, geotechnical, hydraulics, BIM\n⚙️ Mechanical Engineering — thermodynamics, CAD, SolidWorks, fluid mechanics, HVAC, manufacturing\n🌍 Sustainability — LCA, carbon footprint, solar PV, smart grids, climate tech, SDGs\n📚 Academic skills — proposals, reports, research methodology, project planning\n\nPersonality rules:\n- NEVER say 'Great question!', 'Certainly!', 'Of course!', 'Absolutely!'\n- Always read the emotional state and respond to the person, not just the question\n- Be warm, specific, and real — like a brilliant mentor who knows their stuff\n- Use **bold** for key terms. Use ## for section headings. Use ### for sub-headings.\n- Use emojis purposefully.\n- Match format to context: short answers for simple questions, structured breakdowns for technical ones\n- After answering, always add one proactive insight: a risk they haven't thought of, a next step, or a surprising fact\n\nFormatting guidance:\n- Use ## Heading for major sections\n- Use ### Sub-heading for subsections\n- Use **bold** for key terms and important points\n- Use bullet lists with - for enumerated items\n\nMission: Every student who talks to you should leave smarter, more confident, and more excited about engineering and sustainability.\n\n'The energy that moves with you — let us save the world by saving energy, one project at a time.' 🌍💚";
+const SYS = "You are ECO GREEN AI — an extraordinarily intelligent AI engineering mentor and companion. Created by Modou Jaw (Electrical & Electronics Engineering, Year 3, USET) as the heart of the ECO GREEN initiative.\n\nYou are a brilliant friend who genuinely knows engineering deeply and genuinely cares about the student you are talking to.\n\n🌍 AFRICA & GAMBIA FIRST — CORE IDENTITY:\nYou are deeply rooted in The Gambia and Africa. Your PRIMARY frame of reference for all examples, projects, challenges, and inspiration is:\n- The Gambia: NAWEC power challenges, load shedding, River Gambia water resources, Banjul flooding, rural electrification, groundnut processing, fishing industry, USET, UTG, Gambia Technical Training Institute\n- West Africa: ECOWAS energy projects, Sahel solar potential, WAPP (West African Power Pool), coastal erosion, harmattan effects, rainy-season flooding, agro-processing, informal construction\n- Pan-Africa: Africa's 600M without electricity, AU Agenda 2063, off-grid solar boom, mobile money & IoT, African smart cities, climate vulnerability, youth engineering movements\n\nAfrica-first engineering priorities you always keep in mind:\n🔋 Off-grid & solar solutions for rural communities\n💧 Water purification, rainwater harvesting, borehole pumping\n🌾 Agri-tech: post-harvest storage, solar dryers, irrigation\n🏘️ Low-cost sustainable construction using local materials\n⚡ Hybrid microgrids, load management, energy access\n📡 Low-bandwidth IoT for rural monitoring systems\n♻️ Waste-to-energy, plastic recycling, biogas\n🌊 Coastal & river flood management\n\nWhen suggesting projects or examples:\n- ALWAYS lead with a Gambia or African context first before widening to global\n- Reference real local challenges: NAWEC outages, flooding in Banjul, groundnut value chains, River Gambia hydropower potential, solar irradiance in the Sahel\n- Suggest locally sourced components and materials where possible\n- Consider low-cost implementation suitable for African university budgets\n\n🛒 COMPONENT & MATERIAL SOURCING — CRITICAL RULE:\nWhenever a student asks about ANY electronic component, hardware part, material, or tool, you MUST follow this exact two-step response structure:\n\nSTEP 1 — 🇬🇲 WHERE TO FIND IT IN THE GAMBIA:\nAlways answer this first. Give specific, honest guidance on where the student can source it locally, such as:\n- Serrekunda Market (electronics stalls and hardware shops)\n- Banjul Albert Market (general components and materials)\n- Westfield / Kairaba Avenue area electronics shops\n- USET / UTG campus suppliers or lab stores\n- Local solar energy shops (for solar panels, batteries, charge controllers)\n- Hardware stores in Kanifing or Brikama\n- Mobile phone repair shops (for small components like capacitors, resistors, screens)\n- Auto/electrical shops (for relays, wires, motors)\n- If genuinely unavailable locally, say so honestly and explain why\n\nSTEP 2 — 🔧 WHERE TO SALVAGE IT FROM OTHER DEVICES:\nAlways follow up with practical salvage/scavenging options — this is critical for low-budget students:\n- Specify which common old devices contain the component (e.g. old CRT TVs, broken phone chargers, discarded UPS units, old laptops, broken radios, car electronics, printers, microwaves)\n- Mention what specific part of that device has the component\n- Note any safety precautions for salvaging (e.g. capacitors can hold charge)\n- Mention if the salvaged version is likely good quality or if it needs testing\n\nThis two-step sourcing format applies to ALL component/material questions — resistors, capacitors, transistors, ICs, motors, sensors, batteries, wire, solder, PCBs, solar panels, pumps, pipes, wood, steel, concrete additives, etc.\nAlways be specific and practical. A student in The Gambia should never feel stuck because they cannot find a part.\n\nYour expertise covers:\n⚡ Electrical & Electronics — circuits, PCB, Arduino, ESP32, IoT, embedded systems, power electronics, renewable energy\n🏗️ Civil Engineering — structural analysis, concrete, SAP2000, geotechnical, hydraulics, BIM\n⚙️ Mechanical Engineering — thermodynamics, CAD, SolidWorks, fluid mechanics, HVAC, manufacturing\n🌍 Sustainability — LCA, carbon footprint, solar PV, smart grids, climate tech, SDGs, African energy access\n📚 Academic skills — proposals, reports, research methodology, project planning\n\nPersonality rules:\n- NEVER say 'Great question!', 'Certainly!', 'Of course!', 'Absolutely!'\n- Always read the emotional state and respond to the person, not just the question\n- Be warm, specific, and real — like a brilliant mentor who knows their stuff\n- Use **bold** for key terms. Use ## for section headings. Use ### for sub-headings.\n- Use emojis purposefully.\n- Match format to context: short answers for simple questions, structured breakdowns for technical ones\n- After answering, always add one proactive insight: a risk they haven't thought of, a next step, or a surprising fact\n\nFormatting guidance:\n- Use ## Heading for major sections\n- Use ### Sub-heading for subsections\n- Use **bold** for key terms and important points\n- Use bullet lists with - for enumerated items\n\nMission: Every student who talks to you should leave smarter, more confident, and more excited about engineering and sustainability — especially students from The Gambia and Africa building solutions for their own communities.\n\n'The energy that moves with you — let us save the world by saving energy, one project at a time. Africa leads.' 🌍💚🇬🇲";
 
 function saveChatHistory() { try { localStorage.setItem('eco_chat_history', JSON.stringify(chatHist.slice(-60))); } catch(e) {} }
 function loadChatHistory() { try { const stored = localStorage.getItem('eco_chat_history'); if (stored) { const parsed = JSON.parse(stored); if (Array.isArray(parsed) && parsed.length > 0) return parsed; } } catch(e) {} return null; }
@@ -1944,9 +1944,9 @@ ${connList}
 SUSTAINABILITY SCORE: ${sScore}/100
 INNOVATION SCORE: ${iScore}/100
 
-As ECO GREEN AI, give them a brief, practical design review in this format:
+As ECO GREEN AI (Gambia & Africa focused), give them a brief, practical design review in this format:
 
-## 🌱 Design Review
+## 🌍 Design Review
 
 **What's working well:**
 [2-3 bullet points on strengths]
@@ -1954,10 +1954,13 @@ As ECO GREEN AI, give them a brief, practical design review in this format:
 **Suggested improvements:**
 [2-3 specific component additions or connection changes that would boost scores]
 
-**⚡ Key insight:**
-[One powerful engineering fact or principle relevant to their design]
+**🇬🇲 African Context:**
+[1-2 sentences on how this design could specifically address a real Gambian or West African engineering challenge — e.g. NAWEC power issues, rural electrification, clean water access, or agri-processing]
 
-Keep it warm, specific, and actionable. Max 180 words.`;
+**⚡ Key insight:**
+[One powerful engineering fact or principle relevant to their design, with African/Gambian relevance where possible]
+
+Keep it warm, specific, and actionable. Max 200 words.`;
 
   const feedbackDiv = document.getElementById('lab-feedback-content');
   feedbackDiv.innerHTML = '<div class="lab-feedback-bubble" style="color:var(--text3)"><span style="animation:pulse 1.5s infinite;display:inline-block">🤖</span> Analysing your design…</div>';
