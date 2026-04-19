@@ -996,7 +996,7 @@ async function streamAI(messages, sys, onToken) {
             'HTTP-Referer': window.location.href,
             'X-Title': 'ECO GREEN AI'
           },
-          body: JSON.stringify({ model, messages: cleanMsgs, max_tokens: 3000, temperature: 0.72, top_p: 0.9, stream: true })
+          body: JSON.stringify({ model, messages: cleanMsgs, max_tokens: 1500, temperature: 0.72, top_p: 0.9, stream: true })
         });
       } catch (netErr) { console.warn('[ECO GREEN] OpenRouter network error, switching to Pollinations...'); break; }
 
@@ -1009,9 +1009,14 @@ async function streamAI(messages, sys, onToken) {
         const errText = await res.text().catch(() => '');
         const lastErr = errText.toLowerCase();
         console.warn('[ECO GREEN] OR model ' + model + ' failed — ' + res.status);
-        if (res.status === 404 || res.status === 429 || res.status === 500 || res.status === 502 || res.status === 503
+        if (res.status === 429 || lastErr.includes('rate limit')) {
+          const retryAfter = parseInt(res.headers.get('Retry-After') || '60');
+          showRateLimitBanner(isNaN(retryAfter) ? 60 : retryAfter);
+          continue;
+        }
+        if (res.status === 404 || res.status === 500 || res.status === 502 || res.status === 503
             || lastErr.includes('endpoint') || lastErr.includes('not found') || lastErr.includes('overload')
-            || lastErr.includes('unavailable') || lastErr.includes('provider') || lastErr.includes('rate limit')) {
+            || lastErr.includes('unavailable') || lastErr.includes('provider')) {
           continue;
         }
         break;
@@ -1107,17 +1112,22 @@ async function aiRequest(messages, sys) {
     for (let mi = 0; mi < OR_MODELS.length; mi++) {
       const model = OR_MODELS[mi]; let res, data;
       try {
-        res = await fetch(OR_URL, { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + apiKey, 'HTTP-Referer': window.location.href, 'X-Title': 'ECO GREEN AI' }, body: JSON.stringify({ model, messages: msgs, max_tokens: 3000, temperature: 0.72, top_p: 0.9 }) });
+        res = await fetch(OR_URL, { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + apiKey, 'HTTP-Referer': window.location.href, 'X-Title': 'ECO GREEN AI' }, body: JSON.stringify({ model, messages: msgs, max_tokens: 1500, temperature: 0.72, top_p: 0.9 }) });
         data = await res.json();
       } catch (netErr) { console.warn('[ECO GREEN] OpenRouter network error, switching to Pollinations...'); break; }
       if (res.status === 401 || res.status === 403) { apiKey = ''; localStorage.removeItem('eco_or_key'); updateStatus(); console.warn('[ECO GREEN] OpenRouter key invalid, switching to Pollinations...'); break; }
       if (!res.ok || (data && data.error)) {
         const errMsg = String((data && data.error && (data.error.message || data.error.code || data.error)) || res.statusText || '').toLowerCase();
         console.warn('[ECO GREEN] OR model ' + model + ' failed — ' + res.status);
-        if (res.status === 404 || res.status === 429 || res.status === 500 || res.status === 502 || res.status === 503
+        if (res.status === 429 || errMsg.includes('rate limit')) {
+          const retryAfter = parseInt(res.headers.get('Retry-After') || res.headers.get('x-ratelimit-reset-requests') || '60');
+          showRateLimitBanner(isNaN(retryAfter) ? 60 : retryAfter);
+          continue;
+        }
+        if (res.status === 404 || res.status === 500 || res.status === 502 || res.status === 503
             || errMsg.includes('endpoint') || errMsg.includes('no model') || errMsg.includes('not found')
             || errMsg.includes('provider') || errMsg.includes('overload') || errMsg.includes('capacity')
-            || errMsg.includes('unavailable') || errMsg.includes('rate limit')) { continue; }
+            || errMsg.includes('unavailable')) { continue; }
         break;
       }
       const text = (data && data.choices && data.choices[0] && data.choices[0].message && data.choices[0].message.content || '').trim();
@@ -2185,6 +2195,52 @@ function labUpdateScores() {
   document.getElementById('score-bar-i').style.width = inn + '%';
   document.getElementById('score-conn').textContent = cc + ' connection' + (cc===1?'':'s');
   document.getElementById('score-comp').textContent = nc + ' component' + (nc===1?'':'s');
+}
+
+// ── Rate limit banner with live countdown ──
+let _rateLimitTimer = null;
+function showRateLimitBanner(retryAfterSeconds) {
+  // Clear any existing timer
+  if (_rateLimitTimer) { clearInterval(_rateLimitTimer); _rateLimitTimer = null; }
+
+  // Remove existing banner if any
+  const existing = document.getElementById('rate-limit-banner');
+  if (existing) existing.remove();
+
+  const resetAt = Date.now() + (retryAfterSeconds || 60) * 1000;
+
+  const banner = document.createElement('div');
+  banner.id = 'rate-limit-banner';
+  banner.style.cssText = 'position:fixed;top:70px;left:50%;transform:translateX(-50%);background:#fff3e0;border:1.5px solid #f4a429;border-radius:14px;padding:14px 20px;z-index:9999;box-shadow:0 6px 24px rgba(0,0,0,0.12);max-width:380px;width:90%;text-align:center;animation:slideUp .3s ease;';
+  banner.innerHTML = `
+    <div style="font-size:20px;margin-bottom:6px">⏳</div>
+    <div style="font-weight:800;font-size:14px;color:#b45309;margin-bottom:4px">ECO GREEN AI Rate Limit Reached</div>
+    <div style="font-size:12px;color:#92400e;margin-bottom:10px">Your API key has hit its limit. ECO GREEN is using the free AI in the meantime.</div>
+    <div style="background:#fef3c7;border-radius:8px;padding:8px 14px;font-size:13px;font-weight:700;color:#b45309;">
+      Resets in: <span id="rl-countdown" style="font-variant-numeric:tabular-nums">--:--</span>
+    </div>
+    <button onclick="document.getElementById('rate-limit-banner').remove();clearInterval(window._rlTimer);" style="margin-top:10px;background:none;border:none;font-size:11px;color:#92400e;cursor:pointer;font-weight:700;text-decoration:underline;">Dismiss</button>
+  `;
+  document.body.appendChild(banner);
+
+  function tick() {
+    const remaining = Math.max(0, Math.ceil((resetAt - Date.now()) / 1000));
+    const el = document.getElementById('rl-countdown');
+    if (!el) { clearInterval(_rateLimitTimer); return; }
+    const m = String(Math.floor(remaining / 60)).padStart(2, '0');
+    const s = String(remaining % 60).padStart(2, '0');
+    el.textContent = m + ':' + s;
+    if (remaining <= 0) {
+      clearInterval(_rateLimitTimer);
+      _rateLimitTimer = null;
+      const b = document.getElementById('rate-limit-banner');
+      if (b) { b.style.background = '#f0faf5'; b.style.borderColor = 'var(--green)'; b.innerHTML = '<div style="font-size:20px">✅</div><div style="font-weight:800;font-size:14px;color:var(--green);margin-top:4px">ECO GREEN AI Ready Again!</div><button onclick="this.closest(\'#rate-limit-banner\').remove()" style="margin-top:8px;background:none;border:none;font-size:11px;color:var(--green);cursor:pointer;font-weight:700;text-decoration:underline;">Dismiss</button>'; }
+      setTimeout(() => { const b2 = document.getElementById('rate-limit-banner'); if (b2) b2.remove(); }, 4000);
+    }
+  }
+  tick();
+  _rateLimitTimer = setInterval(tick, 1000);
+  window._rlTimer = _rateLimitTimer;
 }
 
 function labShowSynergyToast(msg) {
