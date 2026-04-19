@@ -903,7 +903,7 @@ async function callPollinations(messages, sys) {
   const res = await fetch(POLL_URL, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ messages: msgs, model: 'openai', seed: Math.floor(Math.random() * 9999), private: true })
+    body: JSON.stringify({ messages: msgs, model: 'openai-large', seed: Math.floor(Math.random() * 9999), private: true })
   });
   if (!res.ok) throw new Error('Pollinations error: ' + res.status);
   const text = await res.text();
@@ -1236,47 +1236,102 @@ function renderSteps() {
 
 async function generateIdeas() {
   if (!selField) return;
-  if (!apiKey) { openModal(); return; }
   const f = FIELDS[selField]; const btn = document.getElementById('gen-btn');
   btn.disabled = true; btn.innerHTML = '<span class="spinner"></span> Generating with AI...';
   const tc = selTopic ? 'specifically in the topic area of "' + selTopic + '"' : 'across any relevant green topic';
   const prompt = 'You are an expert sustainable engineering project advisor with deep expertise in African and Gambian engineering challenges. Generate exactly 4 creative, practical, eco-friendly project ideas for a ' + selLevel + ' student in ' + f.label + ' ' + tc + '.\n\nAFRICA & GAMBIA FIRST — CRITICAL REQUIREMENT:\n- AT LEAST 2 of the 4 ideas must directly address a real Gambian or African challenge (e.g. NAWEC power outages, load shedding, rural electrification, River Gambia flooding, lack of clean water in villages, post-harvest crop losses, solar energy access in the Sahel, coastal erosion, agri-processing, waste management in African cities)\n- All 4 ideas should be feasible with components and resources available in West Africa\n- Reference local context naturally in the descriptions (Gambia, West Africa, Sahel, sub-Saharan Africa)\n- Prioritise low-cost, high-impact solutions suitable for African university budgets\n\nEach idea must be:\n- Genuinely innovative and specific (not generic)\n- Realistic for a ' + selLevel + ' student to build\n- Focused on sustainability and green impact with African relevance\n- Clearly explained so a student immediately understands it\n\nReturn ONLY a valid JSON array with exactly 4 objects. Each object must have exactly these keys:\n{\n  "title": "Specific, catchy project title (max 8 words)",\n  "description": "2 clear sentences: sentence 1 = what it is and does (mention African/Gambian context where relevant), sentence 2 = how it works technically",\n  "technologies": ["tech1", "tech2", "tech3", "tech4"],\n  "impact": "1 specific sentence about the measurable green/sustainable impact in an African or Gambian context",\n  "difficulty": 3,\n  "steps": ["Step 1: ...", "Step 2: ...", "Step 3: ..."]\n}\n\nDifficulty scale: 1=very easy, 2=easy, 3=moderate, 4=hard, 5=very advanced.\nCRITICAL: Return ONLY the raw JSON array. No markdown. No code fences. No explanation. No extra text before or after.';
   const sys = 'You are a world-class sustainable engineering project advisor specialising in African and Gambian engineering solutions. Return ONLY a valid JSON array. No markdown. No code fences. No explanation. Nothing else.';
-  try {
-    const raw = await callAI(prompt, sys);
-    let clean = raw.replace(/```json/gi, '').replace(/```/g, '').trim();
 
-    // If the whole response is wrapped in quotes (double-encoded), unwrap it
-    if ((clean.startsWith('"') && clean.endsWith('"')) ||
-        (clean.startsWith("'") && clean.endsWith("'"))) {
-      try { clean = JSON.parse(clean); } catch(e) { clean = clean.slice(1, -1); }
+  function extractIdeas(raw) {
+    // 1. Strip think blocks, markdown fences
+    let s = raw.replace(/<think>[\s\S]*?<\/think>/gi, '').trim();
+    s = s.replace(/```json/gi, '').replace(/```/g, '').trim();
+    // 2. Unescape backslash-escaped quotes
+    if (s.includes('\\"')) s = s.replace(/\\"/g, '"').replace(/\\\\/g, '\\');
+    // 3. Unwrap double-encoded string
+    if ((s.startsWith('"') && s.endsWith('"')) || (s.startsWith("'") && s.endsWith("'"))) {
+      try { s = JSON.parse(s); } catch(e) { s = s.slice(1, -1); }
     }
-
-    // Try to extract a JSON array
-    let match = clean.match(/\[[\s\S]*\]/);
-    if (!match) {
-      // Fallback: unescape backslash-quotes and retry extraction
-      const unescaped = clean.replace(/\\"/g, '"').replace(/\\\\/g, '\\');
-      match = unescaped.match(/\[[\s\S]*\]/);
-      if (match) clean = unescaped;
+    // 4. Find the JSON array (prefer [{...}] pattern)
+    let start = -1;
+    for (let i = 0; i < s.length - 1; i++) {
+      if (s[i] === '[') {
+        let j = i + 1;
+        while (j < s.length && (s[j] === ' ' || s[j] === '\n' || s[j] === '\r' || s[j] === '\t')) j++;
+        if (j < s.length && s[j] === '{') { start = i; break; }
+      }
     }
-    if (!match) throw new Error('Response was not valid JSON. Please try again.');
-
-    // Try parsing — if it fails due to escaped quotes inside, unescape and retry
-    let parsed;
-    try {
-      parsed = JSON.parse(match[0]);
-    } catch (parseErr) {
-      const unescaped = match[0].replace(/\\"/g, '"').replace(/\\\\/g, '\\');
-      parsed = JSON.parse(unescaped);
+    if (start === -1) start = s.indexOf('[');
+    // 5. Also check for wrapper object {"ideas":[...]}
+    if (start === -1) {
+      try {
+        const obj = JSON.parse(s);
+        if (obj && typeof obj === 'object' && !Array.isArray(obj)) {
+          for (const k of Object.keys(obj)) { if (Array.isArray(obj[k])) return obj[k]; }
+        }
+      } catch(e) {}
+      return null;
     }
-    ideas = parsed.slice(0, 4);
-    renderIdeas(); confetti();
-  } catch (e) {
-    if (e.message !== 'no_key' && e.message !== 'bad_key') alert('Could not generate ideas 😕\n\n' + e.message);
-  } finally {
-    btn.disabled = false; btn.innerHTML = '🌿 Generate Green Ideas with AI';
+    // 6. Walk brackets to find true closing ']'
+    let depth = 0, inStr = false, esc = false;
+    for (let i = start; i < s.length; i++) {
+      const c = s[i];
+      if (esc) { esc = false; continue; }
+      if (c === '\\') { esc = true; continue; }
+      if (c === '"') { inStr = !inStr; continue; }
+      if (inStr) continue;
+      if (c === '[' || c === '{') depth++;
+      else if (c === ']' || c === '}') { depth--; if (depth === 0) {
+        let jsonStr = s.slice(start, i + 1);
+        // Remove trailing commas
+        jsonStr = jsonStr.replace(/,\s*([}\]])/g, '$1');
+        try {
+          let parsed = JSON.parse(jsonStr);
+          // Unwrap wrapper object if needed
+          if (parsed && !Array.isArray(parsed) && typeof parsed === 'object') {
+            for (const k of Object.keys(parsed)) { if (Array.isArray(parsed[k])) { parsed = parsed[k]; break; } }
+          }
+          return Array.isArray(parsed) ? parsed : null;
+        } catch(e) { return null; }
+      }}
+    }
+    return null;
   }
+
+  let _success = false;
+  let _attempts = 0;
+  tryGenerate: for (_attempts = 1; _attempts <= 2; _attempts++) {
+    try {
+      const raw = await callAI(prompt, sys);
+      let parsed = extractIdeas(raw);
+      if (!parsed || !parsed.length) throw new Error('Could not read AI response. Retrying…');
+      // Normalise missing title field
+      parsed = parsed.map(item => {
+        if (!item || typeof item !== 'object') return null;
+        if (!item.title) item.title = item.name || item.project_title || item.project_name || 'Untitled Project';
+        return item;
+      }).filter(Boolean);
+      if (!parsed.length) throw new Error('No valid ideas in response. Retrying…');
+      ideas = parsed.slice(0, 4).map(idea => ({
+        title:        String(idea.title        || 'Untitled Project'),
+        description:  String(idea.description  || 'No description provided.'),
+        technologies: Array.isArray(idea.technologies) ? idea.technologies.map(String) : [],
+        impact:       String(idea.impact        || 'Positive environmental impact.'),
+        difficulty:   Math.max(1, Math.min(5, parseInt(idea.difficulty) || 3)),
+        steps:        Array.isArray(idea.steps) ? idea.steps.map(String) : []
+      }));
+      renderIdeas(); confetti();
+      _success = true;
+      break tryGenerate;
+    } catch (e) {
+      if (e.message === 'no_key' || e.message === 'bad_key') { break tryGenerate; }
+      if (_attempts >= 2) {
+        alert('Could not generate ideas 😕\n\nPlease try again in a moment.');
+      }
+      // else: silent retry
+    }
+  }
+  btn.disabled = false; btn.innerHTML = '🌿 Generate Green Ideas with AI';
 }
 
 function renderIdeas() {
