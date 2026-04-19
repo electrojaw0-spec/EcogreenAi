@@ -896,14 +896,16 @@ const OR_MODELS = [
 let currentModel = OR_MODELS[0];
 
 // ===== POLLINATIONS FALLBACK (free, no key needed) =====
-async function callPollinations(messages, sys) {
+async function callPollinations(messages, sys, forceJson) {
   const msgs = [];
   if (sys) msgs.push({ role: 'system', content: sys });
   msgs.push(...messages.filter(m => m.role === 'user' || m.role === 'assistant'));
+  const body = { messages: msgs, model: 'openai', seed: Math.floor(Math.random() * 9999), private: true };
+  if (forceJson) body.jsonMode = true;
   const res = await fetch(POLL_URL, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ messages: msgs, model: 'openai', seed: Math.floor(Math.random() * 9999), private: true })
+    body: JSON.stringify(body)
   });
   if (!res.ok) throw new Error('Pollinations error: ' + res.status);
   const text = await res.text();
@@ -1089,7 +1091,7 @@ async function streamAI(messages, sys, onToken) {
 }
 
 // Non-streaming fallback (used for idea generation JSON)
-async function aiRequest(messages, sys) {
+async function aiRequest(messages, sys, forceJson) {
   const filtered = messages.filter(m => m.role === 'user' || m.role === 'assistant').map(m => ({ role: m.role, content: m.content || '' }));
   const merged = [];
   for (const m of filtered) {
@@ -1131,7 +1133,7 @@ async function aiRequest(messages, sys) {
   // ── Fallback: Pollinations AI (free, no key needed) ──
   try {
     console.log('[ECO GREEN] Using Pollinations fallback for aiRequest...');
-    return await callPollinations(merged, sys);
+    return await callPollinations(merged, sys, forceJson);
   } catch (pollErr) {
     console.warn('[ECO GREEN] Pollinations failed, trying Ollama (offline)...', pollErr);
   }
@@ -1148,7 +1150,7 @@ async function aiRequest(messages, sys) {
   }
 }
 
-function callAI(prompt, sys) { return aiRequest([{ role: 'user', content: prompt }], sys); }
+function callAI(prompt, sys, forceJson) { return aiRequest([{ role: 'user', content: prompt }], sys, forceJson); }
 
 function compressMessages(messages) {
   const filtered = messages.filter(m => m.role === 'user' || m.role === 'assistant');
@@ -1240,16 +1242,50 @@ async function generateIdeas() {
   if (!selField) return;
   const f = FIELDS[selField]; const btn = document.getElementById('gen-btn');
   btn.disabled = true; btn.innerHTML = '<span class="spinner"></span> Generating with AI...';
-  const tc = selTopic ? 'specifically in the topic area of "' + selTopic + '"' : 'across any relevant green topic';
-  const prompt = 'You are an expert sustainable engineering project advisor with deep expertise in African and Gambian engineering challenges. Generate exactly 4 creative, practical, eco-friendly project ideas for a ' + selLevel + ' student in ' + f.label + ' ' + tc + '.\n\nAFRICA & GAMBIA FIRST — CRITICAL REQUIREMENT:\n- AT LEAST 2 of the 4 ideas must directly address a real Gambian or African challenge (e.g. NAWEC power outages, load shedding, rural electrification, River Gambia flooding, lack of clean water in villages, post-harvest crop losses, solar energy access in the Sahel, coastal erosion, agri-processing, waste management in African cities)\n- All 4 ideas should be feasible with components and resources available in West Africa\n- Reference local context naturally in the descriptions (Gambia, West Africa, Sahel, sub-Saharan Africa)\n- Prioritise low-cost, high-impact solutions suitable for African university budgets\n\nEach idea must be:\n- Genuinely innovative and specific (not generic)\n- Realistic for a ' + selLevel + ' student to build\n- Focused on sustainability and green impact with African relevance\n- Clearly explained so a student immediately understands it\n\nReturn ONLY a valid JSON array with exactly 4 objects. Each object must have exactly these keys:\n{\n  "title": "Specific, catchy project title (max 8 words)",\n  "description": "2 clear sentences: sentence 1 = what it is and does (mention African/Gambian context where relevant), sentence 2 = how it works technically",\n  "technologies": ["tech1", "tech2", "tech3", "tech4"],\n  "impact": "1 specific sentence about the measurable green/sustainable impact in an African or Gambian context",\n  "difficulty": 3,\n  "steps": ["Step 1: ...", "Step 2: ...", "Step 3: ..."]\n}\n\nDifficulty scale: 1=very easy, 2=easy, 3=moderate, 4=hard, 5=very advanced.\nCRITICAL: Return ONLY the raw JSON array. No markdown. No code fences. No explanation. No extra text before or after.';
-  const sys = 'You are a world-class sustainable engineering project advisor specialising in African and Gambian engineering solutions. Return ONLY a valid JSON array. No markdown. No code fences. No explanation. Nothing else.';
+
+  const tc = selTopic ? ' about "' + selTopic + '"' : '';
+  const sys = 'You are a sustainable engineering advisor for Gambia and Africa. Return ONLY a valid JSON array. No markdown, no explanation, nothing else.';
+
+  // Primary prompt — concise enough for any free model to follow
+  const prompt =
+    'Generate exactly 4 eco-friendly engineering project ideas for a ' + selLevel + ' ' + f.label + ' student in Gambia/West Africa' + tc + '.\n' +
+    'At least 2 must address a real local challenge (NAWEC outages, rural electrification, clean water, agri-processing, flooding).\n' +
+    'Return ONLY a JSON array of exactly 4 objects. Each object MUST have these exact keys:\n' +
+    '{"title":"short catchy title","description":"2 sentences: what it does + how it works","technologies":["tech1","tech2","tech3"],"impact":"1 sentence on green impact","difficulty":3,"steps":["Step 1...","Step 2...","Step 3..."]}\n' +
+    'Difficulty: 1=easy to 5=very hard. Output the raw JSON array only. No other text.';
+
+  // Minimal fallback prompt — used on retry if primary fails
+  const fallbackPrompt =
+    'List 4 green engineering project ideas for a ' + f.label + ' student in Africa. ' +
+    'Respond with ONLY this JSON array (fill in the values):\n' +
+    '[{"title":"","description":"","technologies":["","",""],"impact":"","difficulty":3,"steps":["","",""]},' +
+    '{"title":"","description":"","technologies":["","",""],"impact":"","difficulty":3,"steps":["","",""]},' +
+    '{"title":"","description":"","technologies":["","",""],"impact":"","difficulty":3,"steps":["","",""]},' +
+    '{"title":"","description":"","technologies":["","",""],"impact":"","difficulty":3,"steps":["","",""]}]';
+
   try {
-    const raw = await callAI(prompt, sys);
-    const parsed = robustParseIdeasJSON(raw);
+    let raw, parsed;
+
+    // Attempt 1 — primary prompt with JSON mode forced
+    try {
+      raw = await callAI(prompt, sys, true);
+      parsed = robustParseIdeasJSON(raw);
+    } catch(e1) {
+      // Attempt 2 — retry with minimal template prompt
+      try {
+        btn.innerHTML = '<span class="spinner"></span> Retrying...';
+        raw = await callAI(fallbackPrompt, 'Return ONLY valid JSON. Nothing else.', true);
+        parsed = robustParseIdeasJSON(raw);
+      } catch(e2) {
+        throw new Error('AI could not generate ideas. Please try again or add an OpenRouter key for better results.');
+      }
+    }
+
     ideas = parsed.slice(0, 4).map(normalizeIdea).filter(Boolean);
+    if (ideas.length === 0) throw new Error('No valid ideas returned. Please try again.');
     renderIdeas(); confetti();
   } catch (e) {
-    if (e.message !== 'no_key' && e.message !== 'bad_key') alert('Could not generate ideas 😕\n\n' + e.message);
+    alert('Could not generate ideas 😕\n\n' + e.message);
   } finally {
     btn.disabled = false; btn.innerHTML = '🌿 Generate Green Ideas with AI';
   }
