@@ -827,6 +827,8 @@ let ideas = [], saved = [], chatHist = [], chatBusy = false;
 // ===== AI CONFIG =====
 const OR_URL = 'https://openrouter.ai/api/v1/chat/completions';
 const POLL_URL = 'https://text.pollinations.ai/';
+const OLLAMA_URL = 'http://localhost:11434/api/chat';
+const OLLAMA_MODELS = ['llama3', 'llama3.2', 'llama3.1', 'mistral', 'gemma2', 'phi3', 'tinyllama'];
 const OR_MODELS = [
   'deepseek/deepseek-chat-v3-0324:free',
   'meta-llama/llama-3.3-70b-instruct:free',
@@ -854,6 +856,40 @@ async function callPollinations(messages, sys) {
   const text = await res.text();
   if (!text || !text.trim()) throw new Error('Empty response from Pollinations');
   return text.trim();
+}
+
+// ===== OLLAMA FALLBACK (offline, local device) =====
+async function callOllama(messages, sys) {
+  // Try each installed model until one responds
+  for (const model of OLLAMA_MODELS) {
+    try {
+      const msgs = [];
+      if (sys) msgs.push({ role: 'system', content: sys });
+      msgs.push(...messages.filter(m => m.role === 'user' || m.role === 'assistant'));
+      const res = await fetch(OLLAMA_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ model, messages: msgs, stream: false }),
+        signal: AbortSignal.timeout(60000) // 60s timeout for local inference
+      });
+      if (res.status === 404) continue; // model not installed, try next
+      if (!res.ok) continue;
+      const data = await res.json();
+      const text = data?.message?.content?.trim();
+      if (text) { console.log('[ECO GREEN] Ollama responded with model: ' + model); return text; }
+    } catch (e) {
+      if (e.name === 'TimeoutError') continue;
+      throw new Error('Ollama not running. Open Terminal and run: ollama serve');
+    }
+  }
+  throw new Error('No Ollama models found. Run: ollama pull llama3');
+}
+
+async function isOllamaAvailable() {
+  try {
+    const res = await fetch('http://localhost:11434/api/tags', { signal: AbortSignal.timeout(2000) });
+    return res.ok;
+  } catch { return false; }
 }
 
 // ================================================================
@@ -973,8 +1009,21 @@ async function streamAI(messages, sys, onToken) {
     currentModel = 'pollinations/openai';
     return text;
   } catch (pollErr) {
-    console.error('[ECO GREEN] Pollinations failed:', pollErr);
-    throw new Error('No internet connection or AI is temporarily down. Please check your connection and try again.');
+    console.warn('[ECO GREEN] Pollinations failed, trying Ollama (offline)...', pollErr);
+  }
+
+  // ── Final fallback: Ollama (offline, runs on your device) ──
+  try {
+    const ollamaText = await callOllama(merged, sys);
+    const words = ollamaText.split(/(\s+)/);
+    for (const chunk of words) {
+      if (chunk) { onToken(chunk); await new Promise(r => setTimeout(r, 38)); }
+    }
+    currentModel = 'ollama/local';
+    return ollamaText;
+  } catch (ollamaErr) {
+    console.error('[ECO GREEN] Ollama failed:', ollamaErr);
+    throw new Error('Please hang on, Ecogreen Team is doing some maintenance. 🙏');
   }
 }
 
@@ -1023,8 +1072,18 @@ async function aiRequest(messages, sys) {
     console.log('[ECO GREEN] Using Pollinations fallback for aiRequest...');
     return await callPollinations(merged, sys);
   } catch (pollErr) {
-    console.error('[ECO GREEN] Pollinations failed:', pollErr);
-    throw new Error('No internet connection or AI is temporarily down. Please check your connection and try again.');
+    console.warn('[ECO GREEN] Pollinations failed, trying Ollama (offline)...', pollErr);
+  }
+
+  // ── Final fallback: Ollama (offline, runs on your device) ──
+  try {
+    console.log('[ECO GREEN] Trying Ollama offline...');
+    const ollamaText = await callOllama(merged, sys);
+    currentModel = 'ollama/local';
+    return ollamaText;
+  } catch (ollamaErr) {
+    console.error('[ECO GREEN] Ollama failed:', ollamaErr);
+    throw new Error('Please hang on, Ecogreen Team is doing some maintenance. 🙏');
   }
 }
 
