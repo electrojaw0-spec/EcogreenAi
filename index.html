@@ -1246,7 +1246,7 @@ async function generateIdeas() {
   try {
     const raw = await callAI(prompt, sys);
     const parsed = robustParseIdeasJSON(raw);
-    ideas = parsed.slice(0, 4);
+    ideas = parsed.slice(0, 4).map(normalizeIdea).filter(Boolean);
     renderIdeas(); confetti();
   } catch (e) {
     if (e.message !== 'no_key' && e.message !== 'bad_key') alert('Could not generate ideas 😕\n\n' + e.message);
@@ -1256,63 +1256,108 @@ async function generateIdeas() {
 }
 
 function robustParseIdeasJSON(raw) {
-  // Strip markdown code fences
-  let s = raw.replace(/```json\s*/gi, '').replace(/```\s*/g, '').trim();
-
-  // If double-encoded (AI wrapped response in outer quotes), unwrap
+  function unescape(text) {
+    return text.replace(/\\\\/g, '\x00BS\x00').replace(/\\"/g, '"').replace(/\x00BS\x00/g, '\\');
+  }
+  function extractBalanced(text, openChar) {
+    var closeChar = openChar === '[' ? ']' : '}';
+    var start = text.indexOf(openChar);
+    if (start === -1) return null;
+    var depth = 0, inStr = false, esc = false;
+    for (var i = start; i < text.length; i++) {
+      var c = text[i];
+      if (esc)                  { esc = false; continue; }
+      if (c === '\\' && inStr)  { esc = true; continue; }
+      if (c === '"')            { inStr = !inStr; continue; }
+      if (inStr)                continue;
+      if (c === openChar)       depth++;
+      else if (c === closeChar) { depth--; if (depth === 0) return text.slice(start, i + 1); }
+    }
+    return text.slice(start);
+  }
+  function extractArray(val) {
+    if (Array.isArray(val) && val.length > 0) return val;
+    if (val && typeof val === 'object') {
+      var keys = Object.keys(val);
+      for (var k = 0; k < keys.length; k++) {
+        var v = val[keys[k]];
+        if (Array.isArray(v) && v.length > 0) return v;
+      }
+    }
+    return null;
+  }
+  function tryParse(candidate) {
+    var parsed = JSON.parse(candidate);
+    var arr = extractArray(parsed);
+    if (arr) return arr;
+    throw new Error('No array found');
+  }
+  var s = raw.replace(/```json\s*/gi, '').replace(/```\s*/g, '').trim();
   if ((s.startsWith('"') && s.endsWith('"')) || (s.startsWith("'") && s.endsWith("'"))) {
     try { s = JSON.parse(s); } catch(e) { s = s.slice(1, -1); }
   }
-
-  // Helper: try parsing a candidate string, return array or throw
-  function tryParse(candidate) {
-    let r = JSON.parse(candidate);
-    if (Array.isArray(r)) return r;
-    throw new Error('Not an array');
-  }
-
-  // Helper: find the first balanced [...] block using a char-by-char scanner
-  // (avoids greedy regex overshooting when AI adds extra text after the array)
-  function extractBalanced(text) {
-    const start = text.indexOf('[');
-    if (start === -1) return null;
-    let depth = 0, inStr = false, esc = false;
-    for (let i = start; i < text.length; i++) {
-      const c = text[i];
-      if (esc)           { esc = false; continue; }
-      if (c === '\\' && inStr) { esc = true;  continue; }
-      if (c === '"')     { inStr = !inStr; continue; }
-      if (inStr)         continue;
-      if (c === '[')     depth++;
-      else if (c === ']') { depth--; if (depth === 0) return text.slice(start, i + 1); }
-    }
-    // Unbalanced — return everything from start (AI cut off mid-response)
-    return text.slice(start);
-  }
-
-  // --- Attempt 1: parse the whole cleaned string directly ---
+  var su = unescape(s);
   try { return tryParse(s); } catch(e) {}
-
-  // --- Attempt 2: unescape backslash-quotes first (AI returns `\"key\": \"val\"`) ---
-  const unescaped = s.replace(/\\\\/g, '\x00BKSL\x00').replace(/\\"/g, '"').replace(/\x00BKSL\x00/g, '\\');
-  try { return tryParse(unescaped); } catch(e) {}
-
-  // --- Attempt 3: extract balanced [...] from original, then parse ---
-  const block = extractBalanced(s);
-  if (block) {
-    try { return tryParse(block); } catch(e) {}
-    // --- Attempt 4: unescape the extracted block ---
-    const unescapedBlock = block.replace(/\\\\/g, '\x00BKSL\x00').replace(/\\"/g, '"').replace(/\x00BKSL\x00/g, '\\');
-    try { return tryParse(unescapedBlock); } catch(e) {}
+  try { return tryParse(su); } catch(e) {}
+  var arrBlock = extractBalanced(s, '[');
+  if (arrBlock) {
+    try { return tryParse(arrBlock); } catch(e) {}
+    try { return tryParse(unescape(arrBlock)); } catch(e) {}
   }
-
-  // --- Attempt 5: extract balanced [...] from the already-unescaped string ---
-  const block2 = extractBalanced(unescaped);
-  if (block2) {
-    try { return tryParse(block2); } catch(e) {}
+  var objBlock = extractBalanced(s, '{');
+  if (objBlock) {
+    try { return tryParse(objBlock); } catch(e) {}
+    try { return tryParse(unescape(objBlock)); } catch(e) {}
   }
-
+  var arrBlock2 = extractBalanced(su, '[');
+  if (arrBlock2) { try { return tryParse(arrBlock2); } catch(e) {} }
+  var objBlock2 = extractBalanced(su, '{');
+  if (objBlock2) { try { return tryParse(objBlock2); } catch(e) {} }
+  var objs = [];
+  var remaining = su;
+  while (objs.length < 4) {
+    var block = extractBalanced(remaining, '{');
+    if (!block) break;
+    try { var o = JSON.parse(block); if (o && typeof o === 'object') objs.push(o); } catch(e) {}
+    var idx = remaining.indexOf(block) + block.length;
+    if (idx <= 0) break;
+    remaining = remaining.slice(idx);
+  }
+  if (objs.length > 0) return objs;
   throw new Error('Could not parse ideas from AI response. Please try again.');
+}
+
+// Normalize an idea object — maps any AI field name variation to the expected keys
+function normalizeIdea(obj) {
+  if (!obj || typeof obj !== 'object') return null;
+
+  // Title
+  const title = obj.title || obj.name || obj.project_title || obj['Project Title'] ||
+    obj.project_name || obj.heading || obj.idea || obj.topic || '';
+
+  // Description
+  const description = obj.description || obj.desc || obj.summary || obj.overview ||
+    obj.details || obj['Project Description'] || obj.explanation || obj.about || '';
+
+  // Technologies
+  const rawTech = obj.technologies || obj.technology || obj.tech || obj.tools ||
+    obj.components || obj.materials || obj.resources || obj.stack || [];
+  const technologies = Array.isArray(rawTech) ? rawTech : (typeof rawTech === 'string' ? rawTech.split(',').map(t => t.trim()) : []);
+
+  // Impact
+  const impact = obj.impact || obj.green_impact || obj.environmental_impact ||
+    obj.sustainability_impact || obj.eco_impact || obj['Green Impact'] ||
+    obj.benefit || obj.sustainability || obj.effect || '';
+
+  // Difficulty
+  const difficulty = parseInt(obj.difficulty || obj.complexity || obj.level || obj.hard || 3) || 3;
+
+  // Steps
+  const rawSteps = obj.steps || obj.implementation_steps || obj.how_to ||
+    obj.guide || obj.instructions || obj.process || obj.procedure || [];
+  const steps = Array.isArray(rawSteps) ? rawSteps : [];
+
+  return { title, description, technologies, impact, difficulty, steps };
 }
 
 function renderIdeas() {
@@ -1325,8 +1370,12 @@ function renderIdeas() {
     const diffLabel = ['','Beginner','Easy','Moderate','Advanced','Expert'][diff];
     const diffColor = ['','#22c55e','#84cc16','#f59e0b','#ef4444','#7c3aed'][diff];
     const steps = (idea.steps || []).slice(0, 3);
+    const title = idea.title || 'Untitled Idea';
+    const description = idea.description || 'No description provided.';
+    const impact = idea.impact || 'Eco-friendly and sustainable impact.';
+    const technologies = idea.technologies || [];
     const d = document.createElement('div'); d.className = 'idea-card';
-    d.innerHTML = '<div class="idea-bar" style="background:linear-gradient(90deg,' + f.color + ',' + f.color + '66)"></div><div class="idea-body"><div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;flex-wrap:wrap"><span class="idea-meta" style="color:' + f.color + ';margin:0">' + f.icon + ' ' + f.label + '</span><span style="padding:3px 10px;border-radius:20px;background:' + diffColor + '18;border:1px solid ' + diffColor + '44;color:' + diffColor + ';font-size:11px;font-weight:800">' + '●'.repeat(diff) + '○'.repeat(5-diff) + ' ' + diffLabel + '</span></div><div class="idea-title">' + idea.title + '</div><div class="idea-desc">' + idea.description + '</div>' + (steps.length ? '<div style="margin-bottom:14px"><div style="font-size:11px;font-weight:800;color:var(--text3);letter-spacing:.5px;margin-bottom:8px">QUICK START</div>' + steps.map((s, si) => '<div style="display:flex;gap:8px;margin:5px 0;font-size:13px;color:var(--text2);font-weight:600;align-items:flex-start"><span style="background:' + f.color + ';color:#fff;border-radius:50%;width:18px;height:18px;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;flex-shrink:0;margin-top:1px">' + (si+1) + '</span><span>' + s.replace(/^Step \d+:\s*/, '') + '</span></div>').join('') + '</div>' : '') + '<div class="tech-tags">' + (idea.technologies || []).map(t => '<span class="tech-tag" style="background:' + f.color + '15;border:1.5px solid ' + f.color + '44;color:' + f.color + '">' + t + '</span>').join('') + '</div><div class="idea-impact">🌍 <strong>Green Impact:</strong> ' + idea.impact + '</div><div class="idea-actions"><button class="btn-eco" onclick="ideaToChat(' + i + ')">🌿 Build this with AI</button><button class="btn-save ' + (isSaved ? 'saved-active' : '') + '" id="sv' + i + '" onclick="toggleSave(' + i + ')">' + (isSaved ? '✓ Saved' : '📌 Save') + '</button></div></div>';
+    d.innerHTML = '<div class="idea-bar" style="background:linear-gradient(90deg,' + f.color + ',' + f.color + '66)"></div><div class="idea-body"><div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;flex-wrap:wrap"><span class="idea-meta" style="color:' + f.color + ';margin:0">' + f.icon + ' ' + f.label + '</span><span style="padding:3px 10px;border-radius:20px;background:' + diffColor + '18;border:1px solid ' + diffColor + '44;color:' + diffColor + ';font-size:11px;font-weight:800">' + '●'.repeat(diff) + '○'.repeat(5-diff) + ' ' + diffLabel + '</span></div><div class="idea-title">' + title + '</div><div class="idea-desc">' + description + '</div>' + (steps.length ? '<div style="margin-bottom:14px"><div style="font-size:11px;font-weight:800;color:var(--text3);letter-spacing:.5px;margin-bottom:8px">QUICK START</div>' + steps.map((s, si) => '<div style="display:flex;gap:8px;margin:5px 0;font-size:13px;color:var(--text2);font-weight:600;align-items:flex-start"><span style="background:' + f.color + ';color:#fff;border-radius:50%;width:18px;height:18px;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;flex-shrink:0;margin-top:1px">' + (si+1) + '</span><span>' + s.replace(/^Step \d+:\s*/, '') + '</span></div>').join('') + '</div>' : '') + '<div class="tech-tags">' + technologies.map(t => '<span class="tech-tag" style="background:' + f.color + '15;border:1.5px solid ' + f.color + '44;color:' + f.color + '">' + t + '</span>').join('') + '</div><div class="idea-impact">🌍 <strong>Green Impact:</strong> ' + impact + '</div><div class="idea-actions"><button class="btn-eco" onclick="ideaToChat(' + i + ')">🌿 Build this with AI</button><button class="btn-save ' + (isSaved ? 'saved-active' : '') + '" id="sv' + i + '" onclick="toggleSave(' + i + ')">' + (isSaved ? '✓ Saved' : '📌 Save') + '</button></div></div>';
     g.appendChild(d);
   });
 }
