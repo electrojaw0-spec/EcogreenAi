@@ -392,6 +392,27 @@ footer{border-top:1px solid var(--border);padding:48px 40px 40px;text-align:cent
   .founder-card{grid-template-columns:1fr;text-align:center;}
   .founder-left{margin:0 auto;}
 }
+
+/* OLLAMA SETTINGS PANEL */
+.ollama-panel{position:fixed;bottom:0;left:0;right:0;background:var(--surface);border-top:1.5px solid var(--border);z-index:1200;padding:20px;border-radius:24px 24px 0 0;box-shadow:0 -8px 40px rgba(0,0,0,0.18);transform:translateY(100%);transition:transform .3s ease;}
+.ollama-panel.open{transform:translateY(0);}
+.ollama-panel-title{font-family:'DM Serif Display',serif;font-size:17px;color:var(--text);margin-bottom:4px;}
+.ollama-panel-sub{font-size:12px;color:var(--text3);font-weight:600;margin-bottom:16px;}
+.ollama-row{display:flex;gap:8px;margin-bottom:12px;}
+.ollama-inp{flex:1;padding:11px 14px;border-radius:12px;border:1.5px solid var(--border2);background:var(--bg);font-family:'Inter',sans-serif;font-size:13px;color:var(--text);outline:none;font-weight:600;}
+.ollama-inp:focus{border-color:var(--green);}
+.ollama-save-btn{padding:11px 16px;border-radius:12px;border:none;background:var(--green);color:#fff;font-size:13px;font-weight:800;cursor:pointer;font-family:'Inter',sans-serif;}
+.ollama-test-btn{padding:11px 14px;border-radius:12px;border:1.5px solid var(--border2);background:var(--surface2);color:var(--text2);font-size:12px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;}
+.ollama-test-btn:hover{border-color:var(--green);color:var(--green);}
+.ollama-status{font-size:12px;font-weight:700;padding:8px 12px;border-radius:10px;margin-bottom:12px;display:none;}
+.ollama-status.ok{background:#d6f3e6;color:#16a05a;display:block;}
+.ollama-status.fail{background:#fee2e2;color:#ef4444;display:block;}
+.ollama-tip{font-size:11px;color:var(--text3);line-height:1.6;font-weight:500;}
+.ollama-tip code{background:var(--surface2);padding:2px 6px;border-radius:5px;font-size:10px;color:var(--green);font-family:monospace;}
+.ai-status-badge{display:inline-flex;align-items:center;gap:5px;padding:3px 10px;border-radius:20px;font-size:10px;font-weight:700;background:var(--green4);border:1px solid var(--green3);color:var(--green);margin-left:8px;vertical-align:middle;cursor:pointer;}
+.ai-status-dot{width:6px;height:6px;border-radius:50%;background:var(--green2);}
+.ollama-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:1199;display:none;}
+.ollama-overlay.open{display:block;}
 </style>
 </head>
 <body>
@@ -415,6 +436,36 @@ footer{border-top:1px solid var(--border);padding:48px 40px 40px;text-align:cent
       <span>🔒</span>
       <span class="modal-lock-text">Your password stays on your device only.</span>
     </div>
+  </div>
+</div>
+
+<!-- OLLAMA OVERLAY -->
+<div class="ollama-overlay" id="ollama-overlay" onclick="closeOllamaPanel()"></div>
+
+<!-- OLLAMA SETTINGS PANEL -->
+<div class="ollama-panel" id="ollama-panel">
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;">
+    <div class="ollama-panel-title">🦙 Ollama Settings</div>
+    <button class="mem-close" onclick="closeOllamaPanel()">✕</button>
+  </div>
+  <div class="ollama-panel-sub">Connect to Ollama for offline AI — runs on your PC or local network</div>
+  <div id="ollama-status-msg" class="ollama-status"></div>
+  <div class="ollama-row">
+    <input class="ollama-inp" id="ollama-host-inp" placeholder="http://localhost:11434" />
+    <button class="ollama-save-btn" onclick="saveOllamaHostUI()">Save</button>
+  </div>
+  <div style="display:flex;gap:8px;margin-bottom:16px;">
+    <button class="ollama-test-btn" onclick="testOllamaUI()" style="flex:1">🔍 Test Connection</button>
+    <button class="ollama-test-btn" onclick="resetOllamaHost()">Reset</button>
+  </div>
+  <div class="ollama-tip">
+    <strong>📱 Using on phone?</strong> Run Ollama on your PC and connect via WiFi:<br/>
+    1. Install Ollama on PC → <code>ollama serve</code><br/>
+    2. Set env: <code>OLLAMA_HOST=0.0.0.0</code><br/>
+    3. Find your PC IP (e.g. <code>192.168.1.5</code>)<br/>
+    4. Enter: <code>http://192.168.1.5:11434</code><br/><br/>
+    <strong>💻 On same device?</strong> Leave as <code>http://localhost:11434</code><br/><br/>
+    <strong>Models to install:</strong> <code>ollama pull llama3</code>
   </div>
 </div>
 
@@ -585,7 +636,7 @@ footer{border-top:1px solid var(--border);padding:48px 40px 40px;text-align:cent
       <div class="eco-ava"><svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><circle cx="14" cy="14" r="12.5" fill="rgba(255,255,255,0.18)"/><circle cx="14" cy="14" r="12.5" stroke="white" stroke-width="1.6"/><path d="M14 1.5C14 1.5 10 7 10 14s4 12.5 4 12.5" stroke="white" stroke-width="1.3" stroke-linecap="round"/><path d="M14 1.5C14 1.5 18 7 18 14s-4 12.5-4 12.5" stroke="white" stroke-width="1.3" stroke-linecap="round"/><path d="M1.5 10.5h25M1.5 17.5h25" stroke="white" stroke-width="1.3" stroke-linecap="round"/></svg></div>
       <div style="flex:1">
         <div class="eco-name">ECO GREEN AI</div>
-        <div class="eco-status"><span class="sdot"></span><span id="status-text">Always available · Remembers you</span></div>
+        <div class="eco-status" style="display:flex;align-items:center;flex-wrap:wrap;gap:4px;"><span class="sdot"></span><span id="status-text">Always available · Remembers you</span><span class="ai-status-badge" id="ai-engine-badge" onclick="openOllamaPanel()" title="Click to configure Ollama">🌐 Online</span></div>
       </div>
       <div style="display:flex;align-items:center;gap:8px;margin-left:auto;flex-shrink:0">
         <button onclick="clearChatHistory()" title="Clear conversation" style="background:none;border:1.5px solid var(--border2);border-radius:10px;padding:6px 10px;font-size:11px;color:var(--text3);cursor:pointer;font-family:'Inter',sans-serif;font-weight:700;transition:all .2s;" onmouseover="this.style.borderColor='var(--green)';this.style.color='var(--green)'" onmouseout="this.style.borderColor='var(--border2)';this.style.color='var(--text3)'">Clear</button>
@@ -827,8 +878,10 @@ let ideas = [], saved = [], chatHist = [], chatBusy = false;
 // ===== AI CONFIG =====
 const OR_URL = 'https://openrouter.ai/api/v1/chat/completions';
 const POLL_URL = 'https://text.pollinations.ai/';
-const OLLAMA_URL = 'http://localhost:11434/api/chat';
 const OLLAMA_MODELS = ['llama3', 'llama3.2', 'llama3.1', 'mistral', 'gemma2', 'phi3', 'tinyllama'];
+function getOllamaHost() {
+  return (localStorage.getItem('eco_ollama_host') || 'http://localhost:11434').replace(/\/$/, '');
+}
 const OR_MODELS = [
   'deepseek/deepseek-chat-v3-0324:free',
   'meta-llama/llama-3.3-70b-instruct:free',
@@ -860,36 +913,44 @@ async function callPollinations(messages, sys) {
 
 // ===== OLLAMA FALLBACK (offline, local device) =====
 async function callOllama(messages, sys) {
-  // Try each installed model until one responds
+  const host = getOllamaHost();
   for (const model of OLLAMA_MODELS) {
     try {
       const msgs = [];
       if (sys) msgs.push({ role: 'system', content: sys });
       msgs.push(...messages.filter(m => m.role === 'user' || m.role === 'assistant'));
-      const res = await fetch(OLLAMA_URL, {
+      const res = await fetch(host + '/api/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ model, messages: msgs, stream: false }),
-        signal: AbortSignal.timeout(60000) // 60s timeout for local inference
+        signal: AbortSignal.timeout(90000)
       });
-      if (res.status === 404) continue; // model not installed, try next
+      if (res.status === 404) continue;
       if (!res.ok) continue;
       const data = await res.json();
       const text = data?.message?.content?.trim();
-      if (text) { console.log('[ECO GREEN] Ollama responded with model: ' + model); return text; }
+      if (text) { console.log('[ECO GREEN] Ollama responded: ' + model + ' @ ' + host); return text; }
     } catch (e) {
-      if (e.name === 'TimeoutError') continue;
-      throw new Error('Ollama not running. Open Terminal and run: ollama serve');
+      if (e.name === 'TimeoutError') { continue; }
+      // Network error = Ollama not reachable
+      throw new Error('Cannot reach Ollama at ' + host + '. Is it running?');
     }
   }
-  throw new Error('No Ollama models found. Run: ollama pull llama3');
+  throw new Error('No Ollama models found at ' + host + '. Run: ollama pull llama3');
 }
 
 async function isOllamaAvailable() {
   try {
-    const res = await fetch('http://localhost:11434/api/tags', { signal: AbortSignal.timeout(2000) });
+    const res = await fetch(getOllamaHost() + '/api/tags', { signal: AbortSignal.timeout(3000) });
     return res.ok;
   } catch { return false; }
+}
+
+function saveOllamaHost(host) {
+  const h = host.trim();
+  if (!h) { localStorage.removeItem('eco_ollama_host'); return; }
+  const full = h.startsWith('http') ? h : 'http://' + h;
+  localStorage.setItem('eco_ollama_host', full);
 }
 
 // ================================================================
@@ -993,7 +1054,7 @@ async function streamAI(messages, sys, onToken) {
         if (fullText) return fullText;
         continue;
       }
-      if (fullText) { currentModel = model; return fullText; }
+      if (fullText) { currentModel = model; updateAIBadge('openrouter'); return fullText; }
     }
   }
 
@@ -1006,7 +1067,7 @@ async function streamAI(messages, sys, onToken) {
     for (const chunk of words) {
       if (chunk) { onToken(chunk); await new Promise(r => setTimeout(r, 38)); }
     }
-    currentModel = 'pollinations/openai';
+    currentModel = 'pollinations/openai'; updateAIBadge('pollinations');
     return text;
   } catch (pollErr) {
     console.warn('[ECO GREEN] Pollinations failed, trying Ollama (offline)...', pollErr);
@@ -1019,7 +1080,7 @@ async function streamAI(messages, sys, onToken) {
     for (const chunk of words) {
       if (chunk) { onToken(chunk); await new Promise(r => setTimeout(r, 38)); }
     }
-    currentModel = 'ollama/local';
+    currentModel = 'ollama/local'; updateAIBadge('ollama');
     return ollamaText;
   } catch (ollamaErr) {
     console.error('[ECO GREEN] Ollama failed:', ollamaErr);
@@ -1186,7 +1247,24 @@ async function generateIdeas() {
   try {
     const raw = await callAI(prompt, sys);
     let clean = raw.replace(/```json/gi, '').replace(/```/g, '').trim();
-    const match = clean.match(/\[[\s\S]*\]/);
+
+    // If the whole response is wrapped in quotes (double-encoded), unwrap it
+    if ((clean.startsWith('"') && clean.endsWith('"')) ||
+        (clean.startsWith("'") && clean.endsWith("'"))) {
+      try { clean = JSON.parse(clean); } catch(e) { clean = clean.slice(1, -1); }
+    }
+
+    // Try to extract a JSON array
+    let match = clean.match(/\[[\s\S]*\]/);
+
+    // If that fails, the AI likely escaped the quotes (e.g. [\"Solar pa...])
+    // Unescape and try again
+    if (!match && clean.includes('\\"')) {
+      const unescaped = clean.replace(/\\"/g, '"').replace(/\\\\/g, '\\');
+      match = unescaped.match(/\[[\s\S]*\]/);
+      if (match) clean = unescaped;
+    }
+
     if (!match) throw new Error('Response was not valid JSON. Please try again.');
     ideas = JSON.parse(match[0]).slice(0, 4);
     renderIdeas(); confetti();
@@ -1244,6 +1322,58 @@ function buildSystemWithMemory() {
   mem += 'CRITICAL: Never say "according to your profile" — just BE naturally aware.';
   return SYS + mem;
 }
+
+// ===== OLLAMA PANEL =====
+function openOllamaPanel() {
+  document.getElementById('ollama-panel').classList.add('open');
+  document.getElementById('ollama-overlay').classList.add('open');
+  document.getElementById('ollama-host-inp').value = localStorage.getItem('eco_ollama_host') || '';
+  document.getElementById('ollama-status-msg').className = 'ollama-status';
+}
+function closeOllamaPanel() {
+  document.getElementById('ollama-panel').classList.remove('open');
+  document.getElementById('ollama-overlay').classList.remove('open');
+}
+function saveOllamaHostUI() {
+  const val = document.getElementById('ollama-host-inp').value.trim();
+  saveOllamaHost(val);
+  const msg = document.getElementById('ollama-status-msg');
+  msg.textContent = val ? '✅ Saved: ' + (val.startsWith('http') ? val : 'http://' + val) : '✅ Reset to localhost';
+  msg.className = 'ollama-status ok';
+  updateAIBadge('ollama');
+}
+function resetOllamaHost() {
+  localStorage.removeItem('eco_ollama_host');
+  document.getElementById('ollama-host-inp').value = '';
+  const msg = document.getElementById('ollama-status-msg');
+  msg.textContent = '↩️ Reset to http://localhost:11434';
+  msg.className = 'ollama-status ok';
+}
+async function testOllamaUI() {
+  const msg = document.getElementById('ollama-status-msg');
+  const val = document.getElementById('ollama-host-inp').value.trim();
+  if (val) saveOllamaHost(val);
+  msg.textContent = '⏳ Testing connection...';
+  msg.className = 'ollama-status ok';
+  const ok = await isOllamaAvailable();
+  if (ok) {
+    msg.textContent = '✅ Connected to Ollama at ' + getOllamaHost();
+    msg.className = 'ollama-status ok';
+    updateAIBadge('ollama');
+  } else {
+    msg.textContent = '❌ Cannot reach Ollama at ' + getOllamaHost() + ' — check host & make sure ollama serve is running.';
+    msg.className = 'ollama-status fail';
+  }
+}
+function updateAIBadge(engine) {
+  const badge = document.getElementById('ai-engine-badge');
+  if (!badge) return;
+  if (engine === 'ollama') { badge.textContent = '🦙 Ollama'; badge.title = 'Using Ollama — click to configure'; }
+  else if (engine === 'pollinations') { badge.textContent = '🌸 Pollinations'; badge.title = 'Using Pollinations AI — click to configure Ollama'; }
+  else if (engine === 'openrouter') { badge.textContent = '⚡ OpenRouter'; badge.title = 'Using OpenRouter — click to configure Ollama'; }
+  else { badge.textContent = '🌐 Online'; }
+}
+
 function openMemPanel() { document.getElementById('mem-panel').classList.add('open'); document.getElementById('mem-overlay').classList.add('open'); renderProfileTags(); renderConvList(); }
 function closeMemPanel() { document.getElementById('mem-panel').classList.remove('open'); document.getElementById('mem-overlay').classList.remove('open'); }
 function renderProfileTags() {
