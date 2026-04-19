@@ -877,7 +877,7 @@ let ideas = [], saved = [], chatHist = [], chatBusy = false;
 
 // ===== AI CONFIG =====
 const OR_URL = 'https://openrouter.ai/api/v1/chat/completions';
-const POLL_URL = 'https://text.pollinations.ai/openai';
+const POLL_URL = 'https://text.pollinations.ai/';
 const OLLAMA_MODELS = ['llama3', 'llama3.2', 'llama3.1', 'mistral', 'gemma2', 'phi3', 'tinyllama'];
 function getOllamaHost() {
   return (localStorage.getItem('eco_ollama_host') || 'http://localhost:11434').replace(/\/$/, '');
@@ -900,31 +900,15 @@ async function callPollinations(messages, sys) {
   const msgs = [];
   if (sys) msgs.push({ role: 'system', content: sys });
   msgs.push(...messages.filter(m => m.role === 'user' || m.role === 'assistant'));
-
-  // Try up to 2 times (Pollinations can be briefly slow)
-  for (let attempt = 1; attempt <= 2; attempt++) {
-    try {
-      const res = await fetch(POLL_URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          model: 'openai',
-          messages: msgs,
-          seed: Math.floor(Math.random() * 9999),
-          private: true
-        }),
-        signal: AbortSignal.timeout(30000)
-      });
-      if (!res.ok) throw new Error('Pollinations error: ' + res.status);
-      const data = await res.json();
-      const text = (data?.choices?.[0]?.message?.content || '').trim();
-      if (text) return text;
-      throw new Error('Empty response from Pollinations');
-    } catch (e) {
-      if (attempt === 2) throw e;
-      await new Promise(r => setTimeout(r, 1500)); // wait before retry
-    }
-  }
+  const res = await fetch(POLL_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ messages: msgs, model: 'openai', seed: Math.floor(Math.random() * 9999), private: true })
+  });
+  if (!res.ok) throw new Error('Pollinations error: ' + res.status);
+  const text = await res.text();
+  if (!text || !text.trim()) throw new Error('Empty response from Pollinations');
+  return text.trim();
 }
 
 // ===== OLLAMA FALLBACK (offline, local device) =====
@@ -997,9 +981,9 @@ async function streamAI(messages, sys, onToken) {
   if (sys) cleanMsgs.push({ role: 'system', content: sys });
   cleanMsgs.push(...merged);
 
-  // ── Try OpenRouter if key is set ──
+  // ── PRIMARY: OpenRouter (uses your key for best models) ──
   if (apiKey) {
-    let lastErr = '';
+    let orSuccess = false;
     for (let mi = 0; mi < OR_MODELS.length; mi++) {
       const model = OR_MODELS[mi];
       let res;
@@ -1014,15 +998,16 @@ async function streamAI(messages, sys, onToken) {
           },
           body: JSON.stringify({ model, messages: cleanMsgs, max_tokens: 3000, temperature: 0.72, top_p: 0.9, stream: true })
         });
-      } catch (netErr) { break; }
+      } catch (netErr) { console.warn('[ECO GREEN] OpenRouter network error, switching to Pollinations...'); break; }
 
       if (res.status === 401 || res.status === 403) {
         apiKey = ''; localStorage.removeItem('eco_or_key'); updateStatus();
+        console.warn('[ECO GREEN] OpenRouter key invalid, switching to Pollinations...');
         break;
       }
       if (!res.ok) {
         const errText = await res.text().catch(() => '');
-        lastErr = errText.toLowerCase();
+        const lastErr = errText.toLowerCase();
         console.warn('[ECO GREEN] OR model ' + model + ' failed — ' + res.status);
         if (res.status === 404 || res.status === 429 || res.status === 500 || res.status === 502 || res.status === 503
             || lastErr.includes('endpoint') || lastErr.includes('not found') || lastErr.includes('overload')
@@ -1074,11 +1059,10 @@ async function streamAI(messages, sys, onToken) {
     }
   }
 
-  // ── Fallback: Pollinations AI (free, no key needed) ──
+  // ── FALLBACK: Pollinations AI (free, no key needed) ──
   try {
-    console.log('[ECO GREEN] Using Pollinations fallback...');
+    console.log('[ECO GREEN] OpenRouter unavailable — falling back to Pollinations...');
     const text = await callPollinations(merged, sys);
-    // Simulate word-by-word streaming
     const words = text.split(/(\s+)/);
     for (const chunk of words) {
       if (chunk) { onToken(chunk); await new Promise(r => setTimeout(r, 38)); }
@@ -1089,7 +1073,7 @@ async function streamAI(messages, sys, onToken) {
     console.warn('[ECO GREEN] Pollinations failed, trying Ollama (offline)...', pollErr);
   }
 
-  // ── Final fallback: Ollama (offline, runs on your device) ──
+  // ── LAST RESORT: Ollama (offline, runs on your device) ──
   try {
     const ollamaText = await callOllama(merged, sys);
     const words = ollamaText.split(/(\s+)/);
@@ -1099,8 +1083,8 @@ async function streamAI(messages, sys, onToken) {
     currentModel = 'ollama/local'; updateAIBadge('ollama');
     return ollamaText;
   } catch (ollamaErr) {
-    console.error('[ECO GREEN] Ollama failed:', ollamaErr);
-    throw new Error('Free AI is temporarily busy. Please try again in a moment, or add an OpenRouter key for reliable access. 🙏');
+    console.error('[ECO GREEN] All AI providers failed:', ollamaErr);
+    throw new Error('Please hang on, Ecogreen Team is doing some maintenance. 🙏');
   }
 }
 
@@ -1115,22 +1099,20 @@ async function aiRequest(messages, sys) {
   while (merged.length && merged[0].role === 'assistant') merged.shift();
   if (!merged.length) throw new Error('Nothing to send.');
 
-  // ── Try OpenRouter if key is set ──
+  // ── PRIMARY: OpenRouter (uses your key for best models) ──
   if (apiKey) {
     const msgs = [];
     if (sys) msgs.push({ role: 'system', content: sys });
     msgs.push(...merged);
-    let lastErr = '';
     for (let mi = 0; mi < OR_MODELS.length; mi++) {
       const model = OR_MODELS[mi]; let res, data;
       try {
         res = await fetch(OR_URL, { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + apiKey, 'HTTP-Referer': window.location.href, 'X-Title': 'ECO GREEN AI' }, body: JSON.stringify({ model, messages: msgs, max_tokens: 3000, temperature: 0.72, top_p: 0.9 }) });
         data = await res.json();
-      } catch (netErr) { break; }
-      if (res.status === 401 || res.status === 403) { apiKey = ''; localStorage.removeItem('eco_or_key'); updateStatus(); break; }
+      } catch (netErr) { console.warn('[ECO GREEN] OpenRouter network error, switching to Pollinations...'); break; }
+      if (res.status === 401 || res.status === 403) { apiKey = ''; localStorage.removeItem('eco_or_key'); updateStatus(); console.warn('[ECO GREEN] OpenRouter key invalid, switching to Pollinations...'); break; }
       if (!res.ok || (data && data.error)) {
         const errMsg = String((data && data.error && (data.error.message || data.error.code || data.error)) || res.statusText || '').toLowerCase();
-        lastErr = errMsg;
         console.warn('[ECO GREEN] OR model ' + model + ' failed — ' + res.status);
         if (res.status === 404 || res.status === 429 || res.status === 500 || res.status === 502 || res.status === 503
             || errMsg.includes('endpoint') || errMsg.includes('no model') || errMsg.includes('not found')
@@ -1140,27 +1122,27 @@ async function aiRequest(messages, sys) {
       }
       const text = (data && data.choices && data.choices[0] && data.choices[0].message && data.choices[0].message.content || '').trim();
       if (text) { currentModel = model; return text; }
-      lastErr = 'empty response'; continue;
+      continue;
     }
   }
 
-  // ── Fallback: Pollinations AI (free, no key needed) ──
+  // ── FALLBACK: Pollinations AI (free, no key needed) ──
   try {
-    console.log('[ECO GREEN] Using Pollinations fallback for aiRequest...');
+    console.log('[ECO GREEN] OpenRouter unavailable — falling back to Pollinations...');
     return await callPollinations(merged, sys);
   } catch (pollErr) {
     console.warn('[ECO GREEN] Pollinations failed, trying Ollama (offline)...', pollErr);
   }
 
-  // ── Final fallback: Ollama (offline, runs on your device) ──
+  // ── LAST RESORT: Ollama (offline, runs on your device) ──
   try {
     console.log('[ECO GREEN] Trying Ollama offline...');
     const ollamaText = await callOllama(merged, sys);
     currentModel = 'ollama/local';
     return ollamaText;
   } catch (ollamaErr) {
-    console.error('[ECO GREEN] Ollama failed:', ollamaErr);
-    throw new Error('Free AI is temporarily busy. Please try again in a moment, or add an OpenRouter key for reliable access. 🙏');
+    console.error('[ECO GREEN] All AI providers failed:', ollamaErr);
+    throw new Error('Please hang on, Ecogreen Team is doing some maintenance. 🙏');
   }
 }
 
@@ -1254,22 +1236,46 @@ function renderSteps() {
 
 async function generateIdeas() {
   if (!selField) return;
+  if (!apiKey) { openModal(); return; }
   const f = FIELDS[selField]; const btn = document.getElementById('gen-btn');
-  btn.disabled = true; btn.innerHTML = '<span class="spinner"></span> Generating' + (apiKey ? ' with AI...' : ' via Free AI...');
+  btn.disabled = true; btn.innerHTML = '<span class="spinner"></span> Generating with AI...';
   const tc = selTopic ? 'specifically in the topic area of "' + selTopic + '"' : 'across any relevant green topic';
   const prompt = 'You are an expert sustainable engineering project advisor with deep expertise in African and Gambian engineering challenges. Generate exactly 4 creative, practical, eco-friendly project ideas for a ' + selLevel + ' student in ' + f.label + ' ' + tc + '.\n\nAFRICA & GAMBIA FIRST — CRITICAL REQUIREMENT:\n- AT LEAST 2 of the 4 ideas must directly address a real Gambian or African challenge (e.g. NAWEC power outages, load shedding, rural electrification, River Gambia flooding, lack of clean water in villages, post-harvest crop losses, solar energy access in the Sahel, coastal erosion, agri-processing, waste management in African cities)\n- All 4 ideas should be feasible with components and resources available in West Africa\n- Reference local context naturally in the descriptions (Gambia, West Africa, Sahel, sub-Saharan Africa)\n- Prioritise low-cost, high-impact solutions suitable for African university budgets\n\nEach idea must be:\n- Genuinely innovative and specific (not generic)\n- Realistic for a ' + selLevel + ' student to build\n- Focused on sustainability and green impact with African relevance\n- Clearly explained so a student immediately understands it\n\nReturn ONLY a valid JSON array with exactly 4 objects. Each object must have exactly these keys:\n{\n  "title": "Specific, catchy project title (max 8 words)",\n  "description": "2 clear sentences: sentence 1 = what it is and does (mention African/Gambian context where relevant), sentence 2 = how it works technically",\n  "technologies": ["tech1", "tech2", "tech3", "tech4"],\n  "impact": "1 specific sentence about the measurable green/sustainable impact in an African or Gambian context",\n  "difficulty": 3,\n  "steps": ["Step 1: ...", "Step 2: ...", "Step 3: ..."]\n}\n\nDifficulty scale: 1=very easy, 2=easy, 3=moderate, 4=hard, 5=very advanced.\nCRITICAL: Return ONLY the raw JSON array. No markdown. No code fences. No explanation. No extra text before or after.';
   const sys = 'You are a world-class sustainable engineering project advisor specialising in African and Gambian engineering solutions. Return ONLY a valid JSON array. No markdown. No code fences. No explanation. Nothing else.';
   try {
     const raw = await callAI(prompt, sys);
     let clean = raw.replace(/```json/gi, '').replace(/```/g, '').trim();
-    const match = clean.match(/\[[\s\S]*\]/);
+
+    // If the whole response is wrapped in quotes (double-encoded), unwrap it
+    if ((clean.startsWith('"') && clean.endsWith('"')) ||
+        (clean.startsWith("'") && clean.endsWith("'"))) {
+      try { clean = JSON.parse(clean); } catch(e) { clean = clean.slice(1, -1); }
+    }
+
+    // Try to extract a JSON array
+    let match = clean.match(/\[[\s\S]*\]/);
+    if (!match) {
+      // Fallback: unescape backslash-quotes and retry extraction
+      const unescaped = clean.replace(/\\"/g, '"').replace(/\\\\/g, '\\');
+      match = unescaped.match(/\[[\s\S]*\]/);
+      if (match) clean = unescaped;
+    }
     if (!match) throw new Error('Response was not valid JSON. Please try again.');
-    ideas = JSON.parse(match[0]).slice(0, 4);
+
+    // Try parsing — if it fails due to escaped quotes inside, unescape and retry
+    let parsed;
+    try {
+      parsed = JSON.parse(match[0]);
+    } catch (parseErr) {
+      const unescaped = match[0].replace(/\\"/g, '"').replace(/\\\\/g, '\\');
+      parsed = JSON.parse(unescaped);
+    }
+    ideas = parsed.slice(0, 4);
     renderIdeas(); confetti();
   } catch (e) {
     if (e.message !== 'no_key' && e.message !== 'bad_key') alert('Could not generate ideas 😕\n\n' + e.message);
   } finally {
-    btn.disabled = false; btn.innerHTML = '🌿 Generate Green Ideas with AI'; 
+    btn.disabled = false; btn.innerHTML = '🌿 Generate Green Ideas with AI';
   }
 }
 
