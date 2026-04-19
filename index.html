@@ -1238,7 +1238,6 @@ function renderSteps() {
 
 async function generateIdeas() {
   if (!selField) return;
-  if (!apiKey) { openModal(); return; }
   const f = FIELDS[selField]; const btn = document.getElementById('gen-btn');
   btn.disabled = true; btn.innerHTML = '<span class="spinner"></span> Generating with AI...';
   const tc = selTopic ? 'specifically in the topic area of "' + selTopic + '"' : 'across any relevant green topic';
@@ -1246,16 +1245,74 @@ async function generateIdeas() {
   const sys = 'You are a world-class sustainable engineering project advisor specialising in African and Gambian engineering solutions. Return ONLY a valid JSON array. No markdown. No code fences. No explanation. Nothing else.';
   try {
     const raw = await callAI(prompt, sys);
-    let clean = raw.replace(/```json/gi, '').replace(/```/g, '').trim();
-    const match = clean.match(/\[[\s\S]*\]/);
-    if (!match) throw new Error('Response was not valid JSON. Please try again.');
-    ideas = JSON.parse(match[0]).slice(0, 4);
+    const parsed = robustParseIdeasJSON(raw);
+    ideas = parsed.slice(0, 4);
     renderIdeas(); confetti();
   } catch (e) {
     if (e.message !== 'no_key' && e.message !== 'bad_key') alert('Could not generate ideas 😕\n\n' + e.message);
   } finally {
     btn.disabled = false; btn.innerHTML = '🌿 Generate Green Ideas with AI';
   }
+}
+
+function robustParseIdeasJSON(raw) {
+  // Strip markdown code fences
+  let s = raw.replace(/```json\s*/gi, '').replace(/```\s*/g, '').trim();
+
+  // If double-encoded (AI wrapped response in outer quotes), unwrap
+  if ((s.startsWith('"') && s.endsWith('"')) || (s.startsWith("'") && s.endsWith("'"))) {
+    try { s = JSON.parse(s); } catch(e) { s = s.slice(1, -1); }
+  }
+
+  // Helper: try parsing a candidate string, return array or throw
+  function tryParse(candidate) {
+    let r = JSON.parse(candidate);
+    if (Array.isArray(r)) return r;
+    throw new Error('Not an array');
+  }
+
+  // Helper: find the first balanced [...] block using a char-by-char scanner
+  // (avoids greedy regex overshooting when AI adds extra text after the array)
+  function extractBalanced(text) {
+    const start = text.indexOf('[');
+    if (start === -1) return null;
+    let depth = 0, inStr = false, esc = false;
+    for (let i = start; i < text.length; i++) {
+      const c = text[i];
+      if (esc)           { esc = false; continue; }
+      if (c === '\\' && inStr) { esc = true;  continue; }
+      if (c === '"')     { inStr = !inStr; continue; }
+      if (inStr)         continue;
+      if (c === '[')     depth++;
+      else if (c === ']') { depth--; if (depth === 0) return text.slice(start, i + 1); }
+    }
+    // Unbalanced — return everything from start (AI cut off mid-response)
+    return text.slice(start);
+  }
+
+  // --- Attempt 1: parse the whole cleaned string directly ---
+  try { return tryParse(s); } catch(e) {}
+
+  // --- Attempt 2: unescape backslash-quotes first (AI returns `\"key\": \"val\"`) ---
+  const unescaped = s.replace(/\\\\/g, '\x00BKSL\x00').replace(/\\"/g, '"').replace(/\x00BKSL\x00/g, '\\');
+  try { return tryParse(unescaped); } catch(e) {}
+
+  // --- Attempt 3: extract balanced [...] from original, then parse ---
+  const block = extractBalanced(s);
+  if (block) {
+    try { return tryParse(block); } catch(e) {}
+    // --- Attempt 4: unescape the extracted block ---
+    const unescapedBlock = block.replace(/\\\\/g, '\x00BKSL\x00').replace(/\\"/g, '"').replace(/\x00BKSL\x00/g, '\\');
+    try { return tryParse(unescapedBlock); } catch(e) {}
+  }
+
+  // --- Attempt 5: extract balanced [...] from the already-unescaped string ---
+  const block2 = extractBalanced(unescaped);
+  if (block2) {
+    try { return tryParse(block2); } catch(e) {}
+  }
+
+  throw new Error('Could not parse ideas from AI response. Please try again.');
 }
 
 function renderIdeas() {
@@ -1433,7 +1490,13 @@ function md(rawText, isUser) {
   }
   // ── Circuit / SVG / Diagram block renderer ──
   s = s.replace(/```(?:svg|circuit|diagram|flow|mechanical|civil|piping|layout)\n?([\s\S]*?)```/g, (_, raw) => {
-    const svgContent = raw.trim();
+    // Unescape HTML entities so the SVG renders as real graphics, not escaped text
+    const svgContent = raw.trim()
+      .replace(/&amp;/g, '&')
+      .replace(/&lt;/g, '<')
+      .replace(/&gt;/g, '>')
+      .replace(/&quot;/g, '"')
+      .replace(/&#39;/g, "'");
     const id = 'circ_' + Math.random().toString(36).slice(2,8);
     return '<div class="circuit-wrap">' +
       '<div class="circuit-header">' +
@@ -1510,7 +1573,6 @@ function resizeTA(el) { el.style.height = 'auto'; el.style.height = Math.min(el.
 async function sendChat() {
   const inp = document.getElementById('chat-in'); const msg = inp.value.trim();
   if (!msg || chatBusy) return;
-  if (!apiKey) { openModal(); return; }
   inp.value = ''; inp.style.height = 'auto'; updateSendBtn();
   chatHist.push({ role: 'user', content: msg });
   chatBusy = true; await doStreamChat();
@@ -1518,7 +1580,6 @@ async function sendChat() {
 
 async function sendQuick(msg) {
   if (chatBusy) return;
-  if (!apiKey) { openModal(); return; }
   if (!chatHist.length) initChat();
   chatHist.push({ role: 'user', content: msg });
   chatBusy = true; await doStreamChat();
@@ -1606,7 +1667,7 @@ async function doStreamChat() {
 }
 
 async function ideaToChat(i) {
-  const idea = ideas[i]; if (!apiKey) { openModal(); return; }
+  const idea = ideas[i];
   const msg = 'Hi ECO GREEN AI! I want to build this project: **' + idea.title + '**. ' + idea.description + ' Can you help me plan it step by step with a focus on sustainability and eco-friendliness?';
   chatHist = [{ role: 'assistant', content: WELCOME }, { role: 'user', content: msg }];
   chatBusy = true; showPage('chat');
@@ -2130,7 +2191,6 @@ async function labAnalyse() {
   if (labAnalysing) return;
   const nodes = Object.values(labNodes);
   if (nodes.length < 2) { alert('Add at least 2 components before analysing! 😊'); return; }
-  if (!apiKey) { openModal(); return; }
 
   labAnalysing = true;
   const btn = document.getElementById('lab-analyse-btn');
