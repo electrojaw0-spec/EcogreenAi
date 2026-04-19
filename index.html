@@ -826,6 +826,7 @@ let ideas = [], saved = [], chatHist = [], chatBusy = false;
 
 // ===== AI CONFIG =====
 const OR_URL = 'https://openrouter.ai/api/v1/chat/completions';
+const POLL_URL = 'https://text.pollinations.ai/';
 const OR_MODELS = [
   'deepseek/deepseek-chat-v3-0324:free',
   'meta-llama/llama-3.3-70b-instruct:free',
@@ -838,6 +839,22 @@ const OR_MODELS = [
   'openrouter/auto'
 ];
 let currentModel = OR_MODELS[0];
+
+// ===== POLLINATIONS FALLBACK (free, no key needed) =====
+async function callPollinations(messages, sys) {
+  const msgs = [];
+  if (sys) msgs.push({ role: 'system', content: sys });
+  msgs.push(...messages.filter(m => m.role === 'user' || m.role === 'assistant'));
+  const res = await fetch(POLL_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ messages: msgs, model: 'openai', seed: Math.floor(Math.random() * 9999), private: true })
+  });
+  if (!res.ok) throw new Error('Pollinations error: ' + res.status);
+  const text = await res.text();
+  if (!text || !text.trim()) throw new Error('Empty response from Pollinations');
+  return text.trim();
+}
 
 // ================================================================
 // STREAMING ENGINE
@@ -852,12 +869,8 @@ let currentModel = OR_MODELS[0];
  * @returns {Promise<string>} - Full assembled text
  */
 async function streamAI(messages, sys, onToken) {
-  if (!apiKey) { openModal(); throw new Error('no_key'); }
-
-  const msgs = [];
-  if (sys) msgs.push({ role: 'system', content: sys });
-
-  // Merge & clean messages (same logic as original)
+  // Prepare & clean messages
+  const cleanMsgs = [];
   const filtered = messages.filter(m => m.role === 'user' || m.role === 'assistant')
     .map(m => ({ role: m.role, content: m.content || '' }));
   const merged = [];
@@ -868,126 +881,105 @@ async function streamAI(messages, sys, onToken) {
   }
   while (merged.length && merged[0].role === 'assistant') merged.shift();
   if (!merged.length) throw new Error('Nothing to send.');
-  msgs.push(...merged);
+  if (sys) cleanMsgs.push({ role: 'system', content: sys });
+  cleanMsgs.push(...merged);
 
-  let lastErr = '';
-  for (let mi = 0; mi < OR_MODELS.length; mi++) {
-    const model = OR_MODELS[mi];
-    let res;
-    try {
-      res = await fetch(OR_URL, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer ' + apiKey,
-          'HTTP-Referer': window.location.href,
-          'X-Title': 'ECO GREEN AI'
-        },
-        body: JSON.stringify({
-          model,
-          messages: msgs,
-          max_tokens: 3000,
-          temperature: 0.72,
-          top_p: 0.9,
-          stream: true   // ← STREAMING ENABLED
-        })
-      });
-    } catch (netErr) {
-      throw new Error('Network error — check your internet connection and try again.');
-    }
+  // ── Try OpenRouter if key is set ──
+  if (apiKey) {
+    let lastErr = '';
+    for (let mi = 0; mi < OR_MODELS.length; mi++) {
+      const model = OR_MODELS[mi];
+      let res;
+      try {
+        res = await fetch(OR_URL, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + apiKey,
+            'HTTP-Referer': window.location.href,
+            'X-Title': 'ECO GREEN AI'
+          },
+          body: JSON.stringify({ model, messages: cleanMsgs, max_tokens: 3000, temperature: 0.72, top_p: 0.9, stream: true })
+        });
+      } catch (netErr) { break; }
 
-    if (res.status === 401 || res.status === 403) {
-      apiKey = ''; localStorage.removeItem('eco_or_key'); updateStatus(); openModal();
-      throw new Error('bad_key');
-    }
-    if (!res.ok) {
-      const errText = await res.text().catch(() => '');
-      lastErr = errText.toLowerCase();
-      console.warn('[ECO GREEN] Model ' + model + ' failed — status ' + res.status + ' — ' + lastErr);
-      if (res.status === 404 || res.status === 429 || res.status === 500 || res.status === 502 || res.status === 503
-          || lastErr.includes('endpoint') || lastErr.includes('not found') || lastErr.includes('overload')
-          || lastErr.includes('unavailable') || lastErr.includes('provider') || lastErr.includes('rate limit')) {
-        continue;
+      if (res.status === 401 || res.status === 403) {
+        apiKey = ''; localStorage.removeItem('eco_or_key'); updateStatus();
+        break;
       }
-      throw new Error(lastErr || 'API error');
-    }
+      if (!res.ok) {
+        const errText = await res.text().catch(() => '');
+        lastErr = errText.toLowerCase();
+        console.warn('[ECO GREEN] OR model ' + model + ' failed — ' + res.status);
+        if (res.status === 404 || res.status === 429 || res.status === 500 || res.status === 502 || res.status === 503
+            || lastErr.includes('endpoint') || lastErr.includes('not found') || lastErr.includes('overload')
+            || lastErr.includes('unavailable') || lastErr.includes('provider') || lastErr.includes('rate limit')) {
+          continue;
+        }
+        break;
+      }
 
-    // ── Read SSE stream ──
-    const reader = res.body.getReader();
-    const decoder = new TextDecoder('utf-8');
-    let fullText = '';
-    let buffer = '';
-    let wordBuffer = '';        // accumulates partial word
-    const WORD_DELAY_MS = 42;  // ~24 words/sec — comfortable reading speed
-
-    // Helper: flush the word buffer through onToken with delay
-    async function flushWordBuffer() {
-      if (!wordBuffer) return;
-      const word = wordBuffer;
-      wordBuffer = '';
-      onToken(word);
-      await new Promise(r => setTimeout(r, WORD_DELAY_MS));
-    }
-
-    try {
-      while (true) {
-        const { done, value } = await reader.read();
-        if (done) break;
-
-        buffer += decoder.decode(value, { stream: true });
-        const lines = buffer.split('\n');
-        buffer = lines.pop(); // keep incomplete line
-
-        for (const line of lines) {
-          const trimmed = line.trim();
-          if (!trimmed || trimmed === ':' || !trimmed.startsWith('data:')) continue;
-          const data = trimmed.slice(5).trim();
-          if (data === '[DONE]') break;
-
-          let parsed;
-          try { parsed = JSON.parse(data); } catch { continue; }
-
-          // Extract token from delta
-          const token = parsed?.choices?.[0]?.delta?.content;
-          if (!token) continue;
-
-          fullText += token;
-
-          // ── Word-by-word assembly ──
-          // We want to emit whole "words" (plus their trailing space/punctuation).
-          // Strategy: accumulate into wordBuffer; flush on space or newline.
-          for (const char of token) {
-            if (char === ' ' || char === '\n' || char === '\t') {
-              wordBuffer += char;
-              await flushWordBuffer();
-            } else {
-              wordBuffer += char;
+      // ── Read SSE stream ──
+      const reader = res.body.getReader();
+      const decoder = new TextDecoder('utf-8');
+      let fullText = '', buffer = '', wordBuffer = '';
+      const WORD_DELAY_MS = 42;
+      async function flushWordBuffer() {
+        if (!wordBuffer) return;
+        const word = wordBuffer; wordBuffer = '';
+        onToken(word);
+        await new Promise(r => setTimeout(r, WORD_DELAY_MS));
+      }
+      try {
+        while (true) {
+          const { done, value } = await reader.read();
+          if (done) break;
+          buffer += decoder.decode(value, { stream: true });
+          const lines = buffer.split('\n');
+          buffer = lines.pop();
+          for (const line of lines) {
+            const trimmed = line.trim();
+            if (!trimmed || trimmed === ':' || !trimmed.startsWith('data:')) continue;
+            const data = trimmed.slice(5).trim();
+            if (data === '[DONE]') break;
+            let parsed; try { parsed = JSON.parse(data); } catch { continue; }
+            const token = parsed?.choices?.[0]?.delta?.content;
+            if (!token) continue;
+            fullText += token;
+            for (const char of token) {
+              if (char === ' ' || char === '\n' || char === '\t') { wordBuffer += char; await flushWordBuffer(); }
+              else wordBuffer += char;
             }
           }
         }
+        await flushWordBuffer();
+      } catch (streamErr) {
+        if (fullText) return fullText;
+        continue;
       }
-
-      // Flush any remaining partial word
-      await flushWordBuffer();
-
-    } catch (streamErr) {
-      // If stream read fails mid-way, still return what we have
-      if (fullText) return fullText;
-      throw streamErr;
+      if (fullText) { currentModel = model; return fullText; }
     }
-
-    currentModel = model;
-    return fullText;
   }
 
-  throw new Error('All AI models are busy right now. Check your OpenRouter key is valid at openrouter.ai, then try again.');
+  // ── Fallback: Pollinations AI (free, no key needed) ──
+  try {
+    console.log('[ECO GREEN] Using Pollinations fallback...');
+    const text = await callPollinations(merged, sys);
+    // Simulate word-by-word streaming
+    const words = text.split(/(\s+)/);
+    for (const chunk of words) {
+      if (chunk) { onToken(chunk); await new Promise(r => setTimeout(r, 38)); }
+    }
+    currentModel = 'pollinations/openai';
+    return text;
+  } catch (pollErr) {
+    console.error('[ECO GREEN] Pollinations failed:', pollErr);
+    throw new Error('No internet connection or AI is temporarily down. Please check your connection and try again.');
+  }
 }
 
 // Non-streaming fallback (used for idea generation JSON)
 async function aiRequest(messages, sys) {
-  if (!apiKey) { openModal(); throw new Error('no_key'); }
-  const msgs = [];
-  if (sys) msgs.push({ role: 'system', content: sys });
   const filtered = messages.filter(m => m.role === 'user' || m.role === 'assistant').map(m => ({ role: m.role, content: m.content || '' }));
   const merged = [];
   for (const m of filtered) {
@@ -996,31 +988,44 @@ async function aiRequest(messages, sys) {
   }
   while (merged.length && merged[0].role === 'assistant') merged.shift();
   if (!merged.length) throw new Error('Nothing to send.');
-  msgs.push(...merged);
-  let lastErr = '';
-  for (let mi = 0; mi < OR_MODELS.length; mi++) {
-    const model = OR_MODELS[mi]; let res, data;
-    try {
-      res = await fetch(OR_URL, { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + apiKey, 'HTTP-Referer': window.location.href, 'X-Title': 'ECO GREEN AI' }, body: JSON.stringify({ model, messages: msgs, max_tokens: 3000, temperature: 0.72, top_p: 0.9 }) });
-      data = await res.json();
-    } catch (netErr) { throw new Error('Network error — check your internet connection and try again.'); }
-    if (res.status === 401 || res.status === 403) { apiKey = ''; localStorage.removeItem('eco_or_key'); updateStatus(); openModal(); throw new Error('bad_key'); }
-    if (!res.ok || (data && data.error)) {
-      const errMsg = String((data && data.error && (data.error.message || data.error.code || data.error)) || res.statusText || '').toLowerCase();
-      lastErr = errMsg;
-      console.warn('[ECO GREEN] Model ' + model + ' failed — status ' + res.status + ' — ' + errMsg);
-      // Only skip to next model for known retryable errors; don't catch everything
-      if (res.status === 404 || res.status === 429 || res.status === 500 || res.status === 502 || res.status === 503
-          || errMsg.includes('endpoint') || errMsg.includes('no model') || errMsg.includes('not found')
-          || errMsg.includes('provider') || errMsg.includes('overload') || errMsg.includes('capacity')
-          || errMsg.includes('unavailable') || errMsg.includes('rate limit')) { continue; }
-      throw new Error(errMsg || 'API error');
+
+  // ── Try OpenRouter if key is set ──
+  if (apiKey) {
+    const msgs = [];
+    if (sys) msgs.push({ role: 'system', content: sys });
+    msgs.push(...merged);
+    let lastErr = '';
+    for (let mi = 0; mi < OR_MODELS.length; mi++) {
+      const model = OR_MODELS[mi]; let res, data;
+      try {
+        res = await fetch(OR_URL, { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + apiKey, 'HTTP-Referer': window.location.href, 'X-Title': 'ECO GREEN AI' }, body: JSON.stringify({ model, messages: msgs, max_tokens: 3000, temperature: 0.72, top_p: 0.9 }) });
+        data = await res.json();
+      } catch (netErr) { break; }
+      if (res.status === 401 || res.status === 403) { apiKey = ''; localStorage.removeItem('eco_or_key'); updateStatus(); break; }
+      if (!res.ok || (data && data.error)) {
+        const errMsg = String((data && data.error && (data.error.message || data.error.code || data.error)) || res.statusText || '').toLowerCase();
+        lastErr = errMsg;
+        console.warn('[ECO GREEN] OR model ' + model + ' failed — ' + res.status);
+        if (res.status === 404 || res.status === 429 || res.status === 500 || res.status === 502 || res.status === 503
+            || errMsg.includes('endpoint') || errMsg.includes('no model') || errMsg.includes('not found')
+            || errMsg.includes('provider') || errMsg.includes('overload') || errMsg.includes('capacity')
+            || errMsg.includes('unavailable') || errMsg.includes('rate limit')) { continue; }
+        break;
+      }
+      const text = (data && data.choices && data.choices[0] && data.choices[0].message && data.choices[0].message.content || '').trim();
+      if (text) { currentModel = model; return text; }
+      lastErr = 'empty response'; continue;
     }
-    const text = (data && data.choices && data.choices[0] && data.choices[0].message && data.choices[0].message.content || '').trim();
-    if (text) { currentModel = model; return text; }
-    lastErr = 'empty response'; continue;
   }
-  throw new Error('All AI models are busy right now. Check your OpenRouter key is valid at openrouter.ai, then try again.');
+
+  // ── Fallback: Pollinations AI (free, no key needed) ──
+  try {
+    console.log('[ECO GREEN] Using Pollinations fallback for aiRequest...');
+    return await callPollinations(merged, sys);
+  } catch (pollErr) {
+    console.error('[ECO GREEN] Pollinations failed:', pollErr);
+    throw new Error('No internet connection or AI is temporarily down. Please check your connection and try again.');
+  }
 }
 
 function callAI(prompt, sys) { return aiRequest([{ role: 'user', content: prompt }], sys); }
@@ -1049,15 +1054,15 @@ function toggleTheme() { const dark = document.documentElement.getAttribute('dat
 (function() { const t = localStorage.getItem('eco-theme'); const dark = t ? t === 'dark' : window.matchMedia('(prefers-color-scheme: dark)').matches; applyTheme(dark, false); })();
 
 // ===== API KEY =====
-function loadKey() { apiKey = localStorage.getItem('eco_or_key') || ''; updateStatus(); if (!apiKey) openModal(); }
-function saveApiKey() { const k = document.getElementById('api-key-input').value.trim(); if (!k) { alert('Please enter your password! 😊'); return; } apiKey = k; localStorage.setItem('eco_or_key', k); document.getElementById('api-modal').classList.add('hidden'); updateStatus(); confetti(); }
+function loadKey() { apiKey = localStorage.getItem('eco_or_key') || ''; updateStatus(); }
+function saveApiKey() { const k = document.getElementById('api-key-input').value.trim(); if (!k) { alert('Please enter your OpenRouter API key! 😊'); return; } apiKey = k; localStorage.setItem('eco_or_key', k); document.getElementById('api-modal').classList.add('hidden'); updateStatus(); confetti(); }
 function skipModal() { document.getElementById('api-modal').classList.add('hidden'); updateStatus(); }
 function openModal() { const inp = document.getElementById('api-key-input'); inp.value = apiKey || ''; inp.type = 'password'; document.getElementById('eye-btn').textContent = '👁️'; document.getElementById('api-modal').classList.remove('hidden'); }
 function toggleEye() { const inp = document.getElementById('api-key-input'); const eye = document.getElementById('eye-btn'); inp.type = inp.type === 'password' ? 'text' : 'password'; eye.textContent = inp.type === 'password' ? '👁️' : '🙈'; }
 function updateStatus() {
   const title = document.getElementById('banner-title'), sub = document.getElementById('banner-sub'), action = document.getElementById('banner-action'), banner = document.getElementById('api-banner');
-  if (apiKey) { title.textContent = '✅ ECO GREEN AI Ready'; sub.textContent = 'AI features unlocked · Click to change password'; action.textContent = 'Change →'; banner.classList.add('connected'); }
-  else { title.textContent = '🔒 Password Required'; sub.textContent = 'Click to enter your password and unlock AI features'; action.textContent = 'Enter →'; banner.classList.remove('connected'); }
+  if (apiKey) { title.textContent = '✅ ECO GREEN AI Ready'; sub.textContent = 'OpenRouter key active · Better AI models unlocked'; action.textContent = 'Change →'; banner.classList.add('connected'); }
+  else { title.textContent = '✅ ECO GREEN AI Ready'; sub.textContent = 'Free AI active · Add OpenRouter key for better models'; action.textContent = 'Upgrade →'; banner.classList.add('connected'); }
 }
 document.getElementById('api-key-input').addEventListener('keydown', function(e) { if (e.key === 'Enter') saveApiKey(); });
 
