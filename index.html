@@ -895,7 +895,10 @@ const OR_MODELS = [
 ];
 let currentModel = OR_MODELS[0];
 
-// ===== POLLINATIONS FALLBACK (free, no key needed) =====
+// Safe timeout signal — AbortSignal.timeout not available in all mobile browsers
+function makeTimeoutSignal(ms) {
+  try { return AbortSignal.timeout(ms); } catch(e) { const c = new AbortController(); setTimeout(() => c.abort(), ms); return c.signal; }
+}
 async function callPollinations(messages, sys) {
   const msgs = [];
   if (sys) msgs.push({ role: 'system', content: sys });
@@ -903,7 +906,8 @@ async function callPollinations(messages, sys) {
   const res = await fetch(POLL_URL, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ messages: msgs, model: 'openai', seed: Math.floor(Math.random() * 9999), private: true })
+    body: JSON.stringify({ messages: msgs, model: 'openai', seed: Math.floor(Math.random() * 9999), private: true }),
+    signal: makeTimeoutSignal(30000)
   });
   if (!res.ok) throw new Error('Pollinations error: ' + res.status);
   const text = await res.text();
@@ -923,7 +927,7 @@ async function callOllama(messages, sys) {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ model, messages: msgs, stream: false }),
-        signal: AbortSignal.timeout(90000)
+        signal: makeTimeoutSignal(90000)
       });
       if (res.status === 404) continue;
       if (!res.ok) continue;
@@ -941,7 +945,7 @@ async function callOllama(messages, sys) {
 
 async function isOllamaAvailable() {
   try {
-    const res = await fetch(getOllamaHost() + '/api/tags', { signal: AbortSignal.timeout(3000) });
+    const res = await fetch(getOllamaHost() + '/api/tags', { signal: makeTimeoutSignal(3000) });
     return res.ok;
   } catch { return false; }
 }
@@ -1153,7 +1157,7 @@ function compressMessages(messages) {
   if (filtered.length <= 24) return filtered;
   const older = filtered.slice(0, filtered.length - 16);
   const recent = filtered.slice(-16);
-  const summary = older.map(m => '[' + (m.role === 'user' ? 'Student' : 'ECO GREEN AI') + ']: ' + String(m.content).slice(0, 100).trim() + (m.content.length > 100 ? '...' : '')).join('\n');
+  const summary = older.map(m => { const c = String(m.content || ''); return '[' + (m.role === 'user' ? 'Student' : 'ECO GREEN AI') + ']: ' + c.slice(0, 100).trim() + (c.length > 100 ? '...' : ''); }).join('\n');
   return [
     { role: 'user', content: '[Conversation history summary — ' + older.length + ' earlier messages]:\n' + summary + '\n\n[Continue from here with full awareness of everything above]' },
     { role: 'assistant', content: 'I have full awareness of our entire conversation history and will continue naturally from where we left off.' },
@@ -1236,7 +1240,6 @@ function renderSteps() {
 
 async function generateIdeas() {
   if (!selField) return;
-  if (!apiKey) { openModal(); return; }
   const f = FIELDS[selField]; const btn = document.getElementById('gen-btn');
   btn.disabled = true; btn.innerHTML = '<span class="spinner"></span> Generating with AI...';
   const tc = selTopic ? 'specifically in the topic area of "' + selTopic + '"' : 'across any relevant green topic';
@@ -1244,33 +1247,58 @@ async function generateIdeas() {
   const sys = 'You are a world-class sustainable engineering project advisor specialising in African and Gambian engineering solutions. Return ONLY a valid JSON array. No markdown. No code fences. No explanation. Nothing else.';
   try {
     const raw = await callAI(prompt, sys);
-    let clean = raw.replace(/```json/gi, '').replace(/```/g, '').trim();
 
-    // If the whole response is wrapped in quotes (double-encoded), unwrap it
-    if ((clean.startsWith('"') && clean.endsWith('"')) ||
-        (clean.startsWith("'") && clean.endsWith("'"))) {
-      try { clean = JSON.parse(clean); } catch(e) { clean = clean.slice(1, -1); }
+    // ── Robust JSON extractor ──
+    // Handles: code fences, backslash-escaped quotes, trailing text, double-encoding
+    function extractJSON(str) {
+      // 1. Strip markdown fences
+      str = str.replace(/```json/gi, '').replace(/```/g, '').trim();
+
+      // 2. Unescape backslash-escaped quotes (Pollinations quirk: [\"Solar pa...])
+      if (str.includes('\\"')) str = str.replace(/\\"/g, '"').replace(/\\\\/g, '\\');
+
+      // 3. Unwrap if double-encoded as a string
+      if ((str.startsWith('"') && str.endsWith('"')) || (str.startsWith("'") && str.endsWith("'"))) {
+        try { str = JSON.parse(str); } catch(e) { str = str.slice(1, -1); }
+      }
+
+      // 4. Find the first '[' and walk brackets to find the true closing ']'
+      //    This correctly ignores trailing text after the array
+      const start = str.indexOf('[');
+      if (start === -1) return null;
+      let depth = 0, inStr = false, esc = false;
+      for (let i = start; i < str.length; i++) {
+        const c = str[i];
+        if (esc) { esc = false; continue; }
+        if (c === '\\') { esc = true; continue; }
+        if (c === '"') { inStr = !inStr; continue; }
+        if (inStr) continue;
+        if (c === '[' || c === '{') depth++;
+        else if (c === ']' || c === '}') { depth--; if (depth === 0) return str.slice(start, i + 1); }
+      }
+      return null; // unbalanced
     }
 
-    // Try to extract a JSON array
-    let match = clean.match(/\[[\s\S]*\]/);
-    if (!match) {
-      // Fallback: unescape backslash-quotes and retry extraction
-      const unescaped = clean.replace(/\\"/g, '"').replace(/\\\\/g, '\\');
-      match = unescaped.match(/\[[\s\S]*\]/);
-      if (match) clean = unescaped;
-    }
-    if (!match) throw new Error('Response was not valid JSON. Please try again.');
+    const jsonStr = extractJSON(raw);
+    if (!jsonStr) throw new Error('AI returned unreadable format. Please try again.');
 
-    // Try parsing — if it fails due to escaped quotes inside, unescape and retry
-    let parsed;
-    try {
-      parsed = JSON.parse(match[0]);
-    } catch (parseErr) {
-      const unescaped = match[0].replace(/\\"/g, '"').replace(/\\\\/g, '\\');
-      parsed = JSON.parse(unescaped);
-    }
-    ideas = parsed.slice(0, 4);
+    // 5. Remove trailing commas before ] or } (common AI mistake)
+    const cleaned = jsonStr.replace(/,\s*([}\]])/g, '$1');
+
+    // 6. Parse and validate — must be a non-empty array of objects
+    const parsed = JSON.parse(cleaned);
+    if (!Array.isArray(parsed) || parsed.length === 0) throw new Error('AI returned no ideas. Please try again.');
+    if (typeof parsed[0] !== 'object' || !parsed[0].title) throw new Error('AI returned unexpected format. Please try again.');
+
+    // 7. Sanitise each idea — fill missing fields with safe defaults
+    ideas = parsed.slice(0, 4).map(idea => ({
+      title:        String(idea.title        || 'Untitled Project'),
+      description:  String(idea.description  || 'No description provided.'),
+      technologies: Array.isArray(idea.technologies) ? idea.technologies.map(String) : [],
+      impact:       String(idea.impact        || 'Positive environmental impact.'),
+      difficulty:   Math.max(1, Math.min(5, parseInt(idea.difficulty) || 3)),
+      steps:        Array.isArray(idea.steps) ? idea.steps.map(String) : []
+    }));
     renderIdeas(); confetti();
   } catch (e) {
     if (e.message !== 'no_key' && e.message !== 'bad_key') alert('Could not generate ideas 😕\n\n' + e.message);
@@ -1295,7 +1323,7 @@ function renderIdeas() {
   });
 }
 
-function toggleSave(i) { const idea = ideas[i]; const idx = saved.findIndex(s => s.title === idea.title); if (idx >= 0) saved.splice(idx, 1); else saved.push(Object.assign({}, idea, { field: selField })); updateSavedNav(); renderIdeas(); }
+function toggleSave(i) { const idea = ideas[i]; if (!idea) return; const idx = saved.findIndex(s => s.title === idea.title); if (idx >= 0) saved.splice(idx, 1); else saved.push(Object.assign({}, idea, { field: selField })); updateSavedNav(); renderIdeas(); }
 function updateSavedNav() { const nb = document.getElementById('nb-saved'); if (nb) nb.textContent = saved.length ? '📌 Saved (' + saved.length + ')' : '📌 Saved'; }
 
 // ===== MEMORY =====
@@ -1305,6 +1333,7 @@ function saveProfile() { try { localStorage.setItem('eco_profile', JSON.stringif
 function saveConvs() { try { localStorage.setItem('eco_saved_convs', JSON.stringify(savedConvs.slice(0, 20))); } catch(e) {} }
 function updateProfileDot() { const dot = document.getElementById('profile-dot'); if (dot) dot.style.display = (userProfile.notes && userProfile.notes.length) || savedConvs.length ? 'block' : 'none'; }
 function extractProfileFromMessage(text) {
+  if (!text || typeof text !== 'string') return;
   let changed = false;
   if (!userProfile.name) { const patterns = [/(?:my name is|i'm called|call me|i am)\s+([A-Za-z]{2,20})/i,/^(?:hi|hello|hey)[,\s]+(?:i'?m|my name is)\s+([A-Za-z]{2,20})/i]; for (const p of patterns) { const m = text.match(p); if (m && m[1] && m[1].length > 1) { const n = m[1].charAt(0).toUpperCase() + m[1].slice(1).toLowerCase(); if (!['the','and','but','for','are','you','this','that','with','have','from'].includes(n.toLowerCase())) { userProfile.name = n; changed = true; break; } } } }
   if (!userProfile.field) { if (/electrical|electronics|circuit|pcb|arduino|esp32|iot|embedded|power system|signal/i.test(text)) { userProfile.field = 'Electrical & Electronics Engineering'; changed = true; } else if (/civil|structural|concrete|bridge|road|foundation|soil|construction|hydraulic/i.test(text)) { userProfile.field = 'Civil Engineering'; changed = true; } else if (/mechanical|thermodynamic|fluid|hvac|engine|solidworks|manufacturing|robotic|machine/i.test(text)) { userProfile.field = 'Mechanical Engineering'; changed = true; } }
@@ -1395,7 +1424,7 @@ function renderProfileTags() {
   c.innerHTML = html;
 }
 function deleteProfileKey(key) { delete userProfile[key]; saveProfile(); renderProfileTags(); }
-function deleteNote(i) { if (!userProfile.notes) return; userProfile.notes.splice(i, 1); saveProfile(); renderProfileTags(); }
+function deleteNote(i) { if (!userProfile.notes || !userProfile.notes[i]) return; userProfile.notes.splice(i, 1); saveProfile(); renderProfileTags(); }
 function addProfileNote() { const inp = document.getElementById('profile-inp'); const val = inp.value.trim(); if (!val) return; if (!userProfile.notes) userProfile.notes = []; extractProfileFromMessage(val); if (!userProfile.notes) userProfile.notes = []; userProfile.notes.push(val); saveProfile(); renderProfileTags(); inp.value = ''; }
 function saveCurrentConv() {
   if (chatHist.length <= 1) { alert('Start a conversation first! 😊'); return; }
@@ -1412,8 +1441,8 @@ function renderConvList() {
   if (!savedConvs.length) { c.innerHTML = '<div class="mem-empty">No saved conversations yet. Press "Save Current" after a chat! 💬</div>'; return; }
   c.innerHTML = savedConvs.map((conv, i) => '<div class="conv-item"><div class="conv-item-title">' + conv.title + '</div><div class="conv-item-meta">📅 ' + conv.date + ' · ' + conv.messages.length + ' messages</div><div class="conv-item-actions"><button class="conv-load-btn" onclick="loadConv(' + i + ')">📂 Load</button><button class="conv-del-btn" onclick="deleteConv(' + i + ')">✕</button></div></div>').join('');
 }
-function loadConv(i) { chatHist = savedConvs[i].messages.slice(); closeMemPanel(); showPage('chat'); renderChat(); }
-function deleteConv(i) { savedConvs.splice(i, 1); saveConvs(); renderConvList(); updateProfileDot(); }
+function loadConv(i) { if (!savedConvs[i] || !Array.isArray(savedConvs[i].messages)) return; chatHist = savedConvs[i].messages.slice(); closeMemPanel(); showPage('chat'); renderChat(); }
+function deleteConv(i) { if (!savedConvs[i]) return; savedConvs.splice(i, 1); saveConvs(); renderConvList(); updateProfileDot(); }
 function clearAllMemory() {
   if (!confirm('Clear all memory, profile, and saved conversations?')) return;
   userProfile = {}; savedConvs = []; localStorage.removeItem('eco_profile'); localStorage.removeItem('eco_saved_convs'); localStorage.removeItem('eco_chat_history'); localStorage.removeItem('eco_chat_last_time');
@@ -1447,7 +1476,7 @@ function initChat() {
 
 // ===== MARKDOWN RENDERER =====
 function md(rawText, isUser) {
-  let s = rawText.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  let s = String(rawText == null ? '' : rawText).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
   if (isUser) {
     s = s.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>').replace(/\*(.+?)\*/g, '<em>$1</em>').replace(/`([^`]+)`/g, '<code class="chat-code-inline">$1</code>').replace(/\n/g, '<br/>');
     return s;
@@ -1502,7 +1531,7 @@ function buildMsgRow(msg) {
 }
 
 function renderChat(loading) {
-  const c = document.getElementById('chat-msgs'); c.innerHTML = '';
+  const c = document.getElementById('chat-msgs'); if (!c) return; c.innerHTML = '';
   chatHist.forEach(msg => c.appendChild(buildMsgRow(msg)));
   if (loading) {
     const row = document.createElement('div'); row.className = 'msg-row assistant';
@@ -1510,13 +1539,12 @@ function renderChat(loading) {
     c.appendChild(row);
   }
   forceScrollDown();
-  document.getElementById('qprompts').style.display = chatHist.length <= 1 ? 'flex' : 'none';
+  const qp = document.getElementById('qprompts'); if (qp) qp.style.display = chatHist.length <= 1 ? 'flex' : 'none';
 }
 
 function scrollDown() {
   const c = document.getElementById('chat-msgs');
   if (!c) return;
-  // Only auto-scroll if user is within 80px of the bottom — never hijack upward scrolling
   const distFromBottom = c.scrollHeight - c.scrollTop - c.clientHeight;
   if (distFromBottom < 80) c.scrollTop = c.scrollHeight;
 }
@@ -1524,14 +1552,17 @@ function forceScrollDown() {
   const c = document.getElementById('chat-msgs');
   if (c) c.scrollTop = c.scrollHeight;
 }
-function updateSendBtn() { const v = document.getElementById('chat-in').value.trim(); document.getElementById('send-btn').className = 'send-btn ' + (v && !chatBusy ? 'ready' : 'off'); }
+function updateSendBtn() {
+  const inp = document.getElementById('chat-in'); const btn = document.getElementById('send-btn');
+  if (!inp || !btn) return;
+  const v = inp.value.trim(); btn.className = 'send-btn ' + (v && !chatBusy ? 'ready' : 'off');
+}
 function chatKey(e) { if (e.key === 'Enter' && e.shiftKey) { e.preventDefault(); sendChat(); } updateSendBtn(); }
 function resizeTA(el) { el.style.height = 'auto'; el.style.height = Math.min(el.scrollHeight, 120) + 'px'; updateSendBtn(); }
 
 async function sendChat() {
   const inp = document.getElementById('chat-in'); const msg = inp.value.trim();
   if (!msg || chatBusy) return;
-  if (!apiKey) { openModal(); return; }
   inp.value = ''; inp.style.height = 'auto'; updateSendBtn();
   chatHist.push({ role: 'user', content: msg });
   chatBusy = true; await doStreamChat();
@@ -1539,7 +1570,6 @@ async function sendChat() {
 
 async function sendQuick(msg) {
   if (chatBusy) return;
-  if (!apiKey) { openModal(); return; }
   if (!chatHist.length) initChat();
   chatHist.push({ role: 'user', content: msg });
   chatBusy = true; await doStreamChat();
@@ -1556,7 +1586,7 @@ async function doStreamChat() {
   const statusBar = document.getElementById('stream-status');
   const statusText = document.getElementById('stream-status-text');
   const statusEl = document.getElementById('status-text');
-  statusBar.classList.add('visible');
+  if (statusBar) statusBar.classList.add('visible');
   if (statusEl) statusEl.textContent = 'Streaming…';
 
   // Create a streaming AI bubble row in the DOM
@@ -1587,7 +1617,7 @@ async function doStreamChat() {
     setTimeout(function() {
       renderPending = false;
       bubble.innerHTML = md(accumulated, false) + '<span class="stream-cursor"></span>';
-      statusText.textContent = 'Streaming… ' + tokenCount + ' tokens';
+      if (statusText) statusText.textContent = 'Streaming… ' + tokenCount + ' tokens';
       scrollDown();
     }, 80);
   }
@@ -1616,7 +1646,7 @@ async function doStreamChat() {
     }
   } finally {
     chatBusy = false;
-    statusBar.classList.remove('visible');
+    if (statusBar) statusBar.classList.remove('visible');
     if (statusEl) statusEl.textContent = 'Always available · Remembers you';
     updateSendBtn();
     // Final clean render (removes cursor, formats properly)
@@ -1627,12 +1657,13 @@ async function doStreamChat() {
 }
 
 async function ideaToChat(i) {
-  const idea = ideas[i]; if (!apiKey) { openModal(); return; }
+  const idea = ideas[i];
+  if (!idea) return;
   const msg = 'Hi ECO GREEN AI! I want to build this project: **' + idea.title + '**. ' + idea.description + ' Can you help me plan it step by step with a focus on sustainability and eco-friendliness?';
   chatHist = [{ role: 'assistant', content: WELCOME }, { role: 'user', content: msg }];
   chatBusy = true; showPage('chat');
   const chip = document.getElementById('build-chip');
-  chip.style.display = 'block'; chip.innerHTML = 'Building:<br/><strong>' + idea.title + '</strong>';
+  if (chip) { chip.style.display = 'block'; chip.innerHTML = 'Building:<br/><strong>' + idea.title + '</strong>'; }
   await doStreamChat();
 }
 
@@ -1643,17 +1674,17 @@ function renderSaved() {
   c.innerHTML = '<div class="saved-grid" id="sg"></div>';
   const g = document.getElementById('sg');
   saved.forEach((idea, i) => {
-    const f = FIELDS[idea.field]; const d = document.createElement('div'); d.className = 'saved-card';
+    const f = FIELDS[idea.field] || Object.values(FIELDS)[0]; const d = document.createElement('div'); d.className = 'saved-card';
     d.innerHTML = '<div style="height:4px;background:linear-gradient(90deg,' + f.color + ',' + f.color + '55)"></div><div style="padding:20px 22px"><div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:12px"><div><div style="font-size:11px;color:' + f.color + ';font-weight:800">' + f.icon + ' ' + f.label + '</div><div style="font-family:\'DM Serif Display\',serif;font-size:18px;font-weight:700;color:var(--text);margin-top:4px;line-height:1.3">' + idea.title + '</div></div><button onclick="removeSaved(' + i + ')" style="padding:6px 12px;border-radius:10px;border:1.5px solid #fca5a5;background:#fef2f2;color:#ef4444;cursor:pointer;font-size:12px;font-weight:700;font-family:\'Inter\',sans-serif;flex-shrink:0">✕ Remove</button></div><p style="color:var(--text2);font-size:13px;line-height:1.8;margin:0 0 14px;font-weight:600">' + idea.description + '</p><div style="display:flex;flex-wrap:wrap;gap:7px;margin-bottom:14px">' + (idea.technologies || []).map(t => '<span style="background:' + f.color + '15;border:1.5px solid ' + f.color + '44;color:' + f.color + ';padding:4px 12px;border-radius:20px;font-size:12px;font-weight:700">' + t + '</span>').join('') + '</div><div style="background:var(--green4);border-radius:10px;padding:10px 14px;font-size:13px;color:var(--text2);margin-bottom:14px;font-weight:600;border:1px solid var(--green3)">🌍 ' + idea.impact + '</div><button class="btn-eco" onclick="savedToChat(' + i + ')" style="width:auto;padding:11px 22px">🌿 Build with Eco Green AI</button></div>';
     g.appendChild(d);
   });
 }
-function removeSaved(i) { saved.splice(i, 1); updateSavedNav(); renderSaved(); }
-function savedToChat(i) { ideas = [saved[i]]; ideaToChat(0); }
+function removeSaved(i) { if (!saved[i]) return; saved.splice(i, 1); updateSavedNav(); renderSaved(); }
+function savedToChat(i) { if (!saved[i]) return; ideas = [saved[i]]; ideaToChat(0); }
 
 // ===== CONFETTI =====
 function confetti() {
-  const layer = document.getElementById('confetti-layer'); layer.innerHTML = '';
+  const layer = document.getElementById('confetti-layer'); if (!layer) return; layer.innerHTML = '';
   const colors = ['#1a9e5c','#f4a429','#7c6ff7','#f0637a','#25c270','#60a5fa'];
   for (let i = 0; i < 36; i++) {
     const p = document.createElement('div'); p.className = 'cp';
@@ -1992,6 +2023,10 @@ function labPortClick(nid) {
     const el = document.getElementById(nid);
     if (el) el.classList.add('connecting-source');
   } else if (labConnFrom !== nid) {
+    // Guard: source node may have been deleted while in connection mode
+    if (!labNodes[labConnFrom] || !labNodes[nid]) {
+      labConnFrom = null; labConnMode = false; return;
+    }
     const already = labConns.find(c => (c.from===labConnFrom&&c.to===nid)||(c.from===nid&&c.to===labConnFrom));
     if (!already) {
       labPushHistory();
@@ -2017,6 +2052,7 @@ function labDeleteNode(nid) {
   if (el) el.remove();
   delete labNodes[nid];
   if (labSelected === nid) labSelected = null;
+  if (labConnFrom === nid) { labConnFrom = null; labConnMode = false; }
   labRedrawConnections();
   labUpdateScores();
   if (Object.keys(labNodes).length === 0) document.getElementById('lab-empty-msg').style.display = '';
@@ -2151,10 +2187,10 @@ async function labAnalyse() {
   if (labAnalysing) return;
   const nodes = Object.values(labNodes);
   if (nodes.length < 2) { alert('Add at least 2 components before analysing! 😊'); return; }
-  if (!apiKey) { openModal(); return; }
 
   labAnalysing = true;
   const btn = document.getElementById('lab-analyse-btn');
+  if (!btn) { labAnalysing = false; return; }
   btn.disabled = true;
   btn.innerHTML = '<span style="display:inline-block;width:14px;height:14px;border:2px solid rgba(255,255,255,.4);border-top-color:#fff;border-radius:50%;animation:spin .8s linear infinite"></span> Analysing…';
 
@@ -2164,8 +2200,8 @@ async function labAnalyse() {
     return (fn ? fn.compData.name : '?') + ' → ' + (tn ? tn.compData.name : '?') + (c.synergy ? ' [SYNERGY]' : '');
   }).join('\n') || 'No connections yet';
 
-  const sScore = parseInt(document.getElementById('score-s').textContent);
-  const iScore = parseInt(document.getElementById('score-i').textContent);
+  const sScore = parseInt(document.getElementById('score-s').textContent) || 0;
+  const iScore = parseInt(document.getElementById('score-i').textContent) || 0;
 
   const prompt = `A student is building a ${labField} engineering project using the ECO GREEN Lab. Here is their design:
 
@@ -2196,6 +2232,7 @@ As ECO GREEN AI (Gambia & Africa focused), give them a brief, practical design r
 Keep it warm, specific, and actionable. Max 200 words.`;
 
   const feedbackDiv = document.getElementById('lab-feedback-content');
+  if (!feedbackDiv) { labAnalysing = false; btn.disabled = false; btn.innerHTML = '🤖 Analyse with AI'; return; }
   feedbackDiv.innerHTML = '<div class="lab-feedback-bubble" style="color:var(--text3)"><span style="animation:pulse 1.5s infinite;display:inline-block">🤖</span> Analysing your design…</div>';
   labRtab('feedback');
 
@@ -2203,7 +2240,7 @@ Keep it warm, specific, and actionable. Max 200 words.`;
     const reply = await callAI(prompt, SYS);
     feedbackDiv.innerHTML = '<div class="lab-feedback-bubble">' + md(reply, false) + '</div>';
   } catch(e) {
-    feedbackDiv.innerHTML = '<div class="lab-feedback-bubble">⚠️ Could not get feedback. Make sure your password is set! 😊</div>';
+    feedbackDiv.innerHTML = '<div class="lab-feedback-bubble">⚠️ Could not get AI feedback. Try again! 😊</div>';
   } finally {
     labAnalysing = false;
     btn.disabled = false;
