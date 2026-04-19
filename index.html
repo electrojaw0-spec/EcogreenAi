@@ -1247,32 +1247,9 @@ async function generateIdeas() {
   try {
     const raw = await callAI(prompt, sys);
     let clean = raw.replace(/```json/gi, '').replace(/```/g, '').trim();
-
-    // If the whole response is wrapped in quotes (double-encoded), unwrap it
-    if ((clean.startsWith('"') && clean.endsWith('"')) ||
-        (clean.startsWith("'") && clean.endsWith("'"))) {
-      try { clean = JSON.parse(clean); } catch(e) { clean = clean.slice(1, -1); }
-    }
-
-    // Try to extract a JSON array
-    let match = clean.match(/\[[\s\S]*\]/);
-    if (!match) {
-      // Fallback: unescape backslash-quotes and retry extraction
-      const unescaped = clean.replace(/\\"/g, '"').replace(/\\\\/g, '\\');
-      match = unescaped.match(/\[[\s\S]*\]/);
-      if (match) clean = unescaped;
-    }
+    const match = clean.match(/\[[\s\S]*\]/);
     if (!match) throw new Error('Response was not valid JSON. Please try again.');
-
-    // Try parsing — if it fails due to escaped quotes inside, unescape and retry
-    let parsed;
-    try {
-      parsed = JSON.parse(match[0]);
-    } catch (parseErr) {
-      const unescaped = match[0].replace(/\\"/g, '"').replace(/\\\\/g, '\\');
-      parsed = JSON.parse(unescaped);
-    }
-    ideas = parsed.slice(0, 4);
+    ideas = JSON.parse(match[0]).slice(0, 4);
     renderIdeas(); confetti();
   } catch (e) {
     if (e.message !== 'no_key' && e.message !== 'bad_key') alert('Could not generate ideas 😕\n\n' + e.message);
