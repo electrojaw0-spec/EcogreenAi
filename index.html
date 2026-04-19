@@ -903,9 +903,10 @@ async function streamAI(messages, sys, onToken) {
     if (!res.ok) {
       const errText = await res.text().catch(() => '');
       lastErr = errText.toLowerCase();
+      console.warn('[ECO GREEN] Model ' + model + ' failed — status ' + res.status + ' — ' + lastErr);
       if (res.status === 404 || res.status === 429 || res.status === 500 || res.status === 502 || res.status === 503
           || lastErr.includes('endpoint') || lastErr.includes('not found') || lastErr.includes('overload')
-          || lastErr.includes('unavailable') || lastErr.includes('provider')) {
+          || lastErr.includes('unavailable') || lastErr.includes('provider') || lastErr.includes('rate limit')) {
         continue;
       }
       throw new Error(lastErr || 'API error');
@@ -979,7 +980,7 @@ async function streamAI(messages, sys, onToken) {
     return fullText;
   }
 
-  throw new Error('Service temporarily unavailable — please try again in a moment.');
+  throw new Error('All AI models are busy right now. Check your OpenRouter key is valid at openrouter.ai, then try again.');
 }
 
 // Non-streaming fallback (used for idea generation JSON)
@@ -1007,14 +1008,19 @@ async function aiRequest(messages, sys) {
     if (!res.ok || (data && data.error)) {
       const errMsg = String((data && data.error && (data.error.message || data.error.code || data.error)) || res.statusText || '').toLowerCase();
       lastErr = errMsg;
-      if (errMsg.includes('endpoint') || errMsg.includes('no model') || errMsg.includes('not found') || errMsg.includes('provider') || errMsg.includes('overload') || errMsg.includes('capacity') || errMsg.includes('unavailable') || errMsg.includes('error') || res.status === 404 || res.status === 429 || res.status === 500 || res.status === 502 || res.status === 503) { continue; }
+      console.warn('[ECO GREEN] Model ' + model + ' failed — status ' + res.status + ' — ' + errMsg);
+      // Only skip to next model for known retryable errors; don't catch everything
+      if (res.status === 404 || res.status === 429 || res.status === 500 || res.status === 502 || res.status === 503
+          || errMsg.includes('endpoint') || errMsg.includes('no model') || errMsg.includes('not found')
+          || errMsg.includes('provider') || errMsg.includes('overload') || errMsg.includes('capacity')
+          || errMsg.includes('unavailable') || errMsg.includes('rate limit')) { continue; }
       throw new Error(errMsg || 'API error');
     }
     const text = (data && data.choices && data.choices[0] && data.choices[0].message && data.choices[0].message.content || '').trim();
     if (text) { currentModel = model; return text; }
     lastErr = 'empty response'; continue;
   }
-  throw new Error('Service temporarily unavailable — please try again in a moment.');
+  throw new Error('All AI models are busy right now. Check your OpenRouter key is valid at openrouter.ai, then try again.');
 }
 
 function callAI(prompt, sys) { return aiRequest([{ role: 'user', content: prompt }], sys); }
