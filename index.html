@@ -827,12 +827,14 @@ let ideas = [], saved = [], chatHist = [], chatBusy = false;
 // ===== AI CONFIG =====
 const OR_URL = 'https://openrouter.ai/api/v1/chat/completions';
 const OR_MODELS = [
+  'deepseek/deepseek-chat-v3-0324:free',
   'meta-llama/llama-3.3-70b-instruct:free',
+  'deepseek/deepseek-r1:free',
   'google/gemma-3-27b-it:free',
   'google/gemma-3-12b-it:free',
-  'mistralai/devstral-small:free',
+  'mistralai/mistral-7b-instruct:free',
+  'qwen/qwen3-8b:free',
   'nvidia/llama-3.1-nemotron-nano-8b-v1:free',
-  'allenai/olmo-3.1-32b-think:free',
   'openrouter/auto'
 ];
 let currentModel = OR_MODELS[0];
@@ -1404,7 +1406,7 @@ async function doStreamChat() {
     if (lastUser) extractProfileFromMessage(lastUser.content);
 
   } catch (e) {
-    const errMsg = '⚠️ ' + (e.message || 'Something went wrong') + ' — please try again!';
+    const errMsg = '⚠️ ' + (e.message || 'Something went wrong — please try again!');
     if (e.message !== 'no_key' && e.message !== 'bad_key') {
       chatHist.push({ role: 'assistant', content: errMsg });
     }
