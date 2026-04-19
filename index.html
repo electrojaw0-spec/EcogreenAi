@@ -896,16 +896,14 @@ const OR_MODELS = [
 let currentModel = OR_MODELS[0];
 
 // ===== POLLINATIONS FALLBACK (free, no key needed) =====
-async function callPollinations(messages, sys, forceJson) {
+async function callPollinations(messages, sys) {
   const msgs = [];
   if (sys) msgs.push({ role: 'system', content: sys });
   msgs.push(...messages.filter(m => m.role === 'user' || m.role === 'assistant'));
-  const body = { messages: msgs, model: 'openai', seed: Math.floor(Math.random() * 9999), private: true };
-  if (forceJson) body.jsonMode = true;
   const res = await fetch(POLL_URL, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(body)
+    body: JSON.stringify({ messages: msgs, model: 'openai', seed: Math.floor(Math.random() * 9999), private: true })
   });
   if (!res.ok) throw new Error('Pollinations error: ' + res.status);
   const text = await res.text();
@@ -1091,7 +1089,7 @@ async function streamAI(messages, sys, onToken) {
 }
 
 // Non-streaming fallback (used for idea generation JSON)
-async function aiRequest(messages, sys, forceJson) {
+async function aiRequest(messages, sys) {
   const filtered = messages.filter(m => m.role === 'user' || m.role === 'assistant').map(m => ({ role: m.role, content: m.content || '' }));
   const merged = [];
   for (const m of filtered) {
@@ -1133,7 +1131,7 @@ async function aiRequest(messages, sys, forceJson) {
   // ── Fallback: Pollinations AI (free, no key needed) ──
   try {
     console.log('[ECO GREEN] Using Pollinations fallback for aiRequest...');
-    return await callPollinations(merged, sys, forceJson);
+    return await callPollinations(merged, sys);
   } catch (pollErr) {
     console.warn('[ECO GREEN] Pollinations failed, trying Ollama (offline)...', pollErr);
   }
@@ -1150,7 +1148,7 @@ async function aiRequest(messages, sys, forceJson) {
   }
 }
 
-function callAI(prompt, sys, forceJson) { return aiRequest([{ role: 'user', content: prompt }], sys, forceJson); }
+function callAI(prompt, sys) { return aiRequest([{ role: 'user', content: prompt }], sys); }
 
 function compressMessages(messages) {
   const filtered = messages.filter(m => m.role === 'user' || m.role === 'assistant');
@@ -1240,160 +1238,24 @@ function renderSteps() {
 
 async function generateIdeas() {
   if (!selField) return;
+  if (!apiKey) { openModal(); return; }
   const f = FIELDS[selField]; const btn = document.getElementById('gen-btn');
   btn.disabled = true; btn.innerHTML = '<span class="spinner"></span> Generating with AI...';
-
-  const tc = selTopic ? ' about "' + selTopic + '"' : '';
-  const sys = 'You are a sustainable engineering advisor for Gambia and Africa. Return ONLY a valid JSON array. No markdown, no explanation, nothing else.';
-
-  // Primary prompt — concise enough for any free model to follow
-  const prompt =
-    'Generate exactly 4 eco-friendly engineering project ideas for a ' + selLevel + ' ' + f.label + ' student in Gambia/West Africa' + tc + '.\n' +
-    'At least 2 must address a real local challenge (NAWEC outages, rural electrification, clean water, agri-processing, flooding).\n' +
-    'Return ONLY a JSON array of exactly 4 objects. Each object MUST have these exact keys:\n' +
-    '{"title":"short catchy title","description":"2 sentences: what it does + how it works","technologies":["tech1","tech2","tech3"],"impact":"1 sentence on green impact","difficulty":3,"steps":["Step 1...","Step 2...","Step 3..."]}\n' +
-    'Difficulty: 1=easy to 5=very hard. Output the raw JSON array only. No other text.';
-
-  // Minimal fallback prompt — used on retry if primary fails
-  const fallbackPrompt =
-    'List 4 green engineering project ideas for a ' + f.label + ' student in Africa. ' +
-    'Respond with ONLY this JSON array (fill in the values):\n' +
-    '[{"title":"","description":"","technologies":["","",""],"impact":"","difficulty":3,"steps":["","",""]},' +
-    '{"title":"","description":"","technologies":["","",""],"impact":"","difficulty":3,"steps":["","",""]},' +
-    '{"title":"","description":"","technologies":["","",""],"impact":"","difficulty":3,"steps":["","",""]},' +
-    '{"title":"","description":"","technologies":["","",""],"impact":"","difficulty":3,"steps":["","",""]}]';
-
+  const tc = selTopic ? 'specifically in the topic area of "' + selTopic + '"' : 'across any relevant green topic';
+  const prompt = 'You are an expert sustainable engineering project advisor with deep expertise in African and Gambian engineering challenges. Generate exactly 4 creative, practical, eco-friendly project ideas for a ' + selLevel + ' student in ' + f.label + ' ' + tc + '.\n\nAFRICA & GAMBIA FIRST — CRITICAL REQUIREMENT:\n- AT LEAST 2 of the 4 ideas must directly address a real Gambian or African challenge (e.g. NAWEC power outages, load shedding, rural electrification, River Gambia flooding, lack of clean water in villages, post-harvest crop losses, solar energy access in the Sahel, coastal erosion, agri-processing, waste management in African cities)\n- All 4 ideas should be feasible with components and resources available in West Africa\n- Reference local context naturally in the descriptions (Gambia, West Africa, Sahel, sub-Saharan Africa)\n- Prioritise low-cost, high-impact solutions suitable for African university budgets\n\nEach idea must be:\n- Genuinely innovative and specific (not generic)\n- Realistic for a ' + selLevel + ' student to build\n- Focused on sustainability and green impact with African relevance\n- Clearly explained so a student immediately understands it\n\nReturn ONLY a valid JSON array with exactly 4 objects. Each object must have exactly these keys:\n{\n  "title": "Specific, catchy project title (max 8 words)",\n  "description": "2 clear sentences: sentence 1 = what it is and does (mention African/Gambian context where relevant), sentence 2 = how it works technically",\n  "technologies": ["tech1", "tech2", "tech3", "tech4"],\n  "impact": "1 specific sentence about the measurable green/sustainable impact in an African or Gambian context",\n  "difficulty": 3,\n  "steps": ["Step 1: ...", "Step 2: ...", "Step 3: ..."]\n}\n\nDifficulty scale: 1=very easy, 2=easy, 3=moderate, 4=hard, 5=very advanced.\nCRITICAL: Return ONLY the raw JSON array. No markdown. No code fences. No explanation. No extra text before or after.';
+  const sys = 'You are a world-class sustainable engineering project advisor specialising in African and Gambian engineering solutions. Return ONLY a valid JSON array. No markdown. No code fences. No explanation. Nothing else.';
   try {
-    let raw, parsed;
-
-    // Attempt 1 — primary prompt with JSON mode forced
-    try {
-      raw = await callAI(prompt, sys, true);
-      parsed = robustParseIdeasJSON(raw);
-    } catch(e1) {
-      // Attempt 2 — retry with minimal template prompt
-      try {
-        btn.innerHTML = '<span class="spinner"></span> Retrying...';
-        raw = await callAI(fallbackPrompt, 'Return ONLY valid JSON. Nothing else.', true);
-        parsed = robustParseIdeasJSON(raw);
-      } catch(e2) {
-        throw new Error('AI could not generate ideas. Please try again or add an OpenRouter key for better results.');
-      }
-    }
-
-    ideas = parsed.slice(0, 4).map(normalizeIdea).filter(Boolean);
-    if (ideas.length === 0) throw new Error('No valid ideas returned. Please try again.');
+    const raw = await callAI(prompt, sys);
+    let clean = raw.replace(/```json/gi, '').replace(/```/g, '').trim();
+    const match = clean.match(/\[[\s\S]*\]/);
+    if (!match) throw new Error('Response was not valid JSON. Please try again.');
+    ideas = JSON.parse(match[0]).slice(0, 4);
     renderIdeas(); confetti();
   } catch (e) {
-    alert('Could not generate ideas 😕\n\n' + e.message);
+    if (e.message !== 'no_key' && e.message !== 'bad_key') alert('Could not generate ideas 😕\n\n' + e.message);
   } finally {
     btn.disabled = false; btn.innerHTML = '🌿 Generate Green Ideas with AI';
   }
-}
-
-function robustParseIdeasJSON(raw) {
-  function unescape(text) {
-    return text.replace(/\\\\/g, '\x00BS\x00').replace(/\\"/g, '"').replace(/\x00BS\x00/g, '\\');
-  }
-  function extractBalanced(text, openChar) {
-    var closeChar = openChar === '[' ? ']' : '}';
-    var start = text.indexOf(openChar);
-    if (start === -1) return null;
-    var depth = 0, inStr = false, esc = false;
-    for (var i = start; i < text.length; i++) {
-      var c = text[i];
-      if (esc)                  { esc = false; continue; }
-      if (c === '\\' && inStr)  { esc = true; continue; }
-      if (c === '"')            { inStr = !inStr; continue; }
-      if (inStr)                continue;
-      if (c === openChar)       depth++;
-      else if (c === closeChar) { depth--; if (depth === 0) return text.slice(start, i + 1); }
-    }
-    return text.slice(start);
-  }
-  function extractArray(val) {
-    if (Array.isArray(val) && val.length > 0) return val;
-    if (val && typeof val === 'object') {
-      var keys = Object.keys(val);
-      for (var k = 0; k < keys.length; k++) {
-        var v = val[keys[k]];
-        if (Array.isArray(v) && v.length > 0) return v;
-      }
-    }
-    return null;
-  }
-  function tryParse(candidate) {
-    var parsed = JSON.parse(candidate);
-    var arr = extractArray(parsed);
-    if (arr) return arr;
-    throw new Error('No array found');
-  }
-  var s = raw.replace(/```json\s*/gi, '').replace(/```\s*/g, '').trim();
-  if ((s.startsWith('"') && s.endsWith('"')) || (s.startsWith("'") && s.endsWith("'"))) {
-    try { s = JSON.parse(s); } catch(e) { s = s.slice(1, -1); }
-  }
-  var su = unescape(s);
-  try { return tryParse(s); } catch(e) {}
-  try { return tryParse(su); } catch(e) {}
-  var arrBlock = extractBalanced(s, '[');
-  if (arrBlock) {
-    try { return tryParse(arrBlock); } catch(e) {}
-    try { return tryParse(unescape(arrBlock)); } catch(e) {}
-  }
-  var objBlock = extractBalanced(s, '{');
-  if (objBlock) {
-    try { return tryParse(objBlock); } catch(e) {}
-    try { return tryParse(unescape(objBlock)); } catch(e) {}
-  }
-  var arrBlock2 = extractBalanced(su, '[');
-  if (arrBlock2) { try { return tryParse(arrBlock2); } catch(e) {} }
-  var objBlock2 = extractBalanced(su, '{');
-  if (objBlock2) { try { return tryParse(objBlock2); } catch(e) {} }
-  var objs = [];
-  var remaining = su;
-  while (objs.length < 4) {
-    var block = extractBalanced(remaining, '{');
-    if (!block) break;
-    try { var o = JSON.parse(block); if (o && typeof o === 'object') objs.push(o); } catch(e) {}
-    var idx = remaining.indexOf(block) + block.length;
-    if (idx <= 0) break;
-    remaining = remaining.slice(idx);
-  }
-  if (objs.length > 0) return objs;
-  throw new Error('Could not parse ideas from AI response. Please try again.');
-}
-
-// Normalize an idea object — maps any AI field name variation to the expected keys
-function normalizeIdea(obj) {
-  if (!obj || typeof obj !== 'object') return null;
-
-  // Title
-  const title = obj.title || obj.name || obj.project_title || obj['Project Title'] ||
-    obj.project_name || obj.heading || obj.idea || obj.topic || '';
-
-  // Description
-  const description = obj.description || obj.desc || obj.summary || obj.overview ||
-    obj.details || obj['Project Description'] || obj.explanation || obj.about || '';
-
-  // Technologies
-  const rawTech = obj.technologies || obj.technology || obj.tech || obj.tools ||
-    obj.components || obj.materials || obj.resources || obj.stack || [];
-  const technologies = Array.isArray(rawTech) ? rawTech : (typeof rawTech === 'string' ? rawTech.split(',').map(t => t.trim()) : []);
-
-  // Impact
-  const impact = obj.impact || obj.green_impact || obj.environmental_impact ||
-    obj.sustainability_impact || obj.eco_impact || obj['Green Impact'] ||
-    obj.benefit || obj.sustainability || obj.effect || '';
-
-  // Difficulty
-  const difficulty = parseInt(obj.difficulty || obj.complexity || obj.level || obj.hard || 3) || 3;
-
-  // Steps
-  const rawSteps = obj.steps || obj.implementation_steps || obj.how_to ||
-    obj.guide || obj.instructions || obj.process || obj.procedure || [];
-  const steps = Array.isArray(rawSteps) ? rawSteps : [];
-
-  return { title, description, technologies, impact, difficulty, steps };
 }
 
 function renderIdeas() {
@@ -1406,12 +1268,8 @@ function renderIdeas() {
     const diffLabel = ['','Beginner','Easy','Moderate','Advanced','Expert'][diff];
     const diffColor = ['','#22c55e','#84cc16','#f59e0b','#ef4444','#7c3aed'][diff];
     const steps = (idea.steps || []).slice(0, 3);
-    const title = idea.title || 'Untitled Idea';
-    const description = idea.description || 'No description provided.';
-    const impact = idea.impact || 'Eco-friendly and sustainable impact.';
-    const technologies = idea.technologies || [];
     const d = document.createElement('div'); d.className = 'idea-card';
-    d.innerHTML = '<div class="idea-bar" style="background:linear-gradient(90deg,' + f.color + ',' + f.color + '66)"></div><div class="idea-body"><div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;flex-wrap:wrap"><span class="idea-meta" style="color:' + f.color + ';margin:0">' + f.icon + ' ' + f.label + '</span><span style="padding:3px 10px;border-radius:20px;background:' + diffColor + '18;border:1px solid ' + diffColor + '44;color:' + diffColor + ';font-size:11px;font-weight:800">' + '●'.repeat(diff) + '○'.repeat(5-diff) + ' ' + diffLabel + '</span></div><div class="idea-title">' + title + '</div><div class="idea-desc">' + description + '</div>' + (steps.length ? '<div style="margin-bottom:14px"><div style="font-size:11px;font-weight:800;color:var(--text3);letter-spacing:.5px;margin-bottom:8px">QUICK START</div>' + steps.map((s, si) => '<div style="display:flex;gap:8px;margin:5px 0;font-size:13px;color:var(--text2);font-weight:600;align-items:flex-start"><span style="background:' + f.color + ';color:#fff;border-radius:50%;width:18px;height:18px;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;flex-shrink:0;margin-top:1px">' + (si+1) + '</span><span>' + s.replace(/^Step \d+:\s*/, '') + '</span></div>').join('') + '</div>' : '') + '<div class="tech-tags">' + technologies.map(t => '<span class="tech-tag" style="background:' + f.color + '15;border:1.5px solid ' + f.color + '44;color:' + f.color + '">' + t + '</span>').join('') + '</div><div class="idea-impact">🌍 <strong>Green Impact:</strong> ' + impact + '</div><div class="idea-actions"><button class="btn-eco" onclick="ideaToChat(' + i + ')">🌿 Build this with AI</button><button class="btn-save ' + (isSaved ? 'saved-active' : '') + '" id="sv' + i + '" onclick="toggleSave(' + i + ')">' + (isSaved ? '✓ Saved' : '📌 Save') + '</button></div></div>';
+    d.innerHTML = '<div class="idea-bar" style="background:linear-gradient(90deg,' + f.color + ',' + f.color + '66)"></div><div class="idea-body"><div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;flex-wrap:wrap"><span class="idea-meta" style="color:' + f.color + ';margin:0">' + f.icon + ' ' + f.label + '</span><span style="padding:3px 10px;border-radius:20px;background:' + diffColor + '18;border:1px solid ' + diffColor + '44;color:' + diffColor + ';font-size:11px;font-weight:800">' + '●'.repeat(diff) + '○'.repeat(5-diff) + ' ' + diffLabel + '</span></div><div class="idea-title">' + idea.title + '</div><div class="idea-desc">' + idea.description + '</div>' + (steps.length ? '<div style="margin-bottom:14px"><div style="font-size:11px;font-weight:800;color:var(--text3);letter-spacing:.5px;margin-bottom:8px">QUICK START</div>' + steps.map((s, si) => '<div style="display:flex;gap:8px;margin:5px 0;font-size:13px;color:var(--text2);font-weight:600;align-items:flex-start"><span style="background:' + f.color + ';color:#fff;border-radius:50%;width:18px;height:18px;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;flex-shrink:0;margin-top:1px">' + (si+1) + '</span><span>' + s.replace(/^Step \d+:\s*/, '') + '</span></div>').join('') + '</div>' : '') + '<div class="tech-tags">' + (idea.technologies || []).map(t => '<span class="tech-tag" style="background:' + f.color + '15;border:1.5px solid ' + f.color + '44;color:' + f.color + '">' + t + '</span>').join('') + '</div><div class="idea-impact">🌍 <strong>Green Impact:</strong> ' + idea.impact + '</div><div class="idea-actions"><button class="btn-eco" onclick="ideaToChat(' + i + ')">🌿 Build this with AI</button><button class="btn-save ' + (isSaved ? 'saved-active' : '') + '" id="sv' + i + '" onclick="toggleSave(' + i + ')">' + (isSaved ? '✓ Saved' : '📌 Save') + '</button></div></div>';
     g.appendChild(d);
   });
 }
@@ -1575,13 +1433,7 @@ function md(rawText, isUser) {
   }
   // ── Circuit / SVG / Diagram block renderer ──
   s = s.replace(/```(?:svg|circuit|diagram|flow|mechanical|civil|piping|layout)\n?([\s\S]*?)```/g, (_, raw) => {
-    // Unescape HTML entities so the SVG renders as real graphics, not escaped text
-    const svgContent = raw.trim()
-      .replace(/&amp;/g, '&')
-      .replace(/&lt;/g, '<')
-      .replace(/&gt;/g, '>')
-      .replace(/&quot;/g, '"')
-      .replace(/&#39;/g, "'");
+    const svgContent = raw.trim();
     const id = 'circ_' + Math.random().toString(36).slice(2,8);
     return '<div class="circuit-wrap">' +
       '<div class="circuit-header">' +
@@ -1658,6 +1510,7 @@ function resizeTA(el) { el.style.height = 'auto'; el.style.height = Math.min(el.
 async function sendChat() {
   const inp = document.getElementById('chat-in'); const msg = inp.value.trim();
   if (!msg || chatBusy) return;
+  if (!apiKey) { openModal(); return; }
   inp.value = ''; inp.style.height = 'auto'; updateSendBtn();
   chatHist.push({ role: 'user', content: msg });
   chatBusy = true; await doStreamChat();
@@ -1665,6 +1518,7 @@ async function sendChat() {
 
 async function sendQuick(msg) {
   if (chatBusy) return;
+  if (!apiKey) { openModal(); return; }
   if (!chatHist.length) initChat();
   chatHist.push({ role: 'user', content: msg });
   chatBusy = true; await doStreamChat();
@@ -1752,7 +1606,7 @@ async function doStreamChat() {
 }
 
 async function ideaToChat(i) {
-  const idea = ideas[i];
+  const idea = ideas[i]; if (!apiKey) { openModal(); return; }
   const msg = 'Hi ECO GREEN AI! I want to build this project: **' + idea.title + '**. ' + idea.description + ' Can you help me plan it step by step with a focus on sustainability and eco-friendliness?';
   chatHist = [{ role: 'assistant', content: WELCOME }, { role: 'user', content: msg }];
   chatBusy = true; showPage('chat');
@@ -2276,6 +2130,7 @@ async function labAnalyse() {
   if (labAnalysing) return;
   const nodes = Object.values(labNodes);
   if (nodes.length < 2) { alert('Add at least 2 components before analysing! 😊'); return; }
+  if (!apiKey) { openModal(); return; }
 
   labAnalysing = true;
   const btn = document.getElementById('lab-analyse-btn');
