@@ -877,7 +877,7 @@ let ideas = [], saved = [], chatHist = [], chatBusy = false;
 
 // ===== AI CONFIG =====
 const OR_URL = 'https://openrouter.ai/api/v1/chat/completions';
-const POLL_URL = 'https://text.pollinations.ai/';
+const POLL_URL = 'https://text.pollinations.ai/openai';
 const OLLAMA_MODELS = ['llama3', 'llama3.2', 'llama3.1', 'mistral', 'gemma2', 'phi3', 'tinyllama'];
 function getOllamaHost() {
   return (localStorage.getItem('eco_ollama_host') || 'http://localhost:11434').replace(/\/$/, '');
@@ -900,15 +900,31 @@ async function callPollinations(messages, sys) {
   const msgs = [];
   if (sys) msgs.push({ role: 'system', content: sys });
   msgs.push(...messages.filter(m => m.role === 'user' || m.role === 'assistant'));
-  const res = await fetch(POLL_URL, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ messages: msgs, model: 'openai', seed: Math.floor(Math.random() * 9999), private: true })
-  });
-  if (!res.ok) throw new Error('Pollinations error: ' + res.status);
-  const text = await res.text();
-  if (!text || !text.trim()) throw new Error('Empty response from Pollinations');
-  return text.trim();
+
+  // Try up to 2 times (Pollinations can be briefly slow)
+  for (let attempt = 1; attempt <= 2; attempt++) {
+    try {
+      const res = await fetch(POLL_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          model: 'openai',
+          messages: msgs,
+          seed: Math.floor(Math.random() * 9999),
+          private: true
+        }),
+        signal: AbortSignal.timeout(30000)
+      });
+      if (!res.ok) throw new Error('Pollinations error: ' + res.status);
+      const data = await res.json();
+      const text = (data?.choices?.[0]?.message?.content || '').trim();
+      if (text) return text;
+      throw new Error('Empty response from Pollinations');
+    } catch (e) {
+      if (attempt === 2) throw e;
+      await new Promise(r => setTimeout(r, 1500)); // wait before retry
+    }
+  }
 }
 
 // ===== OLLAMA FALLBACK (offline, local device) =====
@@ -1084,7 +1100,7 @@ async function streamAI(messages, sys, onToken) {
     return ollamaText;
   } catch (ollamaErr) {
     console.error('[ECO GREEN] Ollama failed:', ollamaErr);
-    throw new Error('Please hang on, Ecogreen Team is doing some maintenance. 🙏');
+    throw new Error('Free AI is temporarily busy. Please try again in a moment, or add an OpenRouter key for reliable access. 🙏');
   }
 }
 
@@ -1144,7 +1160,7 @@ async function aiRequest(messages, sys) {
     return ollamaText;
   } catch (ollamaErr) {
     console.error('[ECO GREEN] Ollama failed:', ollamaErr);
-    throw new Error('Please hang on, Ecogreen Team is doing some maintenance. 🙏');
+    throw new Error('Free AI is temporarily busy. Please try again in a moment, or add an OpenRouter key for reliable access. 🙏');
   }
 }
 
