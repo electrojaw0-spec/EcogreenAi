@@ -906,7 +906,7 @@ async function callPollinations(messages, sys) {
   const res = await fetch(POLL_URL, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ messages: msgs, model: 'openai', seed: Math.floor(Math.random() * 9999), private: true }),
+    body: JSON.stringify({ messages: msgs, model: 'openai-large', seed: Math.floor(Math.random() * 9999), private: true }),
     signal: makeTimeoutSignal(30000)
   });
   if (!res.ok) throw new Error('Pollinations error: ' + res.status);
@@ -1251,9 +1251,13 @@ async function generateIdeas() {
   const tc = selTopic ? 'specifically in the topic area of "' + selTopic + '"' : 'across any relevant green topic';
   const prompt = 'You are an expert sustainable engineering project advisor with deep expertise in African and Gambian engineering challenges. Generate exactly 4 creative, practical, eco-friendly project ideas for a ' + selLevel + ' student in ' + f.label + ' ' + tc + '.\n\nAFRICA & GAMBIA FIRST — CRITICAL REQUIREMENT:\n- AT LEAST 2 of the 4 ideas must directly address a real Gambian or African challenge (e.g. NAWEC power outages, load shedding, rural electrification, River Gambia flooding, lack of clean water in villages, post-harvest crop losses, solar energy access in the Sahel, coastal erosion, agri-processing, waste management in African cities)\n- All 4 ideas should be feasible with components and resources available in West Africa\n- Reference local context naturally in the descriptions (Gambia, West Africa, Sahel, sub-Saharan Africa)\n- Prioritise low-cost, high-impact solutions suitable for African university budgets\n\nEach idea must be:\n- Genuinely innovative and specific (not generic)\n- Realistic for a ' + selLevel + ' student to build\n- Focused on sustainability and green impact with African relevance\n- Clearly explained so a student immediately understands it\n\nReturn ONLY a valid JSON array with exactly 4 objects. Each object must have exactly these keys:\n{\n  "title": "Specific, catchy project title (max 8 words)",\n  "description": "2 clear sentences: sentence 1 = what it is and does (mention African/Gambian context where relevant), sentence 2 = how it works technically",\n  "technologies": ["tech1", "tech2", "tech3", "tech4"],\n  "impact": "1 specific sentence about the measurable green/sustainable impact in an African or Gambian context",\n  "difficulty": 3,\n  "steps": ["Step 1: ...", "Step 2: ...", "Step 3: ..."]\n}\n\nDifficulty scale: 1=very easy, 2=easy, 3=moderate, 4=hard, 5=very advanced.\nCRITICAL: Return ONLY the raw JSON array. No markdown. No code fences. No explanation. No extra text before or after.';
   const sys = 'You are a world-class sustainable engineering project advisor specialising in African and Gambian engineering solutions. Return ONLY a valid JSON array. No markdown. No code fences. No explanation. Nothing else.';
-  // FIX 5: success flag so confetti() only fires on genuine success and lives outside the try block
   let _success = false;
-  try {
+  let _attempts = 0;
+  const _maxAttempts = 2;
+  tryGenerate: try {
+   while (_attempts < _maxAttempts) {
+    _attempts++;
+    try {
     const raw = await callAI(prompt, sys);
 
     // ── Strip <think>…</think> reasoning blocks (DeepSeek R1 / reasoning models) ──
@@ -1310,14 +1314,25 @@ async function generateIdeas() {
     // Remove trailing commas before ] or } (common AI mistake)
     const cleaned = jsonStr.replace(/,\s*([}\]])/g, '$1');
 
-    // FIX 4: wrap JSON.parse in its own try-catch — gives a user-friendly message instead of
-    // a raw cryptic SyntaxError like "Unexpected token < in JSON at position 0"
     let parsed;
     try { parsed = JSON.parse(cleaned); }
     catch (_) { throw new Error('The AI response could not be parsed. Please try again.'); }
 
+    // ── Handle {"ideas":[...]} or {"projects":[...]} wrapper objects ──
+    if (parsed && !Array.isArray(parsed) && typeof parsed === 'object') {
+      const keys = Object.keys(parsed);
+      for (const k of keys) { if (Array.isArray(parsed[k])) { parsed = parsed[k]; break; } }
+    }
+
     if (!Array.isArray(parsed) || parsed.length === 0) throw new Error('AI returned no ideas. Please try again.');
-    // FIX 2: typeof null === "object" in JS — must check for null explicitly before accessing .title
+
+    // Normalise missing 'title' — some models use 'name' or 'project_title'
+    parsed = parsed.map(item => {
+      if (!item || typeof item !== 'object') return item;
+      if (!item.title) item.title = item.name || item.project_title || item.project_name || 'Untitled Project';
+      return item;
+    });
+
     if (!parsed[0] || typeof parsed[0] !== 'object' || !parsed[0].title) throw new Error('AI returned an unexpected format. Please try again.');
 
     // FIX 3: filter(Boolean) removes any null/undefined items before mapping — prevents
@@ -1333,6 +1348,13 @@ async function generateIdeas() {
     if (!ideas.length) throw new Error('No valid ideas could be extracted. Please try again.');
     renderIdeas();
     _success = true;
+    break tryGenerate;
+    } catch (innerE) {
+      if (innerE.message === 'no_key' || innerE.message === 'bad_key') throw innerE;
+      if (_attempts >= _maxAttempts) throw innerE;
+      console.warn('[ECO GREEN] Idea gen attempt ' + _attempts + ' failed, retrying…', innerE.message);
+    }
+   }
   } catch (e) {
     if (e.message !== 'no_key' && e.message !== 'bad_key') alert('Could not generate ideas 😕\n\n' + e.message);
   } finally {
